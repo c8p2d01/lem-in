@@ -5,8 +5,9 @@ CC = cc
 CFLAGS = -Wall -Werror -Wextra -Wno-unused-variable -g
 
 SD = ./src/
-SRC =	tests.c \
-		ft_graph.c
+SRC =	main.c \
+		ft_graph.c \
+		parser.c
 SRF = $(addprefix $(SD),$(SRC))
 
 OD = ./obj/
