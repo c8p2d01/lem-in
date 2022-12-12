@@ -48,8 +48,32 @@ static bool	addNode(globe *data, char *line)
 		free_2dstr(split);
 		return false;
 	}
-	// TODO: validate name
-	gNode *node = ft_gNewNode(ft_strdup(split[0])); // TODO: add x + y
+
+	if (split[0][0] == 'L' || split[0][0] == '#' || ft_strchr(split[0], '-') != NULL)
+	{
+		ft_putendl_fd("error: node name can't start with L or # or contains -", STDOUT_FILENO);
+		free_2dstr(split);
+		return false;
+	}
+	gNode *node = ft_gNewNode(ft_strdup(split[0]));
+
+	if (!ft_isnumeric(split[1]) || !ft_isnumeric(split[2]))
+	{
+		ft_putendl_fd("error: node position needs to be a number", STDOUT_FILENO);
+		free_2dstr(split);
+		return false;
+	}
+	int x = ft_atoi(split[1]);
+	int y = ft_atoi(split[2]);
+	if (x < 0 || y < 0)
+	{
+		ft_putendl_fd("error: node position can't be negative", STDOUT_FILENO);
+		free_2dstr(split);
+		return false;
+	}
+	node->x = x;
+	node->y = y;
+
 	if (data->allNodes == NULL)
 	{
 		data->allNodes = ft_calloc(sizeof(gNode *), 2);
@@ -61,6 +85,7 @@ static bool	addNode(globe *data, char *line)
 		data->allNodes = ft_realloc(data->allNodes, sizeof(gNode *) * size, sizeof(gNode *) * (size + 2));
 		data->allNodes[size] = node;
 	}
+
 	free_2dstr(split);
 	return true;
 }
