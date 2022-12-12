@@ -2,7 +2,7 @@ NAME = lem-in
 
 CC = cc
 
-CFLAGS = #-Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -Wno-unused-variable -g
 
 SD = ./src/
 SRC =	tests.c \
@@ -19,18 +19,21 @@ e: all
 	./$(NAME)
 
 $(OD)%.o: $(SD)%.c
+	@mkdir -p $(OD)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(NAME): $(OBF)
-	make -C ./lft
+	make -s -C ./lft
 	$(CC) $(OBF) ./lft/libft.a -o $(NAME)
 
 clean:
-	make clean -C ./lft
-	rm -dfr ./obj/*.o
+	make -s -C ./lft clean
+	rm -rdf $(OD)
 
 fclean: clean
-	make fclean -C ./lft
+	make -s -C ./lft fclean
 	rm -rdf $(NAME)
 
 re: fclean all
+
+phony: all clean fclean re e
