@@ -12,20 +12,6 @@ size_t	arraySize(void **array)
 }
 
 /**
- * @brief Free globe struct
- */
-void	freeGlobe(globe *data)
-{
-	for (size_t i = 0; data->allNodes[i] != NULL; ++i)
-	{
-		free(data->allNodes[i]->name);
-		free(data->allNodes[i]->gates);
-		free(data->allNodes[i]);
-	}
-	free(data->allNodes);
-}
-
-/**
  * @brief Check if a line is a comment
  */
 static int	isComment(char *line)
@@ -35,6 +21,9 @@ static int	isComment(char *line)
 	return 0;
 }
 
+/**
+ * @brief Get node index by name
+ */
 static ssize_t	getNodeIndex(globe *data, char *name)
 {
 	size_t i = 0;
@@ -76,6 +65,9 @@ static int	addNode(globe *data, char *line)
 	return 1;
 }
 
+/**
+ * @brief Extract data from line to globe struct
+ */
 static bool	extractData(char *line, globe *data)
 {
 	static int isGateParse = 0;

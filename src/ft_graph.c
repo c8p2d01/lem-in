@@ -1,6 +1,22 @@
 #include "../inc/lem_in.h"
 
-// allocate space foe a new node
+/**
+ * @brief Free globe struct
+ */
+void	freeGlobe(globe *data)
+{
+	for (size_t i = 0; data->allNodes[i] != NULL; ++i)
+	{
+		free(data->allNodes[i]->name);
+		free(data->allNodes[i]->gates);
+		free(data->allNodes[i]);
+	}
+	free(data->allNodes);
+}
+
+/**
+ * @brief Allocate a new node
+ */
 gNode	*ft_gNewNode(char *data)
 {
 	gNode *res = ft_calloc(sizeof(gNode), 1);
@@ -8,7 +24,9 @@ gNode	*ft_gNewNode(char *data)
 	return (res);
 }
 
-// connect a node to an amount of other nodes
+/**
+ * @brief Insert one node to another
+ */
 void	ft_gInsert(gNode *node, size_t amount, ...)
 {
 	va_list c;
@@ -65,6 +83,9 @@ void	ft_gClean(gNode *node)
 	}
 }
 
+/**
+ * @brief Check if a node is already connected to another node
+ */
 bool	hasGate(gNode *node, gNode *next)
 {
 	if (node == NULL || node->gates == NULL)
