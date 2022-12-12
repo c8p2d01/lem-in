@@ -1,15 +1,32 @@
 #include "../inc/lem_in.h"
 
-// allocate space foe a new node
+/**
+ * @brief Free globe struct
+ */
+void	freeGlobe(globe *data)
+{
+	for (size_t i = 0; data->allNodes[i] != NULL; ++i)
+	{
+		free(data->allNodes[i]->name);
+		free(data->allNodes[i]->gates);
+		free(data->allNodes[i]);
+	}
+	free(data->allNodes);
+}
+
+/**
+ * @brief Allocate a new node
+ */
 gNode	*ft_gNewNode(char *data)
 {
-	gNode *res = malloc(sizeof(gNode));
+	gNode *res = ft_calloc(sizeof(gNode), 1);
 	res->name = data;
-	res->gates = NULL;
 	return (res);
 }
 
-// connect a node to an amount of other nodes
+/**
+ * @brief Insert one node to another
+ */
 void	ft_gInsert(gNode *node, size_t amount, ...)
 {
 	va_list c;
@@ -30,44 +47,20 @@ void	ft_gInsert(gNode *node, size_t amount, ...)
 	}
 	else
 	{
-		struct timeval	time;
-		gettimeofday(&time, NULL);
-		printf("\e[38;5;%im", time.tv_usec % 228);
-		printf("before\n");
-		printNode(node);
-
-		int i = 0;
-		int j = 0;
-		size_t l = 0;
-		while (node->gates[i] != NULL)
-			i++;
-		gNode **new = ft_calloc((i + amount + 1), sizeof(gNode *));
-		new[i + amount] = NULL;
-		while (node->gates[j] != NULL)
+		size_t size = arraySize((void **)node->gates);
+		size_t newSize = size + amount;
+		node->gates = ft_realloc(node->gates, sizeof(gNode *) * size, sizeof(gNode *) * (newSize + 1));
+		while (size < newSize)
 		{
-			new[j] = node->gates[j];
-			j++;
-		}
-		free(node->gates);
-		node->gates = new;
-		while (l < amount)
-		{
-			gNode	*in = va_arg(c, gNode*);
+			gNode *in = va_arg(c, gNode*);
 			if (!in)
 				break;
 			printf("inserted %s\n", in->name);
-			new[j + l] = in;
-			if (!hasGate(new[j + l], node))
-				ft_gInsert(new[j + l], 1, node);
-			l++;
+			node->gates[size] = in;
+			if (!hasGate(node->gates[size], node))
+				ft_gInsert(node->gates[size], 1, node);
+			size++;
 		}
-		free(node->gates);
-		node->gates = new;
-
-		printf("\e[38;5;%im", time.tv_usec % 228);
-		printf("after\n");
-		printNode(node);
-		printf("\e[0m");
 	}
 }
 
@@ -90,6 +83,9 @@ void	ft_gClean(gNode *node)
 	}
 }
 
+/**
+ * @brief Check if a node is already connected to another node
+ */
 bool	hasGate(gNode *node, gNode *next)
 {
 	if (node == NULL || node->gates == NULL)
@@ -102,13 +98,20 @@ bool	hasGate(gNode *node, gNode *next)
 	return (false);
 }
 
-void	printNode(gNode *node)
+/**
+ * @brief Print all nodes and its gates
+ * @note Debug
+ */
+void	printNodes(gNode **node)
 {
-	if (!node->gates[0]->name)
-		printf("Error!\n");
-	printf("node '%s'\n", node->name);
-	for (int i = 0; node->gates && node->gates[i]; i++)
-		printf("\t link to '%s'\n", node->gates[i]->name);
+	for (size_t i = 0; node[i]; ++i)
+	{
+		printf("node '%s'\n", node[i]->name);
+		for (size_t j = 0; node[i]->gates && node[i]->gates[j]; ++j)
+		{
+			printf("\t link to '%s'\n", node[i]->gates[j]->name);
+		}
+	}
 }
 
 void	delNode(gNode *node)

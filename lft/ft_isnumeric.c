@@ -21,8 +21,8 @@ int	ft_isnumeric(char *num)
 	{
 		if ((!ft_isdigit(num[i]) && (i != 0)) || \
 		(!ft_isdigit(num[i]) && num[i] != '+' && num[i] != '-' && i == 0))
-			return (1);
+			return (0);
 		i++;
 	}
-	return (0);
+	return (1);
 }
