@@ -14,11 +14,11 @@ size_t	arraySize(void **array)
 /**
  * @brief Check if a line is a comment
  */
-static int	isComment(char *line)
+static bool	isComment(char *line)
 {
 	if (line[0] == '#' && line[1] != '#')
-		return 1;
-	return 0;
+		return true;
+	return false;
 }
 
 /**
@@ -39,14 +39,14 @@ static ssize_t	getNodeIndex(globe *data, char *name)
 /**
  * @brief Add a node to all nodes list
  */
-static int	addNode(globe *data, char *line)
+static bool	addNode(globe *data, char *line)
 {
 	char **split = ft_split(line, ' ');
 	if (arraySize((void **)split) != 3)
 	{
 		ft_putendl_fd("error: wrong node format", STDOUT_FILENO);
 		free_2dstr(split);
-		return 0;
+		return false;
 	}
 	// TODO: validate name
 	gNode *node = ft_gNewNode(ft_strdup(split[0])); // TODO: add x + y
@@ -62,7 +62,7 @@ static int	addNode(globe *data, char *line)
 		data->allNodes[size] = node;
 	}
 	free_2dstr(split);
-	return 1;
+	return true;
 }
 
 /**
@@ -70,24 +70,24 @@ static int	addNode(globe *data, char *line)
  */
 static bool	extractData(char *line, globe *data)
 {
-	static int isGateParse = 0;
+	static bool isGateParse = false;
 
 	if (data->nAnts == 0) {
 		if (!ft_isnumeric(line))
 		{
 			ft_putendl_fd("error: number of ants needs to be a number", STDOUT_FILENO);
-			return 0;
+			return false;
 		}
 
 		int nAnts = ft_atoi(line);
 		if (nAnts <= 0)
 		{
 			ft_putendl_fd("error: number of ants needs to be positive", STDOUT_FILENO);
-			return 0;
+			return false;
 		}
 
 		data->nAnts = nAnts;
-		return 1;
+		return true;
 	}
 
 	if (!isGateParse && (ft_strncmp(line, "##start", 8) == 0 || ft_strncmp(line, "##end", 6) == 0))
@@ -96,13 +96,13 @@ static bool	extractData(char *line, globe *data)
 		if (get_next_line(0, &nodeLine) <= 0)
 		{
 			ft_putendl_fd("error: get_next_line() after ##start or ##end", STDOUT_FILENO);
-			return 0;
+			return false;
 		}
 
 		if (!addNode(data, nodeLine))
 		{
 			free(nodeLine);
-			return 0;
+			return false;
 		}
 
 		if (ft_strncmp(line, "##start", 8) == 0)
@@ -110,21 +110,20 @@ static bool	extractData(char *line, globe *data)
 		else
 			data->end = data->allNodes[arraySize((void **)data->allNodes) - 1];
 
-		return 1;
+		return true;
 	}
 
 	if (!isGateParse && ft_strchr(line, ' ') != NULL)
 		return addNode(data, line);
 
-	isGateParse = 1;
-	if (isGateParse == 0)
+	if (isGateParse == false)
 	{
 		if (data->start == NULL || data->end == NULL)
 		{
 			ft_putendl_fd("error: start or end not set", STDOUT_FILENO);
 			return 0;
 		}
-		isGateParse = 1;
+		isGateParse = true;
 	}
 
 	char **split = ft_split(line, '-');
@@ -137,7 +136,7 @@ static bool	extractData(char *line, globe *data)
 	ft_gInsert(data->allNodes[getNodeIndex(data, split[0])], 1, data->allNodes[getNodeIndex(data, split[1])]);
 
 	free_2dstr(split);
-	return 1;
+	return true;
 }
 
 /**
@@ -153,7 +152,8 @@ void	readData(globe *data)
 		readRet = get_next_line(STDIN_FILENO, &line);
 		if (readRet != 1)
 		{
-			free(line);
+			if (readRet == 0)
+				free(line);
 			break;
 		}
 
