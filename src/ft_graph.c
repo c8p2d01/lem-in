@@ -3,9 +3,8 @@
 // allocate space foe a new node
 gNode	*ft_gNewNode(char *data)
 {
-	gNode *res = malloc(sizeof(gNode));
+	gNode *res = ft_calloc(sizeof(gNode), 1);
 	res->name = data;
-	res->gates = NULL;
 	return (res);
 }
 
@@ -30,44 +29,20 @@ void	ft_gInsert(gNode *node, size_t amount, ...)
 	}
 	else
 	{
-		struct timeval	time;
-		gettimeofday(&time, NULL);
-		printf("\e[38;5;%im", time.tv_usec % 228);
-		printf("before\n");
-		printNode(node);
-
-		int i = 0;
-		int j = 0;
-		size_t l = 0;
-		while (node->gates[i] != NULL)
-			i++;
-		gNode **new = ft_calloc((i + amount + 1), sizeof(gNode *));
-		new[i + amount] = NULL;
-		while (node->gates[j] != NULL)
+		size_t size = arraySize((void **)node->gates);
+		size_t newSize = size + amount;
+		node->gates = ft_realloc(node->gates, sizeof(gNode *) * size, sizeof(gNode *) * (newSize + 1));
+		while (size < newSize)
 		{
-			new[j] = node->gates[j];
-			j++;
-		}
-		free(node->gates);
-		node->gates = new;
-		while (l < amount)
-		{
-			gNode	*in = va_arg(c, gNode*);
+			gNode *in = va_arg(c, gNode*);
 			if (!in)
 				break;
 			printf("inserted %s\n", in->name);
-			new[j + l] = in;
-			if (!hasGate(new[j + l], node))
-				ft_gInsert(new[j + l], 1, node);
-			l++;
+			node->gates[size] = in;
+			if (!hasGate(node->gates[size], node))
+				ft_gInsert(node->gates[size], 1, node);
+			size++;
 		}
-		free(node->gates);
-		node->gates = new;
-
-		printf("\e[38;5;%im", time.tv_usec % 228);
-		printf("after\n");
-		printNode(node);
-		printf("\e[0m");
 	}
 }
 
