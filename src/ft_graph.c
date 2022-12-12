@@ -98,13 +98,20 @@ bool	hasGate(gNode *node, gNode *next)
 	return (false);
 }
 
-void	printNode(gNode *node)
+/**
+ * @brief Print all nodes and its gates
+ * @note Debug
+ */
+void	printNodes(gNode **node)
 {
-	if (!node->gates[0]->name)
-		printf("Error!\n");
-	printf("node '%s'\n", node->name);
-	for (int i = 0; node->gates && node->gates[i]; i++)
-		printf("\t link to '%s'\n", node->gates[i]->name);
+	for (size_t i = 0; node[i]; ++i)
+	{
+		printf("node '%s'\n", node[i]->name);
+		for (size_t j = 0; node[i]->gates && node[i]->gates[j]; ++j)
+		{
+			printf("\t link to '%s'\n", node[i]->gates[j]->name);
+		}
+	}
 }
 
 void	delNode(gNode *node)

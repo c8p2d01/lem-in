@@ -11,6 +11,8 @@
 typedef struct gNode {
 	struct gNode	**gates;
 	char			*name;
+	size_t			x;
+	size_t			y;
 }	gNode;
 
 typedef struct globe {
@@ -28,7 +30,7 @@ void	ft_gInsert(gNode *node, size_t amount, ...);
 void	ft_gClean(gNode *node);
 bool	hasGate(gNode *node, gNode *next);
 
-void	printNode(gNode *node);
+void	printNodes(gNode **node);
 
 size_t	arraySize(void **array);
 void	freeGlobe(globe *data);

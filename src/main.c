@@ -3,10 +3,9 @@
 int main()
 {
 	globe data;
-	data.nAnts = 0;
-	data.allNodes = NULL;
+	ft_bzero(&data, sizeof(globe));
 	readData(&data);
 
-	printNode(data.start);
+	printNodes(data.allNodes);
 	freeGlobe(&data);
 }
