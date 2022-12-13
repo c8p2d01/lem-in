@@ -44,14 +44,14 @@ static bool	addNode(globe *data, char *line)
 	char **split = ft_split(line, ' ');
 	if (arraySize((void **)split) != 3)
 	{
-		ft_putendl_fd("error: wrong node format", STDOUT_FILENO);
+		ft_putendl_fd("error: wrong node format", STDERR_FILENO);
 		free_2dstr(split);
 		return false;
 	}
 
 	if (split[0][0] == 'L' || split[0][0] == '#' || ft_strchr(split[0], '-') != NULL)
 	{
-		ft_putendl_fd("error: node name can't start with L or # or contains -", STDOUT_FILENO);
+		ft_putendl_fd("error: node name can't start with L or # or contains -", STDERR_FILENO);
 		free_2dstr(split);
 		return false;
 	}
@@ -59,7 +59,7 @@ static bool	addNode(globe *data, char *line)
 
 	if (!ft_isnumeric(split[1]) || !ft_isnumeric(split[2]))
 	{
-		ft_putendl_fd("error: node position needs to be a number", STDOUT_FILENO);
+		ft_putendl_fd("error: node position needs to be a number", STDERR_FILENO);
 		free_2dstr(split);
 		return false;
 	}
@@ -67,7 +67,7 @@ static bool	addNode(globe *data, char *line)
 	int y = ft_atoi(split[2]);
 	if (x < 0 || y < 0)
 	{
-		ft_putendl_fd("error: node position can't be negative", STDOUT_FILENO);
+		ft_putendl_fd("error: node position can't be negative", STDERR_FILENO);
 		free_2dstr(split);
 		return false;
 	}
@@ -100,14 +100,14 @@ static bool	extractData(char *line, globe *data)
 	if (data->nAnts == 0) {
 		if (!ft_isnumeric(line))
 		{
-			ft_putendl_fd("error: number of ants needs to be a number", STDOUT_FILENO);
+			ft_putendl_fd("error: number of ants needs to be a number", STDERR_FILENO);
 			return false;
 		}
 
 		int nAnts = ft_atoi(line);
 		if (nAnts <= 0)
 		{
-			ft_putendl_fd("error: number of ants needs to be positive", STDOUT_FILENO);
+			ft_putendl_fd("error: number of ants needs to be positive", STDERR_FILENO);
 			return false;
 		}
 
@@ -120,7 +120,7 @@ static bool	extractData(char *line, globe *data)
 		char *nodeLine;
 		if (get_next_line(0, &nodeLine) <= 0)
 		{
-			ft_putendl_fd("error: get_next_line() after ##start or ##end", STDOUT_FILENO);
+			ft_putendl_fd("error: get_next_line() after ##start or ##end", STDERR_FILENO);
 			return false;
 		}
 
@@ -145,7 +145,7 @@ static bool	extractData(char *line, globe *data)
 	{
 		if (data->start == NULL || data->end == NULL)
 		{
-			ft_putendl_fd("error: start or end not set", STDOUT_FILENO);
+			ft_putendl_fd("error: start or end not set", STDERR_FILENO);
 			return 0;
 		}
 		isGateParse = true;
@@ -154,11 +154,19 @@ static bool	extractData(char *line, globe *data)
 	char **split = ft_split(line, '-');
 	if (arraySize((void **)split) != 2)
 	{
-		ft_putendl_fd("error: wrong link format", STDOUT_FILENO);
+		ft_putendl_fd("error: wrong link format", STDERR_FILENO);
 		free_2dstr(split);
 		return 0;
 	}
-	ft_gInsert(data->allNodes[getNodeIndex(data, split[0])], 1, data->allNodes[getNodeIndex(data, split[1])]);
+	ssize_t node1Index = getNodeIndex(data, split[0]);
+	ssize_t node2Index = getNodeIndex(data, split[1]);
+	if (node1Index == -1 || node2Index == -1)
+	{
+		ft_putendl_fd("error: node not found for linking", STDERR_FILENO);
+		free_2dstr(split);
+		return 0;
+	}
+	ft_gInsert(data->allNodes[node1Index], 1, data->allNodes[node2Index]);
 
 	free_2dstr(split);
 	return true;
@@ -200,7 +208,28 @@ void	readData(globe *data)
 
 	if (readRet == -1)
 	{
-		ft_putendl_fd("error: get_next_line()", STDOUT_FILENO);
+		ft_putendl_fd("error: get_next_line()", STDERR_FILENO);
+		freeGlobe(data);
+		exit(EXIT_FAILURE);
+	}
+
+	if (data->nAnts == 0)
+	{
+		ft_putendl_fd("error: no ants", STDERR_FILENO);
+		freeGlobe(data);
+		exit(EXIT_FAILURE);
+	}
+
+	if (data->allNodes == NULL)
+	{
+		ft_putendl_fd("error: no nodes", STDERR_FILENO);
+		freeGlobe(data);
+		exit(EXIT_FAILURE);
+	}
+
+	if (data->start == NULL || data->end == NULL)
+	{
+		ft_putendl_fd("error: start or end not set", STDERR_FILENO);
 		freeGlobe(data);
 		exit(EXIT_FAILURE);
 	}
