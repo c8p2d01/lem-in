@@ -6,7 +6,7 @@
 size_t	arraySize(void **array)
 {
 	size_t i = 0;
-	while (array[i])
+	while (array && array[i])
 		i++;
 	return i;
 }
@@ -152,13 +152,14 @@ static bool	extractData(char *line, globe *data)
 	}
 
 	char **split = ft_split(line, '-');
-	if (arraySize((void **)split) != 2)
+	if (arraySize((void **)split) != 2 || getNodeIndex(data, split[0]) == -1
+		|| getNodeIndex(data, split[1]) == -1)
 	{
 		ft_putendl_fd("error: wrong link format", STDOUT_FILENO);
 		free_2dstr(split);
 		return 0;
 	}
-	ft_gInsert(data->allNodes[getNodeIndex(data, split[0])], 1, data->allNodes[getNodeIndex(data, split[1])]);
+	ft_gInsert(data->allNodes[getNodeIndex(data, split[0])], data->allNodes[getNodeIndex(data, split[1])]);
 
 	free_2dstr(split);
 	return true;

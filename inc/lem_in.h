@@ -25,10 +25,9 @@ typedef struct globe {
 void	readData(globe *data);
 
 gNode	*ft_gNewNode(char *data);
-void	delNode(gNode *node);
-void	ft_gInsert(gNode *node, size_t amount, ...);
+void	ft_gInsert(gNode *node, gNode *next);
 void	ft_gClean(gNode *node);
-bool	hasGate(gNode *node, gNode *next);
+bool	ft_hasGate(gNode *node, gNode *next);
 
 void	printNodes(gNode **node);
 

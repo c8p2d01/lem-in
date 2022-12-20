@@ -27,41 +27,51 @@ gNode	*ft_gNewNode(char *data)
 /**
  * @brief Insert one node to another
  */
-void	ft_gInsert(gNode *node, size_t amount, ...)
+void	ft_gInsert(gNode *node, gNode *next)
 {
-	va_list c;
-	va_start(c, amount);
 	if (node->gates == NULL)
 	{
-		node->gates = ft_calloc((amount + 1), sizeof(gNode *));
-		node->gates[amount] = NULL;
-		for (size_t i = 0; i < amount; i++)
-		{
-			node->gates[i] = va_arg(c, gNode*);
-			if (!hasGate(node->gates[i], node))
-			{
-				printf("connect %s to %s\n", node->name, node->gates[i]->name);
-				ft_gInsert(node->gates[i], 1, node);
-			}
-		}
+		node->gates = ft_calloc(2, sizeof(gNode *));
+		node->gates[0] = next;
+		if (!ft_hasGate(node->gates[0], node))
+			ft_gInsert(node->gates[0], node);
 	}
 	else
 	{
 		size_t size = arraySize((void **)node->gates);
-		size_t newSize = size + amount;
+		size_t newSize = size + 1;
 		node->gates = ft_realloc(node->gates, sizeof(gNode *) * size, sizeof(gNode *) * (newSize + 1));
-		while (size < newSize)
-		{
-			gNode *in = va_arg(c, gNode*);
-			if (!in)
-				break;
-			printf("inserted %s\n", in->name);
-			node->gates[size] = in;
-			if (!hasGate(node->gates[size], node))
-				ft_gInsert(node->gates[size], 1, node);
-			size++;
-		}
+		gNode *in = next;
+		node->gates[size] = in;
+		if (!ft_hasGate(node->gates[size], node))
+			ft_gInsert(node->gates[size], node);
 	}
+}
+
+/**
+ * @brief free a node and remove its traces from tho nodes it was connected to
+ */
+void	ft_gErase(gNode *node)
+{
+	size_t i = 0;
+	while (node->gates && node->gates[i])
+	{
+		size_t	s = arraySize((void **)node->gates[i]->gates);
+		gNode	**new = ft_calloc(s, sizeof(gNode*));
+		size_t	n = 0;
+		size_t	o = 0;
+		while (n < s)
+		{
+			if (node->gates[i]->gates[n + o] == node)
+				o++;
+			new[n] = node->gates[i]->gates[n + o];
+			n++;
+		}
+		i++;
+	}
+	free(node->gates);
+	free(node->name);
+	free(node);
 }
 
 void	ft_gClean(gNode *node)
@@ -86,7 +96,7 @@ void	ft_gClean(gNode *node)
 /**
  * @brief Check if a node is already connected to another node
  */
-bool	hasGate(gNode *node, gNode *next)
+bool	ft_hasGate(gNode *node, gNode *next)
 {
 	if (node == NULL || node->gates == NULL)
 		return (false);
@@ -112,11 +122,4 @@ void	printNodes(gNode **node)
 			printf("\t link to '%s'\n", node[i]->gates[j]->name);
 		}
 	}
-}
-
-void	delNode(gNode *node)
-{
-	free(node->name);
-	free(node->gates);
-	// still need to take out the link to this nodes from the gates of its gates
 }
