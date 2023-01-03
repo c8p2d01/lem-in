@@ -6,7 +6,7 @@ CFLAGS = -Wall -Werror -Wextra -Wno-unused-variable -g
 
 SD = ./src/
 SRC =	main.c \
-		ft_graph.c \
+		graph.c \
 		parser.c
 SRF = $(addprefix $(SD),$(SRC))
 

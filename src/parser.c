@@ -55,7 +55,7 @@ static bool	addNode(globe *data, char *line)
 		free_2dstr(split);
 		return false;
 	}
-	gNode *node = ft_gNewNode(ft_strdup(split[0]));
+	t_graph*node = ft_g_new_node(ft_strdup(split[0]));
 
 	if (!ft_isnumeric(split[1]) || !ft_isnumeric(split[2]))
 	{
@@ -76,13 +76,13 @@ static bool	addNode(globe *data, char *line)
 
 	if (data->allNodes == NULL)
 	{
-		data->allNodes = ft_calloc(sizeof(gNode *), 2);
+		data->allNodes = ft_calloc(sizeof(t_graph*), 2);
 		data->allNodes[0] = node;
 	}
 	else
 	{
 		size_t size = arraySize((void **)data->allNodes);
-		data->allNodes = ft_realloc(data->allNodes, sizeof(gNode *) * size, sizeof(gNode *) * (size + 2));
+		data->allNodes = ft_realloc(data->allNodes, sizeof(t_graph*) * size, sizeof(t_graph*) * (size + 2));
 		data->allNodes[size] = node;
 	}
 
@@ -159,7 +159,7 @@ static bool	extractData(char *line, globe *data)
 		free_2dstr(split);
 		return 0;
 	}
-	ft_gInsert(data->allNodes[getNodeIndex(data, split[0])], data->allNodes[getNodeIndex(data, split[1])]);
+	ft_g_insert_single(data->allNodes[getNodeIndex(data, split[0])], data->allNodes[getNodeIndex(data, split[1])]);
 
 	free_2dstr(split);
 	return true;
