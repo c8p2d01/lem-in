@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 19:08:04 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/04 13:58:53 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/04 15:24:56 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,11 @@ void	ft_g_del_node(t_graph *node)
 	bool	t;
 
 	i = 0;
-	while (node->gates[i])
+	while (node->gates && node->gates[i])
 	{
 		l = 0;
 		t = false;
-		while ((node->gates[i])->gates[l])
+		while ((node->gates[i])->gates && (node->gates[i])->gates[l])
 		{
 			if ((node->gates[i])->gates[l] == node)
 			{
@@ -97,7 +97,10 @@ void	ft_g_del_node(t_graph *node)
 			}
 			if (t)
 			{
-				(node->gates[i])->gates[l] = (node->gates[i])->gates[l + 1];
+				if ((node->gates[i])->gates[l + 1])
+					(node->gates[i])->gates[l] = (node->gates[i])->gates[l + 1];
+				else
+					(node->gates[i])->gates[l] = NULL;
 			}
 			l++;
 		}

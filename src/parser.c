@@ -130,7 +130,8 @@ static bool	extractData(char *line, globe *data)
 			return false;
 		}
 
-		free(nodeLine); // not leaking
+		if (nodeLine)
+			free(nodeLine); // not leaking
 
 		if (ft_strncmp(line, "##start", 8) == 0)
 			data->start = data->allNodes[arraySize((void **)data->allNodes) - 1];
