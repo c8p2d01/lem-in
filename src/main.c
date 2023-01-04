@@ -6,6 +6,11 @@ int main()
 	ft_bzero(&data, sizeof(globe));
 	readData(&data);
 
-	printNodes(data.allNodes);
+	level(&data);
+
+	level_sort(&data);
+
+	print_nodes(data.allNodes);
+
 	freeGlobe(&data);
 }

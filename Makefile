@@ -6,7 +6,7 @@ CFLAGS = -Wall -Werror -Wextra -Wno-unused-variable -g
 
 SD = ./src/
 SRC =	main.c \
-		ft_graph.c \
+		graph.c \
 		parser.c
 SRF = $(addprefix $(SD),$(SRC))
 
@@ -16,8 +16,8 @@ OBF = $(SRF:$(SD)%.c=$(OD)%.o)
 
 all: $(NAME)
 
-e: all
-	./$(NAME) < ./map/default.map
+e: re
+	cat map/ex3 | ./$(NAME)
 
 $(OD)%.o: $(SD)%.c
 	@mkdir -p $(OD)
