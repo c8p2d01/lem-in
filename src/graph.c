@@ -5,13 +5,16 @@
  */
 void	freeGlobe(globe *data)
 {
-	for (size_t i = 0; data->allNodes[i] != NULL; ++i)
+	for (size_t i = 0; data->allNodes && data->allNodes[i] != NULL; ++i)
 	{
-		free(data->allNodes[i]->name);
-		free(data->allNodes[i]->gates);
+		if (data->allNodes[i]->name)
+			free(data->allNodes[i]->name);
+		if (data->allNodes[i]->gates)
+			free(data->allNodes[i]->gates);
 		free(data->allNodes[i]);
 	}
-	free(data->allNodes);
+	if (data->allNodes)
+		free(data->allNodes);
 }
 
 void	level(globe *data)
