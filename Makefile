@@ -16,8 +16,8 @@ OBF = $(SRF:$(SD)%.c=$(OD)%.o)
 
 all: $(NAME)
 
-e: all
-	cat .map/default | ./$(NAME)
+e: re
+	cat .map/ex0 | ./$(NAME)
 
 $(OD)%.o: $(SD)%.c
 	@mkdir -p $(OD)

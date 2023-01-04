@@ -19,6 +19,8 @@ void	readData(globe *data);
 
 void	level(globe *data);
 
+void	level_sort(globe *data);
+
 size_t	arraySize(void **array);
 
 void	freeGlobe(globe *data);

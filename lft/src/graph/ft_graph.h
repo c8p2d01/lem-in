@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:07 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/03 23:42:43 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/04 13:30:20 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,6 @@ void	ft_g_insert_single(t_graph *node, t_graph *next);
 void	ft_g_clean(t_graph *node);
 void	print_nodes(t_graph **node);
 bool	ft_has_gate(t_graph *node, t_graph *next);
+void	ft_g_del_node(t_graph *node);
 
 #endif

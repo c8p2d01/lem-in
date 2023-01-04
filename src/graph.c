@@ -40,9 +40,42 @@ void	level(globe *data)
 			count2 = 0;
 		}
 		q = q->next;
-		printf("queuelen %i\n", ft_lstsize(q));
 	}
 	ft_lstclear(&t, NULL);
+}
+
+void	level_sort(globe *data)
+{
+	t_graph	**s;
+	t_graph	**r;
+	ssize_t	l;
+
+	s = ft_calloc(arraySize((void **)data->allNodes) + 1, sizeof(t_graph *));
+	for (size_t i = 0; i < arraySize((void **)data->allNodes); i++)
+	{
+		if ((data->allNodes[i])->lvl < 0)
+		{
+			ft_g_del_node(data->allNodes[i]);
+		}
+		else
+		{
+			s[ft_array_size((void **)s)] = data->allNodes[i];
+		}
+	}
+	r = ft_calloc(arraySize((void **)s) + 1, sizeof(t_graph *));
+	l = 0;
+	while (arraySize((void **)r) < arraySize((void **)s))
+	{
+		for (int i = 0; s[i]; i++)
+		{
+			if (s[i]->lvl == l)
+				r[ft_array_size((void **)r)] = s[i];
+		}
+		l++;
+	}
+	free(data->allNodes);
+	free(s);
+	data->allNodes = r;
 }
 
 // /**
