@@ -21,6 +21,7 @@ typedef struct t_graph {
 	size_t			x;
 	size_t			y;
 	ssize_t			lvl;
+	ssize_t			path_id;
 }	t_graph;
 
 t_graph	*ft_g_new_node(char *data);

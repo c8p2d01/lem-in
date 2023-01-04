@@ -22,6 +22,7 @@ t_graph	*ft_g_new_node(char *data)
 	res->x = 0;
 	res->y = 0;
 	res->lvl = -1;
+	res->path_id = -1;
 	return (res);
 }
 
@@ -67,7 +68,7 @@ void	print_nodes(t_graph **node)
 {
 	for (size_t i = 0; node[i]; ++i)
 	{
-		printf("node '%s'		level  %li\n", node[i]->name, node[i]->lvl);
+		printf("node '%s'		level %li		path id: %li\n", node[i]->name, node[i]->lvl, node[i]->path_id);
 		for (size_t j = 0; node[i]->gates && node[i]->gates[j]; ++j)
 		{
 			printf("\t link to '%s'\n", node[i]->gates[j]->name);
@@ -75,7 +76,7 @@ void	print_nodes(t_graph **node)
 	}
 }
 
-/* 
+/*
 	delete a single node, and all refrences to it from other print_nodes
  */
 void	ft_g_del_node(t_graph *node)

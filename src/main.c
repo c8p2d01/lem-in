@@ -7,8 +7,8 @@ int main()
 	readData(&data);
 
 	level(&data);
-
 	level_sort(&data);
+	find_all_shortest_paths(&data);
 
 	print_nodes(data.allNodes);
 

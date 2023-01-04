@@ -13,6 +13,7 @@ typedef struct globe {
 	struct t_graph	*start;
 	struct t_graph	*end;
 	size_t			nAnts;
+	size_t			nPaths;
 }	globe;
 
 void	readData(globe *data);
@@ -20,6 +21,8 @@ void	readData(globe *data);
 void	level(globe *data);
 
 void	level_sort(globe *data);
+
+void	find_all_shortest_paths(globe *data);
 
 size_t	arraySize(void **array);
 
