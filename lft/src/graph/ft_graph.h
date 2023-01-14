@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:07 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/04 13:30:20 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/14 15:24:16 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,15 @@ typedef struct t_graph {
 }	t_graph;
 
 t_graph	*ft_g_new_node(char *data);
+
 void	ft_g_insert(t_graph *node, size_t amount, ...);
 void	ft_g_insert_single(t_graph *node, t_graph *next);
+
 void	ft_g_clean(t_graph *node);
 void	print_nodes(t_graph **node);
 bool	ft_has_gate(t_graph *node, t_graph *next);
+
 void	ft_g_del_node(t_graph *node);
+void	ft_g_unlink(t_graph *a, t_graph *b);
 
 #endif

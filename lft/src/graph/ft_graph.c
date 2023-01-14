@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 19:08:04 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/04 15:24:56 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/14 15:25:46 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,40 +73,4 @@ void	print_nodes(t_graph **node)
 			printf("\t link to '%s'\n", node[i]->gates[j]->name);
 		}
 	}
-}
-
-/* 
-	delete a single node, and all refrences to it from other print_nodes
- */
-void	ft_g_del_node(t_graph *node)
-{
-	size_t	i;
-	size_t	l;
-	bool	t;
-
-	i = 0;
-	while (node->gates && node->gates[i])
-	{
-		l = 0;
-		t = false;
-		while ((node->gates[i])->gates && (node->gates[i])->gates[l])
-		{
-			if ((node->gates[i])->gates[l] == node)
-			{
-				t = true;
-			}
-			if (t)
-			{
-				if ((node->gates[i])->gates[l + 1])
-					(node->gates[i])->gates[l] = (node->gates[i])->gates[l + 1];
-				else
-					(node->gates[i])->gates[l] = NULL;
-			}
-			l++;
-		}
-		i++;
-	}
-	free(node->name);
-	if (node->gates)
-		free(node->gates);
 }
