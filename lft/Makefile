@@ -71,7 +71,8 @@ SRCFILES =	mem/ft_calloc.c \
 		gnl/get_next_line_utils.c \
 		gnl/get_next_line.c \
 		\
-		graph/ft_gInsert.c \
+		graph/ft_g_insert.c \
+		graph/ft_g_remove.c \
 		graph/ft_graph.c \
 
 
