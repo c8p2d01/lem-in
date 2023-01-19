@@ -17,8 +17,11 @@ typedef struct globe {
 
 void	readData(globe *data);
 
-void	level(globe *data);
+void	unlink_equals(t_graph *node);
+void	dead_ends(t_graph *node, globe *data);
 
+void 	sort_links(t_graph *node);
+void	level(globe *data);
 void	level_sort(globe *data);
 
 size_t	arraySize(void **array);

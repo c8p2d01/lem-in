@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:07 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/14 15:24:16 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/19 14:19:56 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,20 @@
 # include "../../inc/libft.h"
 
 typedef struct t_graph {
-	struct t_graph	**gates;
+	struct t_link	**links;
 	char			*name;
 	size_t			x;
 	size_t			y;
 	ssize_t			lvl;
+	float			frate;
 }	t_graph;
+
+typedef struct t_link {
+	t_graph *next;
+	t_graph *prev;
+	double	fCapa;
+	double	bCapa;
+}	t_link;
 
 t_graph	*ft_g_new_node(char *data);
 

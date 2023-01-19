@@ -12,9 +12,7 @@ int main()
 
 	print_nodes(data.allNodes);
 
-	ft_g_unlink(data.start->gates[0], data.start);
-
-	printf("\e[38;5;234m");
+	printf("\e[38;5;196m");
 	print_nodes(data.allNodes);
 	printf("\e[0m");
 

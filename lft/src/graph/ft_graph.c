@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 19:08:04 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/14 15:25:46 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/15 22:33:54 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
  */
 t_graph	*ft_g_new_node(char *data)
 {
-	t_graph *res = ft_calloc(sizeof(t_graph), 1);
+	t_graph *res = malloc(sizeof(t_graph), 1);
+	res->links = NULL;
 	res->name = data;
 	res->x = 0;
 	res->y = 0;
@@ -49,18 +50,19 @@ void	ft_g_clean(t_graph *node)
  */
 bool	ft_has_gate(t_graph *node, t_graph *next)
 {
-	if (node == NULL || node->gates == NULL)
+	if (node == NULL || node->links == NULL)
 		return (false);
-	for (int i = 0; node->gates && node->gates[i]; i++)
+	for (int i = 0; node->links && node->links[i]; i++)
 	{
-		if (next == node->gates[i])
+		if ((next == (node->links[i])->next && node != (node->links[i])->prev) || 
+			((next == (node->links[i])->next) && node != (node->links[i])->prev))
 			return(true);
 	}
 	return (false);
 }
 
 /**
- * @brief Print all nodes and its gates
+ * @brief Print all nodes and its links
  * @note Debug
  */
 void	print_nodes(t_graph **node)
@@ -68,9 +70,9 @@ void	print_nodes(t_graph **node)
 	for (size_t i = 0; node[i]; ++i)
 	{
 		printf("node '%s'		level  %li\n", node[i]->name, node[i]->lvl);
-		for (size_t j = 0; node[i]->gates && node[i]->gates[j]; ++j)
+		for (size_t j = 0; node[i]->links && node[i]->links[j]; ++j)
 		{
-			printf("\t link to '%s'\n", node[i]->gates[j]->name);
+			printf("\t link to '%s'\n", node[i]->links[j]->next->name);
 		}
 	}
 }

@@ -6,7 +6,9 @@ CFLAGS = -Wall -Werror -Wextra -Wno-unused-variable -g
 
 SD = ./src/
 SRC =	main.c \
+		clean.c \
 		graph.c \
+		level.c \
 		parser.c
 SRF = $(addprefix $(SD),$(SRC))
 
@@ -17,7 +19,8 @@ OBF = $(SRF:$(SD)%.c=$(OD)%.o)
 all: $(NAME)
 
 e: re
-	cat .map/thousandFlow | ./$(NAME) | wc -l
+	cat .map/ex0 | ./$(NAME)
+
 
 $(OD)%.o: $(SD)%.c
 	@mkdir -p $(OD)
