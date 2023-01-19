@@ -17,7 +17,7 @@ OBF = $(SRF:$(SD)%.c=$(OD)%.o)
 all: $(NAME)
 
 e: re
-	cat map/ex3 | ./$(NAME)
+	cat .map/thousandFlow | ./$(NAME) | wc -l
 
 $(OD)%.o: $(SD)%.c
 	@mkdir -p $(OD)

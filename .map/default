@@ -1,0 +1,28 @@
+2
+##start
+S 2 0
+##end
+E 4 2
+a 0 2
+b 4 4
+c 2 6
+d 0 2
+e 4 4
+f 2 6
+g 0 2
+h 4 4
+i 2 6
+j 0 2
+k 4 4
+l 2 6
+S-a
+S-b
+S-c
+c-d
+d-e
+a-e
+a-b
+c-b
+a-c
+a-E
+c-E
