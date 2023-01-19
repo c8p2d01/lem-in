@@ -6,17 +6,17 @@ int main()
 	ft_bzero(&data, sizeof(globe));
 	readData(&data);
 
-	level(&data);
-
-	level_sort(&data);
+	add_level(&data);
+	delete_useless_node(&data);
+	unlink_same_level(&data);
+	delete_deadend(&data);
+	sort_level(&data);
+	remove_input_links(&data);
+	remove_output_links(&data);
+	find_all_shortest_paths(&data);
 
 	print_nodes(data.allNodes);
-
-	ft_g_unlink(data.start->gates[0], data.start);
-
-	printf("\e[38;5;234m");
-	print_nodes(data.allNodes);
-	printf("\e[0m");
+	print_paths(&data);
 
 	freeGlobe(&data);
 }

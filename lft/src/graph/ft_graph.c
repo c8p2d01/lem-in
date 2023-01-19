@@ -13,15 +13,18 @@
 #include "ft_graph.h"
 
 /**
- * @brief Allocate a new node
+ * @brief Allocate and default initialize a new node
  */
 t_graph	*ft_g_new_node(char *data)
 {
 	t_graph *res = ft_calloc(sizeof(t_graph), 1);
-	res->name = data;
-	res->x = 0;
-	res->y = 0;
-	res->lvl = -1;
+	*res = (t_graph){
+		.name = data,
+		.x = 0,
+		.y = 0,
+		.lvl = -1,
+		.path_id = -1
+	};
 	return (res);
 }
 
@@ -67,7 +70,7 @@ void	print_nodes(t_graph **node)
 {
 	for (size_t i = 0; node[i]; ++i)
 	{
-		printf("node '%s'		level  %li\n", node[i]->name, node[i]->lvl);
+		printf("node '%s'\tlevel %li\t\tpath id: %li\n", node[i]->name, node[i]->lvl, node[i]->path_id);
 		for (size_t j = 0; node[i]->gates && node[i]->gates[j]; ++j)
 		{
 			printf("\t link to '%s'\n", node[i]->gates[j]->name);

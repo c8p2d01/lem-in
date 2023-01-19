@@ -12,74 +12,59 @@
 
 #include "ft_graph.h"
 
-/* 
-remove a link between two nodes
+/**
+ * @brief Remove link between two nodes
  */
 void	ft_g_unlink(t_graph *a, t_graph *b)
 {
-	int i;
-	bool t;
+	bool	found = false;
 
 	if (!a || !b)
-		return;
-	i = 0;
-	t = false;
-	while (a->gates && a->gates[i])
+		return ;
+	for (size_t i = 0; a->gates && a->gates[i]; ++i)
 	{
 		if (a->gates[i] == b)
-			t = true;
-		if (t)
+			found = true;
+		if (found)
 			a->gates[i] = a->gates[i + 1];
-		i++;
 	}
-	if (t)
+	if (found)
+	{
 		ft_g_unlink(b, a);
-
-	// i = 0;
-	// t = false;
-	// while (b->gates && b->gates[i])
-	// {
-	// 	if (b->gates[i] == a)
-	// 		t = true;
-	// 	if (t)
-	// 		b->gates[i] = b->gates[i + 1];
-	// }
+	}
 }
 
-/*
-	delete a single node, and all refrences to it from other print_nodes
-*/
+/**
+ * @brief Delete a node and remove all links to it
+ */
 void	ft_g_del_node(t_graph *node)
 {
-	size_t	i;
-	size_t	l;
-	bool	t;
+	bool	found = false;
 
 	if (!node)
 		return ;
-	i = 0;
-	while (node->gates && node->gates[i])
+	for (size_t i = 0; node->gates && node->gates[i]; ++i)
 	{
-		l = 0;
-		t = false;
-		while ((node->gates[i])->gates && (node->gates[i])->gates[l])
+		found = false;
+		for (size_t j = 0; node->gates[i]->gates && node->gates[i]->gates[j]; ++j)
 		{
-			if ((node->gates[i])->gates[l] == node)
+			if (node->gates[i]->gates[j] == node)
 			{
-				t = true;
+				found = true;
 			}
-			if (t)
+			if (found)
 			{
-				if ((node->gates[i])->gates[l + 1])
-					(node->gates[i])->gates[l] = (node->gates[i])->gates[l + 1];
-				else
-					(node->gates[i])->gates[l] = NULL;
+				node->gates[i]->gates[j] = node->gates[i]->gates[j + 1];
 			}
-			l++;
 		}
-		i++;
 	}
-	free(node->name);
+	if (node->name)
+	{
+		free(node->name);
+	}
 	if (node->gates)
+	{
 		free(node->gates);
+	}
+	free(node);
 }
