@@ -194,7 +194,7 @@ void	read_data(globe *data)
 			break;
 		}
 
-		if (ft_strlen(line) == 0 || isComment(line))
+		if (ft_strlen(line) == 0 || is_comment(line))
 		{
 			free(line);
 			continue;

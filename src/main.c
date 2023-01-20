@@ -5,7 +5,6 @@ int main()
 	globe data;
 	ft_bzero(&data, sizeof(globe));
 	read_data(&data);
-	//establish connection()
 	//BFS_M(&data);
 
 	//delete dead ends()
@@ -19,8 +18,6 @@ int main()
 	// unlink all 0 flow connections
 	// establith all viable paths;
 	// print()
-
-	level_sort(&data);
 
 	print_nodes(data.graph);
 	return (0);

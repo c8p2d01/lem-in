@@ -25,7 +25,7 @@ void	level_sort(globe *data);
 void	remove_useless(globe *data);
 void	remove_deadend(globe *data);
 
-size_t	arraySize(void **array);
+void	print_nodes(t_room **node);
 
 void	free_globe(globe *data);
 
