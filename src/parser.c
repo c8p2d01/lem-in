@@ -82,7 +82,7 @@ static bool	addNode(globe *data, char *line)
 	else
 	{
 		size_t size = arraySize((void **)data->allNodes);
-		data->allNodes = ft_realloc(data->allNodes, sizeof(t_graph*) * size, sizeof(t_graph*) * (size + 2));
+		data->allNodes = ft_realloc(data->allNodes, sizeof(t_graph*) * (size + 1), 1);
 		data->allNodes[size] = node;
 	}
 
@@ -204,7 +204,7 @@ void	readData(globe *data)
 		if (!extractData(line, data))
 		{
 			free(line);
-			freeGlobe(data);
+			free_globe(data);
 			exit(EXIT_FAILURE);
 		}
 
@@ -214,28 +214,28 @@ void	readData(globe *data)
 	if (readRet == -1)
 	{
 		ft_putendl_fd("error: get_next_line()", STDERR_FILENO);
-		freeGlobe(data);
+		free_globe(data);
 		exit(EXIT_FAILURE);
 	}
 
 	if (data->nAnts == 0)
 	{
 		ft_putendl_fd("error: no ants", STDERR_FILENO);
-		freeGlobe(data);
+		free_globe(data);
 		exit(EXIT_FAILURE);
 	}
 
 	if (data->allNodes == NULL)
 	{
 		ft_putendl_fd("error: no nodes", STDERR_FILENO);
-		freeGlobe(data);
+		free_globe(data);
 		exit(EXIT_FAILURE);
 	}
 
 	if (data->start == NULL || data->end == NULL)
 	{
 		ft_putendl_fd("error: start or end not set", STDERR_FILENO);
-		freeGlobe(data);
+		free_globe(data);
 		exit(EXIT_FAILURE);
 	}
 }

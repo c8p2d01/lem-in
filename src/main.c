@@ -8,8 +8,9 @@ int main()
 
 	add_level(&data);
 	delete_useless_node(&data);
-	unlink_same_level(&data);
 	delete_deadend(&data);
+	add_directional(&data);
+	unlink_same_level(&data);
 	sort_level(&data);
 	remove_input_links(&data);
 	remove_output_links(&data);
@@ -18,5 +19,5 @@ int main()
 	print_nodes(data.allNodes);
 	print_paths(&data);
 
-	freeGlobe(&data);
+	free_globe(&data);
 }

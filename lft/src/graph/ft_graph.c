@@ -19,6 +19,9 @@ t_graph	*ft_g_new_node(char *data)
 {
 	t_graph *res = ft_calloc(sizeof(t_graph), 1);
 	*res = (t_graph){
+		.gates = NULL,
+		.next_gates = NULL,
+		.prev_gates = NULL,
 		.name = data,
 		.x = 0,
 		.y = 0,
@@ -74,6 +77,14 @@ void	print_nodes(t_graph **node)
 		for (size_t j = 0; node[i]->gates && node[i]->gates[j]; ++j)
 		{
 			printf("\t link to '%s'\n", node[i]->gates[j]->name);
+		}
+		for (size_t j = 0; node[i]->next_gates && node[i]->next_gates[j]; ++j)
+		{
+			printf("\t next node: '%s'\n", node[i]->next_gates[j]->name);
+		}
+		for (size_t j = 0; node[i]->prev_gates && node[i]->prev_gates[j]; ++j)
+		{
+			printf("\t prev node: '%s'\n", node[i]->prev_gates[j]->name);
 		}
 	}
 }

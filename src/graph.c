@@ -3,7 +3,7 @@
 /**
  * @brief Free globe struct
  */
-void	freeGlobe(globe *data)
+void	free_globe(globe *data)
 {
 	for (size_t i = 0; data->allNodes && data->allNodes[i] != NULL; ++i)
 	{
@@ -11,12 +11,15 @@ void	freeGlobe(globe *data)
 			free(data->allNodes[i]->name);
 		if (data->allNodes[i]->gates)
 			free(data->allNodes[i]->gates);
+		if (data->allNodes[i]->next_gates)
+			free(data->allNodes[i]->next_gates);
+		if (data->allNodes[i]->prev_gates)
+			free(data->allNodes[i]->prev_gates);
 		free(data->allNodes[i]);
 	}
 	if (data->allNodes)
 		free(data->allNodes);
 }
-
 /**
  * @brief BFS to assign level to each node
  * Start node is level 0, end node is level SSIZE_MAX
@@ -55,7 +58,7 @@ void	add_level(globe *data)
 }
 
 /**
- * @brief Delete all nodes that are not connected to the start/end node
+ * @brief Delete all nodes that are not connected to the start/end node (not leveled)
  */
 void	delete_useless_node(globe *data)
 {
@@ -64,10 +67,7 @@ void	delete_useless_node(globe *data)
 		if (data->allNodes[i]->lvl == -1)
 		{
 			ft_g_del_node(data->allNodes[i]);
-			for (size_t j = i; data->allNodes[j]; ++j)
-			{
-				data->allNodes[j] = data->allNodes[j + 1];
-			}
+			ft_memmove(&data->allNodes[i], &data->allNodes[i + 1], sizeof(t_graph *) * (ft_array_size((void**)&data->allNodes[i + 1]) + 1));
 			--i;
 		}
 	}
@@ -78,50 +78,168 @@ void	delete_useless_node(globe *data)
  */
 void	unlink_same_level(globe *data)
 {
+	bool	found = false;
 	for (size_t i = 0; data->allNodes[i]; ++i)
 	{
 		for (size_t j = 0; data->allNodes[i]->gates && data->allNodes[i]->gates[j]; ++j)
 		{
-			if (data->allNodes[i]->lvl == data->allNodes[i]->gates[j]->lvl)
+			if (data->allNodes[i]->gates[j]->lvl == data->allNodes[i]->lvl)
 			{
-				ft_g_unlink(data->allNodes[i], data->allNodes[i]->gates[j]);
-				--j;
+				found = false;
+				for (size_t k = 0; data->allNodes[i]->next_gates && data->allNodes[i]->next_gates[k]; ++k)
+				{
+					if (data->allNodes[i]->next_gates[k] == data->allNodes[i]->gates[j])
+					{
+						found = true;
+						break;
+					}
+				}
+				for (size_t k = 0; !found && data->allNodes[i]->prev_gates && data->allNodes[i]->prev_gates[k]; ++k)
+				{
+					if (data->allNodes[i]->prev_gates[k] == data->allNodes[i]->gates[j])
+					{
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+				{
+					ft_g_unlink(data->allNodes[i], data->allNodes[i]->gates[j]);
+					--j;
+				}
+			}
+		}
+	}
+	delete_deadend(data); // may not need this
+}
+
+/**
+ * @brief Helper function to add node to array dynamically
+ */
+static void	add_node_to_array(t_graph ***array, t_graph *node)
+{
+	if (array == NULL)
+		return ;
+	if (*array == NULL)
+	{
+		*array = ft_calloc(2, sizeof(t_graph *));
+		(*array)[0] = node;
+		return ;
+	}
+	else
+	{
+		size_t size = ft_array_size((void **)(*array));
+		*array = ft_realloc(*array, (size + 1) * sizeof(t_graph *), 1);
+		(*array)[size] = node;
+	}
+}
+
+/**
+ * @brief Check if a node is deadend, meaning isn't not connected to any above or below node
+ */
+static bool	is_node_deadend(t_graph *node)
+{
+	if (node->gates == NULL)
+		return (true);
+	bool	has_next_level = false;
+	bool	has_prev_level = false;
+	bool	has_same_level = false;
+	for (size_t i = 0; node->gates[i]; ++i)
+	{
+		if (node->gates[i]->lvl > node->lvl)
+		{
+			has_next_level = true;
+		}
+		else if (node->gates[i]->lvl < node->lvl)
+		{
+			has_prev_level = true;
+		}
+		else
+		{
+			has_same_level = true;
+		}
+	}
+	if (!has_same_level && (!has_next_level || !has_prev_level))
+		return (true);
+	else if (has_same_level && !has_next_level && !has_prev_level)
+		return (true);
+	return (false);
+}
+
+/**
+ * @brief Add directional link between two same level nodes
+ * @note This also add to the other node next gates, not just current node prev gates
+ */
+static void	add_directional_same_level(t_graph *current_node, t_graph *other_node)
+{
+	for (size_t i = 0; current_node->next_gates && current_node->next_gates[i]; ++i)
+	{
+		if (current_node->next_gates[i] == other_node)
+			return ;
+	}
+	for (size_t i = 0; current_node->prev_gates && current_node->prev_gates[i]; ++i)
+	{
+		if (current_node->prev_gates[i] == other_node)
+			return ;
+	}
+	bool has_next_level = false;
+	for (size_t i = 0; other_node->gates[i]; ++i)
+	{
+		if (other_node->gates[i]->lvl > other_node->lvl)
+		{
+			has_next_level = true;
+		}
+	}
+	if (!has_next_level)
+	{
+		add_node_to_array(&current_node->prev_gates, other_node);
+		add_node_to_array(&other_node->next_gates, current_node);
+	}
+}
+
+/**
+ * @brief Add directional link between nodes and remove link between nodes that are on same level and have their own complete path
+ */
+void	add_directional(globe *data)
+{
+	bool	has_next_level = false;
+	bool	has_prev_level = false;
+	for (size_t i = 0; data->allNodes[i]; ++i)
+	{
+		for (size_t j = 0; data->allNodes[i]->gates && data->allNodes[i]->gates[j]; ++j)
+		{
+			if (data->allNodes[i]->gates[j]->lvl > data->allNodes[i]->lvl)
+			{
+				add_node_to_array(&data->allNodes[i]->next_gates, data->allNodes[i]->gates[j]);
+			}
+			else if (data->allNodes[i]->gates[j]->lvl < data->allNodes[i]->lvl)
+			{
+				add_node_to_array(&data->allNodes[i]->prev_gates, data->allNodes[i]->gates[j]);
+			}
+			else if (!is_node_deadend(data->allNodes[i]->gates[j]))
+			{
+				add_directional_same_level(data->allNodes[i], data->allNodes[i]->gates[j]);
 			}
 		}
 	}
 }
 
 /**
- * @brief Delete all the deadend nodes that isn't connected to any next or previous level node
+ * @brief Delete all the deadend nodes
  */
 void	delete_deadend(globe *data)
 {
 	bool	has_next_level = false;
 	bool	has_prev_level = false;
-	for (ssize_t i = 1; data->allNodes[i]; ++i)
+	bool	has_same_level = false;
+	for (ssize_t i = 0; data->allNodes[i]; ++i)
 	{
 		if (data->allNodes[i] == data->end || data->allNodes[i] == data->start)
 			continue ;
-		has_next_level = false;
-		has_prev_level = false;
-		for (size_t j = 0; data->allNodes[i]->gates && data->allNodes[i]->gates[j]; ++j)
-		{
-			if (data->allNodes[i]->gates[j]->lvl > data->allNodes[i]->lvl)
-			{
-				has_next_level = true;
-			}
-			else if (data->allNodes[i]->gates[j]->lvl < data->allNodes[i]->lvl)
-			{
-				has_prev_level = true;
-			}
-		}
-		if (data->allNodes[i]->gates == NULL || !has_next_level || !has_prev_level)
+		if (is_node_deadend(data->allNodes[i]))
 		{
 			ft_g_del_node(data->allNodes[i]);
-			for (size_t k = i; data->allNodes[k]; ++k)
-			{
-				data->allNodes[k] = data->allNodes[k + 1];
-			}
+			ft_memmove(&data->allNodes[i], &data->allNodes[i + 1], sizeof(t_graph *) * (ft_array_size((void**)&data->allNodes[i + 1]) + 1));
 			i = -1;
 		}
 	}
@@ -154,72 +272,16 @@ void	sort_level(globe *data)
 }
 
 /**
- * @brief Count input link of this node
- */
-static size_t	count_input_link(t_graph *node)
-{
-	size_t	count = 0;
-
-	for (size_t i = 0; node->gates && node->gates[i]; ++i)
-	{
-		if (node->gates[i]->lvl < node->lvl)
-			++count;
-	}
-	return (count);
-}
-
-/**
- * @brief Count output link of this node
- */
-static size_t	count_output_link(t_graph *node)
-{
-	size_t	count = 0;
-
-	for (size_t i = 0; node->gates && node->gates[i]; ++i)
-	{
-		if (node->gates[i]->lvl > node->lvl)
-			++count;
-	}
-	return (count);
-}
-
-/**
- * @brief Get the first parent input node
- */
-static t_graph*	get_first_input_node(t_graph *node)
-{
-	for (size_t i = 0; node->gates && node->gates[i]; ++i)
-	{
-		if (node->gates[i]->lvl < node->lvl)
-			return (node->gates[i]);
-	}
-	return (NULL);
-}
-
-/**
- * @brief Get the first child onput node
- */
-static t_graph*	get_first_onput_node(t_graph *node)
-{
-	for (size_t i = 0; node->gates && node->gates[i]; ++i)
-	{
-		if (node->gates[i]->lvl > node->lvl)
-			return (node->gates[i]);
-	}
-	return (NULL);
-}
-
-/**
  * @brief Check if this node and upstream has multiple output links
  */
 static bool	is_upstream_multiple_output(globe *data, t_graph *node)
 {
 	while (node != data->start)
 	{
-		if (count_output_link(node) > 1)
+		if (ft_array_size((void**)node->next_gates) > 1)
 			return (true);
-		assert(get_first_input_node(node) != NULL); // TODO: remove assert debug, there should be at least and only 1 input link
-		node = get_first_input_node(node);
+		assert(node->prev_gates != NULL && node->prev_gates[0] != NULL); // TODO: remove assert debug, there should be at least and only 1 input link
+		node = node->prev_gates[0];
 	}
 	return (false);
 }
@@ -231,15 +293,17 @@ void	remove_input_links(globe *data)
 {
 	for (size_t i = 1; data->allNodes[i + 1]; ++i)
 	{
-		while (count_input_link(data->allNodes[i]) > 1)
+		while (ft_array_size((void**)data->allNodes[i]->prev_gates) > 1)
 		{
-			for (size_t j = 0; data->allNodes[i]->gates && data->allNodes[i]->gates[j]; ++j)
+			for (size_t j = 0; data->allNodes[i]->prev_gates && data->allNodes[i]->prev_gates[j]; ++j)
 			{
-				if (data->allNodes[i]->gates[j]->lvl < data->allNodes[i]->lvl && is_upstream_multiple_output(data, data->allNodes[i]->gates[j]))
+				if (is_upstream_multiple_output(data, data->allNodes[i]->prev_gates[j]))
 				{
-					ft_g_unlink(data->allNodes[i], data->allNodes[i]->gates[j]);
+					ft_g_unlink(data->allNodes[i], data->allNodes[i]->prev_gates[j]);
 					delete_deadend(data);
-					--j;
+					--i;
+					assert(i > 0); // TODO: remove assert debug, first node after start should have only 1 prev gates start
+					break;
 				}
 			}
 		}
@@ -255,8 +319,8 @@ static size_t	path_length(globe *data, t_graph *node)
 
 	while (node != data->end)
 	{
-		assert(get_first_onput_node(node) != NULL); // TODO: remove assert debug, there should be at least and only 1 output node
-		node = get_first_onput_node(node);
+		assert(node->next_gates != NULL && node->next_gates[0] != NULL); // TODO: remove assert debug, there should be at least and only 1 output node
+		node = node->next_gates[0];
 		++length;
 	}
 	return (length);
@@ -270,33 +334,32 @@ void	remove_output_links(globe *data)
 	size_t	min_path_len = SIZE_MAX;
 	size_t	tmp_len = 0;
 	t_graph	*path = NULL;
-	for (size_t i = ft_array_size((void*)data->allNodes) - 2; i > 1; --i)
+	size_t	array_size = ft_array_size((void*)data->allNodes);
+	for (size_t i = array_size - 2; i > 1; --i)
 	{
-		while (count_output_link(data->allNodes[i]) > 1)
+		if (ft_array_size((void**)data->allNodes[i]->next_gates) > 1)
 		{
 			min_path_len = SIZE_MAX;
-			for (size_t j = 0; data->allNodes[i]->gates && data->allNodes[i]->gates[j]; ++j)
+			for (size_t j = 0; data->allNodes[i]->next_gates && data->allNodes[i]->next_gates[j]; ++j)
 			{
-				if (data->allNodes[i]->gates[j]->lvl > data->allNodes[i]->lvl)
+				tmp_len = path_length(data, data->allNodes[i]->next_gates[j]);
+				if (min_path_len > tmp_len)
 				{
-					tmp_len = path_length(data, data->allNodes[i]->gates[j]);
-					if (min_path_len > tmp_len)
-					{
-						min_path_len = tmp_len;
-						path = data->allNodes[i]->gates[j];
-					}
+					min_path_len = tmp_len;
+					path = data->allNodes[i]->next_gates[j];
 				}
 			}
 			assert(path != NULL); // TODO: remove assert debug, there should be at least 1 path to the end
-			for (size_t j = 0; data->allNodes[i]->gates && data->allNodes[i]->gates[j]; ++j)
+			for (size_t j = 0; data->allNodes[i]->next_gates && data->allNodes[i]->next_gates[j]; ++j)
 			{
-				if (data->allNodes[i]->gates[j]->lvl > data->allNodes[i]->lvl && data->allNodes[i]->gates[j] != path)
+				if (data->allNodes[i]->next_gates[j] != path)
 				{
-					ft_g_unlink(data->allNodes[i], data->allNodes[i]->gates[j]);
-					delete_deadend(data);
+					ft_g_unlink(data->allNodes[i], data->allNodes[i]->next_gates[j]);
 					--j;
 				}
 			}
+			delete_deadend(data);
+			i = array_size - 2;
 		}
 	}
 }
@@ -317,12 +380,12 @@ static bool	find_shortest_path(globe *data, t_graph	*node)
 	t_graph	*next_node = NULL;
 	ssize_t	next_level = SSIZE_MAX;
 	node->path_id = data->nPaths;
-	for (size_t i = 0; node->gates && node->gates[i]; ++i)
+	for (size_t i = 0; node->prev_gates && node->prev_gates[i]; ++i)
 	{
-		if (node->gates[i]->path_id == -1 && node->gates[i]->lvl < node->lvl && next_level > node->gates[i]->lvl)
+		if (node->prev_gates[i]->path_id == -1 && next_level > node->prev_gates[i]->lvl)
 		{
-			next_node = node->gates[i];
-			next_level = node->gates[i]->lvl;
+			next_node = node->prev_gates[i];
+			next_level = node->prev_gates[i]->lvl;
 		}
 	}
 	if (!find_shortest_path(data, next_node))
@@ -359,16 +422,16 @@ void	print_paths(globe *data)
 		while (node != data->end)
 		{
 			printf("%s -> ", node->name);
-			for (size_t j = 0; node->gates && node->gates[j]; ++j)
+			for (size_t j = 0; node->next_gates && node->next_gates[j]; ++j)
 			{
-				if ((node->gates[j]->lvl > node->lvl && (size_t)node->gates[j]->path_id == i) || node->gates[j] == data->end)
+				if ((size_t)node->next_gates[j]->path_id == i || node->next_gates[j] == data->end)
 				{
-					node = node->gates[j];
-					break ;
+					node = node->next_gates[j];
+					break;
 				}
 			}
 		}
-		printf("\n");
+		printf("%s\n", data->end->name);
 	}
 }
 

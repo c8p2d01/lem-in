@@ -17,6 +17,8 @@
 
 typedef struct t_graph {
 	struct t_graph	**gates;
+	struct t_graph	**next_gates;
+	struct t_graph	**prev_gates;
 	char			*name;
 	size_t			x;
 	size_t			y;

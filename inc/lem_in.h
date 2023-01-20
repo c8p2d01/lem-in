@@ -24,8 +24,9 @@ void	readData(globe *data);
 
 void	add_level(globe *data);
 void	delete_useless_node(globe *data);
-void	unlink_same_level(globe *data);
 void	delete_deadend(globe *data);
+void	add_directional(globe *data);
+void	unlink_same_level(globe *data);
 void	sort_level(globe *data);
 void	remove_input_links(globe *data);
 void	remove_output_links(globe *data);
@@ -34,6 +35,6 @@ void	print_paths(globe *data);
 
 size_t	arraySize(void **array);
 
-void	freeGlobe(globe *data);
+void	free_globe(globe *data);
 
 #endif
