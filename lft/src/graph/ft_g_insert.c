@@ -32,7 +32,7 @@ t_link	*ft_g_insert(t_room *node, t_room *next)
 			i++;
 		if (!node->links[i])
 		{
-			node->links = ft_realloc(node->links, sizeof(t_link *) * (i + 1), sizeof(t_link *) * (i + 2));
+			node->links = ft_realloc(node->links, sizeof(t_link *) * (i + 1), sizeof(t_link *));
 			node->links[i] = con;
 			node->links[1 + i] = NULL;
 		}
@@ -51,7 +51,7 @@ t_link	*ft_g_insert(t_room *node, t_room *next)
 			j++;
 		if (!con->moorv->links[j])
 		{
-			con->moorv->links = ft_realloc(node->links, sizeof(t_link *) * (j + 1), sizeof(t_link *) * (j + 2));
+			con->moorv->links = ft_realloc(node->links, sizeof(t_link *) * (j + 1), sizeof(t_link *));
 			con->moorv->links[j] = con;
 			con->moorv->links[j + 1] = NULL;
 		}

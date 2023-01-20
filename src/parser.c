@@ -71,7 +71,7 @@ static bool	add_node(globe *data, char *line)
 	else
 	{
 		size_t size = ft_array_size((void **)data->graph);
-		data->graph = ft_realloc(data->graph, sizeof(t_room *) * (size + 1), 1);
+		data->graph = ft_realloc(data->graph, sizeof(t_room *) * (size + 1), sizeof(t_room *));
 		data->graph[size] = node;
 	}
 
@@ -160,7 +160,17 @@ static bool	extract_data(char *line, globe *data)
 		free_2dstr(split);
 		return 0;
 	}
-	ft_g_insert_single(data->graph[get_node_index(data, split[0])], data->graph[get_node_index(data, split[1])]);
+	if (data->linkedlist == NULL)
+	{
+		data->linkedlist = ft_calloc(sizeof(t_room *), 2);
+		ft_g_insert(data->graph[get_node_index(data, split[0])], data->graph[get_node_index(data, split[1])]);
+	}
+	else
+	{
+		size_t size = ft_array_size((void **)data->linkedlist);
+		data->linkedlist = ft_realloc(data->linkedlist, sizeof(t_room *) * (size + 1), sizeof(t_room *));
+		data->linkedlist[size] = ft_g_insert(data->graph[get_node_index(data, split[0])], data->graph[get_node_index(data, split[1])]);
+	}
 
 	free_2dstr(split);
 	return true;

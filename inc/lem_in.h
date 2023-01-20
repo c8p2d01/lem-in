@@ -12,6 +12,7 @@ typedef struct globe {
 	struct s_room	**graph;
 	struct s_room	*start;
 	struct s_room	*end;
+	struct s_link	**linkedlist;
 	size_t			nAnts;
 }	globe;
 
