@@ -37,5 +37,54 @@ bool	ft_is_link(t_link *link, t_room *a, t_room *b)
 	if (link->vroom == b && link->moorv == a)
 		return (true);
 	return (false);
-	
+}
+
+/** 
+ * @brief return the flow vlaue of the link
+ * @param link, t_link * ::	the link that holds the flows
+ * @param r, t_room *	::	the room the flow starts from
+ * @return int			::	the flow towards the connected node
+ */
+int	ft_flow(t_link *link, t_room *r)
+{
+	if (link->vroom == r)
+		return(link->flow);
+	if (link->moorv == r)
+		return(link->r_flow);
+	return (FLOW_ERROR);
+}
+
+/** 
+ * @brief return the rflow vlaue of the link
+ * @param link, t_link * ::	the link that holds the flows
+ * @param r, t_room *	::	the room the flow leads to
+ * @return int			::	the flow coming from the connected node
+ */
+int	ft_r_flow(t_link *link, t_room *r)
+{
+	if (link->vroom == r)
+		return(link->r_flow);
+	if (link->moorv == r)
+		return(link->flow);
+	return (FLOW_ERROR);
+}
+
+/**
+ * @brief check if node a has a link to node b
+ * @param a; t_room *
+ * @param b; t_room *
+ */
+bool	ft_has_link(t_room *a, t_room *b)
+{
+	int i = 0;
+
+	if (!a || !b)
+		return(false);
+	while (a->links && a->links[i])
+	{
+		if (ft_is_link(a->links[i], a, b))
+			return(true);
+		i++;
+	}
+	return (false);
 }
