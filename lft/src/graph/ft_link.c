@@ -37,4 +37,5 @@ bool	ft_is_link(t_link *link, t_room *a, t_room *b)
 	if (link->vroom == b && link->moorv == a)
 		return (true);
 	return (false);
+	
 }
