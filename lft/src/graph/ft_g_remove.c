@@ -34,16 +34,6 @@ void	ft_g_unlink(t_room *a, t_room *b)
 	}
 	if (t)
 		ft_g_unlink(b, a);
-
-	// i = 0;
-	// t = false;
-	// while (b->links && b->links[i])
-	// {
-	// 	if (b->links[i] == a)
-	// 		t = true;
-	// 	if (t)
-	// 		b->links[i] = b->links[i + 1];
-	// }
 }
 
 /*
