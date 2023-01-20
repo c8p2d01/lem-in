@@ -15,11 +15,14 @@ typedef struct globe {
 	size_t			nAnts;
 }	globe;
 
-void	read_ddata(globe *data);
+void	read_data(globe *data);
 
 void	level(globe *data);
 
 void	level_sort(globe *data);
+
+void	remove_useless(globe *data);
+void	remove_deadend(globe *data);
 
 size_t	arraySize(void **array);
 

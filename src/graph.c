@@ -81,6 +81,38 @@ void	level_sort(globe *data)
 	data->graph = r;
 }
 
+/**
+ * @brief Remove node that isn't connected to anywhere (not leveled)
+ */
+void	remove_useless(globe *data)
+{
+	for (size_t i = 0; data->graph[i]; ++i)
+	{
+		if (data->graph[i]->lvl == -1)
+		{
+			ft_g_del_node(data->graph[i]);
+			ft_memmove(&data->graph[i], &data->graph[i + 1], sizeof(t_room *) * (ft_array_size((void **)&data->graph[i + 1]) + 1));
+			--i;
+		}
+	}
+}
+
+/**
+ * @brief Remove all deadend nodes
+ */
+void	remove_deadend(globe *data)
+{
+	for (size_t i = 0; data->graph[i]; ++i)
+	{
+		if (ft_array_size((void **)data->graph[i]->links) == 1)
+		{
+			ft_g_del_node(data->graph[i]);
+			ft_memmove(&data->graph[i], &data->graph[i + 1], sizeof(t_room *) * (ft_array_size((void **)&data->graph[i + 1]) + 1));
+			i = -1;
+		}
+	}
+}
+
 // /**
 //  * @brief free a node and remove its traces from tho nodes it was connected to
 //  */
