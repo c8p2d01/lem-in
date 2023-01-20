@@ -15,24 +15,33 @@
 
 # include "../../inc/libft.h"
 
-typedef struct t_graph {
-	struct t_graph	**gates;
+typedef struct s_room 
+{
+	struct s_link	**links;
 	char			*name;
 	size_t			x;
 	size_t			y;
 	ssize_t			lvl;
-}	t_graph;
+}	t_room;
 
-t_graph	*ft_g_new_node(char *data);
+typedef struct s_link 
+{
+	struct s_room *vroom;
+	int flow;
+	int r_flow;
+	struct s_room *broom;
+}	t_link;
 
-void	ft_g_insert(t_graph *node, size_t amount, ...);
-void	ft_g_insert_single(t_graph *node, t_graph *next);
+t_room	*ft_g_new_node(char *data);
 
-void	ft_g_clean(t_graph *node);
-void	print_nodes(t_graph **node);
-bool	ft_has_gate(t_graph *node, t_graph *next);
+void	ft_g_insert(t_room *node, size_t amount, ...);
+void	ft_g_insert_single(t_room *node, t_room *next);
 
-void	ft_g_del_node(t_graph *node);
-void	ft_g_unlink(t_graph *a, t_graph *b);
+void	ft_g_clean(t_room *node);
+void	print_nodes(t_room **node);
+bool	ft_has_gate(t_room *node, t_room *next);
+
+void	ft_g_del_node(t_room *node);
+void	ft_g_unlink(t_room *a, t_room *b);
 
 #endif

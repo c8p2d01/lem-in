@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_graph.c                                         :+:      :+:    :+:   */
+/*   ft_room.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_graph.h"
+#include "ft_room.h"
 
 /**
  * @brief Allocate a new node
  */
-t_graph	*ft_g_new_node(char *data)
+t_room	*ft_g_new_node(char *data)
 {
-	t_graph *res = ft_calloc(sizeof(t_graph), 1);
+	t_room *res = ft_calloc(sizeof(t_room), 1);
 	res->name = data;
 	res->x = 0;
 	res->y = 0;
@@ -25,52 +25,52 @@ t_graph	*ft_g_new_node(char *data)
 	return (res);
 }
 
-void	ft_g_clean(t_graph *node)
+void	ft_g_clean(t_room *node)
 {
 	size_t amount = 0;
-	while (node->gates[amount] != NULL)
+	while (node->links[amount] != NULL)
 		amount++;
-	t_graph **comp = ft_calloc((amount + 1), sizeof(t_graph*));
+	t_room **comp = ft_calloc((amount + 1), sizeof(t_room*));
 	for (size_t i = 0; i < amount; i++)
 	{
 		int a = 0;
-		while (comp[a] != NULL && comp[a] != node->gates[i])
+		while (comp[a] != NULL && comp[a] != node->links[i])
 			a++;
 		if (comp[a])
 			continue;
 		while (comp[a] != NULL)
 			a++;
-		comp[a] = node->gates[i];
+		comp[a] = node->links[i];
 	}
 }
 
 /**
  * @brief Check if a node is already connected to another node
  */
-bool	ft_has_gate(t_graph *node, t_graph *next)
+bool	ft_has_gate(t_room *node, t_room *next)
 {
-	if (node == NULL || node->gates == NULL)
+	if (node == NULL || node->links == NULL)
 		return (false);
-	for (int i = 0; node->gates && node->gates[i]; i++)
+	for (int i = 0; node->links && node->links[i]; i++)
 	{
-		if (next == node->gates[i])
+		if (next == node->links[i])
 			return(true);
 	}
 	return (false);
 }
 
 /**
- * @brief Print all nodes and its gates
+ * @brief Print all nodes and its links
  * @note Debug
  */
-void	print_nodes(t_graph **node)
+void	print_nodes(t_room **node)
 {
 	for (size_t i = 0; node[i]; ++i)
 	{
 		printf("node '%s'		level  %li\n", node[i]->name, node[i]->lvl);
-		for (size_t j = 0; node[i]->gates && node[i]->gates[j]; ++j)
+		for (size_t j = 0; node[i]->links && node[i]->links[j]; ++j)
 		{
-			printf("\t link to '%s'\n", node[i]->gates[j]->name);
+			printf("\t link to '%s'\n", node[i]->links[j]->name);
 		}
 	}
 }

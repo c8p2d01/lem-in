@@ -27,9 +27,9 @@ static bool	isComment(char *line)
 static ssize_t	getNodeIndex(globe *data, char *name)
 {
 	size_t i = 0;
-	while (data->allNodes[i])
+	while (data->graph[i])
 	{
-		if (ft_strncmp(data->allNodes[i]->name, name, ft_strlen(name) + 1) == 0)
+		if (ft_strncmp(data->graph[i]->name, name, ft_strlen(name) + 1) == 0)
 			return i;
 		i++;
 	}
@@ -55,7 +55,7 @@ static bool	addNode(globe *data, char *line)
 		free_2dstr(split);
 		return false;
 	}
-	t_graph*node = ft_g_new_node(ft_strdup(split[0]));
+	t_room*node = ft_g_new_node(ft_strdup(split[0]));
 
 	if (!ft_isnumeric(split[1]) || !ft_isnumeric(split[2]))
 	{
@@ -74,16 +74,16 @@ static bool	addNode(globe *data, char *line)
 	node->x = x;
 	node->y = y;
 
-	if (data->allNodes == NULL)
+	if (data->graph == NULL)
 	{
-		data->allNodes = ft_calloc(sizeof(t_graph*), 2);
-		data->allNodes[0] = node;
+		data->graph = ft_calloc(sizeof(t_room*), 2);
+		data->graph[0] = node;
 	}
 	else
 	{
-		size_t size = arraySize((void **)data->allNodes);
-		data->allNodes = ft_realloc(data->allNodes, sizeof(t_graph*) * size, sizeof(t_graph*) * (size + 2));
-		data->allNodes[size] = node;
+		size_t size = arraySize((void **)data->graph);
+		data->graph = ft_realloc(data->graph, sizeof(t_room*) * size, sizeof(t_room*) * (size + 2));
+		data->graph[size] = node;
 	}
 
 	free_2dstr(split);
@@ -134,9 +134,9 @@ static bool	extractData(char *line, globe *data)
 			free(nodeLine);
 
 		if (ft_strncmp(line, "##start", 8) == 0)
-			data->start = data->allNodes[arraySize((void **)data->allNodes) - 1];
+			data->start = data->graph[arraySize((void **)data->graph) - 1];
 		else
-			data->end = data->allNodes[arraySize((void **)data->allNodes) - 1];
+			data->end = data->graph[arraySize((void **)data->graph) - 1];
 
 		return true;
 	}
@@ -171,7 +171,7 @@ static bool	extractData(char *line, globe *data)
 		free_2dstr(split);
 		return 0;
 	}
-	ft_g_insert_single(data->allNodes[getNodeIndex(data, split[0])], data->allNodes[getNodeIndex(data, split[1])]);
+	ft_g_insert_single(data->graph[getNodeIndex(data, split[0])], data->graph[getNodeIndex(data, split[1])]);
 
 	free_2dstr(split);
 	return true;
@@ -225,7 +225,7 @@ void	readData(globe *data)
 		exit(EXIT_FAILURE);
 	}
 
-	if (data->allNodes == NULL)
+	if (data->graph == NULL)
 	{
 		ft_putendl_fd("error: no nodes", STDERR_FILENO);
 		freeGlobe(data);

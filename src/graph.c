@@ -5,16 +5,16 @@
  */
 void	freeGlobe(globe *data)
 {
-	for (size_t i = 0; data->allNodes && data->allNodes[i] != NULL; ++i)
+	for (size_t i = 0; data->graph && data->graph[i] != NULL; ++i)
 	{
-		if (data->allNodes[i]->name)
-			free(data->allNodes[i]->name);
-		if (data->allNodes[i]->gates)
-			free(data->allNodes[i]->gates);
-		free(data->allNodes[i]);
+		if (data->graph[i]->name)
+			free(data->graph[i]->name);
+		if (data->graph[i]->links)
+			free(data->graph[i]->links);
+		free(data->graph[i]);
 	}
-	if (data->allNodes)
-		free(data->allNodes);
+	if (data->graph)
+		free(data->graph);
 }
 
 void	level(globe *data)
@@ -26,13 +26,13 @@ void	level(globe *data)
 	size_t	count2 = 0;
 	while(q)
 	{
-		if (((t_graph *)(q->content))->lvl < 0)
-			((t_graph *)(q->content))->lvl = level;
-		for(int i = 0; ((t_graph *)(q->content))->gates[i] ; i++)
+		if (((t_room *)(q->content))->lvl < 0)
+			((t_room *)(q->content))->lvl = level;
+		for(int i = 0; ((t_room *)(q->content))->links[i] ; i++)
 		{
-			if (((t_graph *)(q->content))->gates[i]->lvl < 0)
+			if (((t_room *)(q->content))->links[i]->lvl < 0)
 			{
-				ft_lstadd_back(&q, ft_lstnew(((t_graph *)(q->content))->gates[i]));
+				ft_lstadd_back(&q, ft_lstnew(((t_room *)(q->content))->links[i]));
 				count2++;
 			}
 		}
@@ -49,23 +49,23 @@ void	level(globe *data)
 
 void	level_sort(globe *data)
 {
-	t_graph	**s;
-	t_graph	**r;
+	t_room	**s;
+	t_room	**r;
 	ssize_t	l;
 
-	s = ft_calloc(arraySize((void **)data->allNodes) + 1, sizeof(t_graph *));
-	for (size_t i = 0; i < arraySize((void **)data->allNodes); i++)
+	s = ft_calloc(arraySize((void **)data->graph) + 1, sizeof(t_room *));
+	for (size_t i = 0; i < arraySize((void **)data->graph); i++)
 	{
-		if ((data->allNodes[i])->lvl < 0)
+		if ((data->graph[i])->lvl < 0)
 		{
-			ft_g_del_node(data->allNodes[i]);
+			ft_g_del_node(data->graph[i]);
 		}
 		else
 		{
-			s[ft_array_size((void **)s)] = data->allNodes[i];
+			s[ft_array_size((void **)s)] = data->graph[i];
 		}
 	}
-	r = ft_calloc(arraySize((void **)s) + 1, sizeof(t_graph *));
+	r = ft_calloc(arraySize((void **)s) + 1, sizeof(t_room *));
 	l = 0;
 	while (arraySize((void **)r) < arraySize((void **)s))
 	{
@@ -76,9 +76,9 @@ void	level_sort(globe *data)
 		}
 		l++;
 	}
-	free(data->allNodes);
+	free(data->graph);
 	free(s);
-	data->allNodes = r;
+	data->graph = r;
 }
 
 // /**
@@ -87,22 +87,22 @@ void	level_sort(globe *data)
 // void	ft_gErase(gNode *node)
 // {
 // 	size_t i = 0;
-// 	while (node->gates && node->gates[i])
+// 	while (node->links && node->links[i])
 // 	{
-// 		size_t	s = arraySize((void **)node->gates[i]->gates);
+// 		size_t	s = arraySize((void **)node->links[i]->links);
 // 		gNode	**new = ft_calloc(s, sizeof(gNode*));
 // 		size_t	n = 0;
 // 		size_t	o = 0;
 // 		while (n < s)
 // 		{
-// 			if (node->gates[i]->gates[n + o] == node)
+// 			if (node->links[i]->links[n + o] == node)
 // 				o++;
-// 			new[n] = node->gates[i]->gates[n + o];
+// 			new[n] = node->links[i]->links[n + o];
 // 			n++;
 // 		}
 // 		i++;
 // 	}
-// 	free(node->gates);
+// 	free(node->links);
 // 	free(node->name);
 // 	free(node);
 // }
@@ -110,18 +110,18 @@ void	level_sort(globe *data)
 // void	ft_gClean(gNode *node)
 // {
 // 	size_t amount = 0;
-// 	while (node->gates[amount] != NULL)
+// 	while (node->links[amount] != NULL)
 // 		amount++;
 // 	gNode **comp = ft_calloc((amount + 1), sizeof(gNode*));
 // 	for (size_t i = 0; i < amount; i++)
 // 	{
 // 		int a = 0;
-// 		while (comp[a] != NULL && comp[a] != node->gates[i])
+// 		while (comp[a] != NULL && comp[a] != node->links[i])
 // 			a++;
 // 		if (comp[a])
 // 			continue;
 // 		while (comp[a] != NULL)
 // 			a++;
-// 		comp[a] = node->gates[i];
+// 		comp[a] = node->links[i];
 // 	}
 // }

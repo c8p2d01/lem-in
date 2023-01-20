@@ -9,9 +9,9 @@
 # include <sys/time.h>
 
 typedef struct globe {
-	struct t_graph	**allNodes;
-	struct t_graph	*start;
-	struct t_graph	*end;
+	struct s_room	**graph;
+	struct s_room	*start;
+	struct s_room	*end;
 	size_t			nAnts;
 }	globe;
 
