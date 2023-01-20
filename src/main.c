@@ -4,7 +4,10 @@ int main()
 {
 	globe data;
 	ft_bzero(&data, sizeof(globe));
+
 	read_data(&data);
+	remove_deadend(&data);
+
 	//BFS_M(&data);
 
 	//delete dead ends()
@@ -20,5 +23,6 @@ int main()
 	// print()
 
 	print_nodes(data.graph);
+	free_globe(&data);
 	return (0);
 }

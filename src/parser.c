@@ -15,14 +15,12 @@ static bool	is_comment(char *line)
  */
 static ssize_t	get_node_index(globe *data, char *name)
 {
-	size_t i = 0;
-	while (data->graph[i])
+	for (size_t i = 0; data->graph[i]; ++i)
 	{
 		if (ft_strncmp(data->graph[i]->name, name, ft_strlen(name) + 1) == 0)
-			return i;
-		i++;
+			return (i);
 	}
-	return -1;
+	return (-1);
 }
 
 /**
@@ -44,7 +42,7 @@ static bool	add_node(globe *data, char *line)
 		free_2dstr(split);
 		return false;
 	}
-	t_room *node = ft_g_new_node(ft_strdup(split[0]));
+	t_room *node = ft_g_new_room(ft_strdup(split[0]));
 
 	if (!ft_isnumeric(split[1]) || !ft_isnumeric(split[2]))
 	{
@@ -164,7 +162,7 @@ static bool	extract_data(char *line, globe *data)
 	if (data->linkedlist == NULL)
 	{
 		data->linkedlist = ft_calloc(sizeof(t_room *), 2);
-		ft_g_insert(data->graph[get_node_index(data, split[0])], data->graph[get_node_index(data, split[1])]);
+		data->linkedlist[0] = ft_g_insert(data->graph[get_node_index(data, split[0])], data->graph[get_node_index(data, split[1])]);
 	}
 	else
 	{

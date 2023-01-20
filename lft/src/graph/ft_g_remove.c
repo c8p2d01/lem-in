@@ -12,8 +12,8 @@
 
 #include "ft_graph.h"
 
-/* 
-remove a link between two nodes
+/**
+ * @brief Deactive a link between 2
  */
 void	ft_g_unlink(t_room *a, t_room *b)
 {
@@ -30,9 +30,9 @@ void	ft_g_unlink(t_room *a, t_room *b)
 	}
 }
 
-/*
-	delete a single node, and all refrences to it from other print_nodes
-*/
+/**
+ * @brief Delete a node and deactive all links to it
+ */
 void	ft_g_del_node(t_room *node)
 {
 	size_t	i;
@@ -45,7 +45,9 @@ void	ft_g_del_node(t_room *node)
 		(node->links[i])->active = false;
 		i++;
 	}
-	free(node->name);
+	if (node->name)
+		free(node->name);
 	if (node->links)
 		free(node->links);
+	free(node);
 }

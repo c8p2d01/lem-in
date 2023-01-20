@@ -18,14 +18,7 @@ typedef struct globe {
 
 void	read_data(globe *data);
 
-void	level(globe *data);
-
-void	level_sort(globe *data);
-
-void	remove_useless(globe *data);
 void	remove_deadend(globe *data);
-
-void	print_nodes(t_room **node);
 
 void	free_globe(globe *data);
 

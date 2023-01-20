@@ -12,23 +12,30 @@
 
 #include "ft_graph.h"
 
+/**
+ * @brief Allocate new link
+ */
 t_link	*ft_new_link(t_room *in, t_room *out)
 {
 	t_link *res = malloc(sizeof(t_link));
-	if (res)
-	{
-		res->vroom = NULL;
-		if (in)
-			res->vroom = in;
-		res->moorv = NULL;
-		if (out)
-			res->moorv = out;
-		res->flow = 0;
-		res->active = true;
-	}
+	if (!res)
+		return (NULL);
+	*res = (t_link){
+		.vroom = NULL,
+		.moorv = NULL,
+		.flow = 0,
+		.active = true
+	};
+	if (in)
+		res->vroom = in;
+	if (out)
+		res->moorv = out;
 	return (res);
 };
 
+/**
+ * @brief Check if room a is linked to room b
+ */
 bool	ft_is_link(t_link *link, t_room *a, t_room *b)
 {
 	if (link->vroom == a && link->moorv == b)
@@ -38,7 +45,7 @@ bool	ft_is_link(t_link *link, t_room *a, t_room *b)
 	return (false);
 }
 
-/** 
+/**
  * @brief return the flow vlaue of the link (negative if towards node)
  * @param link, t_link * ::	the link that holds the flow
  * @param mode, t_room *	::	the room the flow starts from
@@ -47,27 +54,28 @@ bool	ft_is_link(t_link *link, t_room *a, t_room *b)
 int	ft_flow(t_link *link, t_room *node)
 {
 	if (link->vroom == node)
-		return(link->flow);
+		return (link->flow);
 	if (link->moorv == node)
-		return(-(link->flow));
+		return (-(link->flow));
 	return (FLOW_ERROR);
 }
 
 /**
- * @brief check if node a has a link to node b
+ * @brief check if node a has an active link to node b
  * @param a; t_room *
  * @param b; t_room *
  */
 bool	ft_has_link(t_room *a, t_room *b)
 {
-	int i = 0;
+	int i;
 
 	if (!a || !b)
-		return(false);
+		return (false);
+	i = 0;
 	while (a->links && a->links[i])
 	{
-		if (ft_is_link(a->links[i], a, b))
-			return(true);
+		if (a->links[i]->active && ft_is_link(a->links[i], a, b))
+			return (true);
 		i++;
 	}
 	return (false);
@@ -76,13 +84,34 @@ bool	ft_has_link(t_room *a, t_room *b)
 /**
  * @brief returns the node being linked to
  */
-t_room	*otherside(t_link *link, t_room *myside)
+t_room	*ft_otherside(t_link *link, t_room *myside)
 {
 	if (!link || !myside)
-		return(NULL);
+		return (NULL);
 	if (link->vroom == myside)
-		return(link->moorv);
+		return (link->moorv);
 	if (link->moorv == myside)
-		return(link->vroom);
-	return(NULL);
+		return (link->vroom);
+	return (NULL);
+}
+
+/**
+ * @brief Get active links size of a node
+ */
+size_t	ft_active_link_size(t_room *node)
+{
+	size_t i;
+	size_t size;
+
+	if (!node)
+		return (0);
+	i = 0;
+	size = 0;
+	while (node->links && node->links[i])
+	{
+		if (node->links[i]->active)
+			size++;
+		i++;
+	}
+	return (size);
 }
