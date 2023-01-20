@@ -3,7 +3,7 @@
 /**
  * @brief Free globe struct
  */
-void	freeGlobe(globe *data)
+void	free_globe(globe *data)
 {
 	for (size_t i = 0; data->graph && data->graph[i] != NULL; ++i)
 	{

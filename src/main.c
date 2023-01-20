@@ -4,7 +4,7 @@ int main()
 {
 	globe data;
 	ft_bzero(&data, sizeof(globe));
-	readData(&data);
+	read_data(&data);
 	//establish connection()
 	//BFS_M(&data);
 
@@ -30,5 +30,5 @@ int main()
 	print_nodes(data.graph);
 	printf("\e[0m");
 
-	freeGlobe(&data);
+	free_globe(&data);
 }

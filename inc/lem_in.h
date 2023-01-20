@@ -15,7 +15,7 @@ typedef struct globe {
 	size_t			nAnts;
 }	globe;
 
-void	readData(globe *data);
+void	read_ddata(globe *data);
 
 void	level(globe *data);
 
@@ -23,6 +23,6 @@ void	level_sort(globe *data);
 
 size_t	arraySize(void **array);
 
-void	freeGlobe(globe *data);
+void	free_globe(globe *data);
 
 #endif
