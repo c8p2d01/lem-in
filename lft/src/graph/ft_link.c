@@ -24,7 +24,6 @@ t_link	*ft_new_link(t_room *in, t_room *out)
 		if (out)
 			res->moorv = out;
 		res->flow = 0;
-		res->r_flow = 0;
 		res->active = true;
 	}
 	return (res);
@@ -40,32 +39,17 @@ bool	ft_is_link(t_link *link, t_room *a, t_room *b)
 }
 
 /** 
- * @brief return the flow vlaue of the link
- * @param link, t_link * ::	the link that holds the flows
- * @param r, t_room *	::	the room the flow starts from
+ * @brief return the flow vlaue of the link (negative if towards node)
+ * @param link, t_link * ::	the link that holds the flow
+ * @param mode, t_room *	::	the room the flow starts from
  * @return int			::	the flow towards the connected node
  */
-int	ft_flow(t_link *link, t_room *r)
+int	ft_flow(t_link *link, t_room *node)
 {
-	if (link->vroom == r)
+	if (link->vroom == node)
 		return(link->flow);
-	if (link->moorv == r)
-		return(link->r_flow);
-	return (FLOW_ERROR);
-}
-
-/** 
- * @brief return the rflow vlaue of the link
- * @param link, t_link * ::	the link that holds the flows
- * @param r, t_room *	::	the room the flow leads to
- * @return int			::	the flow coming from the connected node
- */
-int	ft_r_flow(t_link *link, t_room *r)
-{
-	if (link->vroom == r)
-		return(link->r_flow);
-	if (link->moorv == r)
-		return(link->flow);
+	if (link->moorv == node)
+		return(-(link->flow));
 	return (FLOW_ERROR);
 }
 
@@ -87,4 +71,18 @@ bool	ft_has_link(t_room *a, t_room *b)
 		i++;
 	}
 	return (false);
+}
+
+/**
+ * @brief returns the node being linked to
+ */
+t_room	*otherside(t_link *link, t_room *myside)
+{
+	if (!link || !myside)
+		return(NULL);
+	if (link->vroom == myside)
+		return(link->moorv);
+	if (link->moorv == myside)
+		return(link->vroom);
+	return(NULL);
 }

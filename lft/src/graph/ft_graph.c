@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_room.h"
+#include "ft_graph.h"
 
 /**
  * @brief Allocate a new node
@@ -24,7 +24,7 @@ t_room	*ft_g_new_node(char *name)
 		res->name = name;
 		res->x = 0;
 		res->y = 0;
-		res->lvl = -1
+		res->lvl = -1;
 	}
 	return (res);
 }

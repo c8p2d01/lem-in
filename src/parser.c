@@ -171,7 +171,7 @@ static bool	extractData(char *line, globe *data)
 		free_2dstr(split);
 		return 0;
 	}
-	ft_g_insert_single(data->graph[getNodeIndex(data, split[0])], data->graph[getNodeIndex(data, split[1])]);
+	ft_g_insert(data->graph[getNodeIndex(data, split[0])], data->graph[getNodeIndex(data, split[1])]);
 
 	free_2dstr(split);
 	return true;
