@@ -22,38 +22,35 @@ t_link	*ft_g_insert(t_room *node, t_room *next)
 	size_t	i = 0;
 	if (node->links == NULL)
 	{
-		node->links = malloc(2 * sizeof(t_link *));
+		node->links = ft_calloc(2, sizeof(t_link *));
 		node->links[i] = con;
-		node->links[1 + i] = NULL;
 	}
 	else
 	{
-		while (!ft_is_link(node->links[i], con->moorv, con->moorv))
+		while (node->links[i] && !ft_is_link(node->links[i], con->moorv, con->vroom))
 			i++;
 		if (!node->links[i])
 		{
 			node->links = ft_realloc(node->links, sizeof(t_link *) * (i + 1), sizeof(t_link *));
 			node->links[i] = con;
-			node->links[1 + i] = NULL;
 		}
 	}
 
 	size_t	j = 0;
 	if (con->moorv->links == NULL)
 	{
-		con->moorv->links = malloc(2 * sizeof(t_link *));
+		con->moorv->links = ft_calloc(2, sizeof(t_link *));
 		con->moorv->links[j] = con;
-		con->moorv->links[j + 1] = NULL;
 	}
 	else
 	{
-		while (!ft_is_link(con->moorv->links[j], con->moorv, con->moorv))
+		while (con->moorv->links[j] && !ft_is_link(con->moorv->links[j], con->moorv,  con->vroom))
 			j++;
 		if (!con->moorv->links[j])
 		{
-			con->moorv->links = ft_realloc(node->links, sizeof(t_link *) * (j + 1), sizeof(t_link *));
+			con->moorv->links = ft_realloc(con->moorv->links, sizeof(t_link *) * (j + 1), sizeof(t_link *));
 			con->moorv->links[j] = con;
-			con->moorv->links[j + 1] = NULL;
 		}
 	}
+	return (con);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_room.h"
+#include "ft_graph.h"
 
 /**
  * @brief Allocate a new node
@@ -24,7 +24,20 @@ t_room	*ft_g_new_node(char *name)
 		res->name = name;
 		res->x = 0;
 		res->y = 0;
-		res->lvl = -1
+		res->lvl = -1;
 	}
 	return (res);
 }
+
+void    print_nodes(t_room **node)
+{
+    for (size_t i = 0; node[i]; ++i)
+    {
+        printf("node '%s'\tlevel %li\n", node[i]->name, node[i]->lvl);
+        for (size_t j = 0; node[i]->links && node[i]->links[j]; ++j)
+        {
+            printf("\t link to '%s'\n", (otherside(node[i]->links[j], node[i]))->name);
+        }
+    }
+}
+

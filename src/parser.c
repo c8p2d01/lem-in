@@ -160,6 +160,7 @@ static bool	extract_data(char *line, globe *data)
 		free_2dstr(split);
 		return 0;
 	}
+
 	if (data->linkedlist == NULL)
 	{
 		data->linkedlist = ft_calloc(sizeof(t_room *), 2);
