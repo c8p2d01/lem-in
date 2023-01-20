@@ -10,66 +10,50 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_room.h"
+#include "ft_graph.h"
 
 /**
  * @brief Insert one node to another
  */
-void	ft_g_insert_single(t_room *node, t_room *next)
+t_link	*ft_g_insert(t_room *node, t_room *next)
 {
+	t_link	*con =ft_new_link(node, next);
+
+	size_t	i = 0;
 	if (node->links == NULL)
 	{
-		node->links = ft_calloc(2, sizeof(t_room *));
-		node->links[0] = next;
-		if (!ft_has_gate(node->links[0], node))
-			ft_g_insert_single(node->links[0], node);
+		node->links = malloc(2 * sizeof(t_link *));
+		node->links[i] = con;
+		node->links[1 + i] = NULL;
 	}
 	else
 	{
-		size_t size = ft_array_size((void **)node->links);
-		size_t newSize = size + 1;
-		node->links = ft_realloc(node->links, sizeof(t_room *) * size, sizeof(t_room *) * (newSize + 1));
-		t_room *in = next;
-		node->links[size] = in;
-		if (!ft_has_gate(node->links[size], node))
-			ft_g_insert_single(node->links[size], node);
-	}
-}
-
-/**
- * @brief Insert one node to other nodes
- */
-void	ft_g_insert(t_room *node, size_t amount, ...)
-{
-	va_list c;
-	va_start(c, amount);
-	if (node->links == NULL)
-	{
-		node->links = ft_calloc((amount + 1), sizeof(t_room *));
-		node->links[amount] = NULL;
-		for (size_t i = 0; i < amount; i++)
+		while (!ft_is_link(node->links[i], con->moorv, con->moorv))
+			i++;
+		if (!node->links[i])
 		{
-			node->links[i] = va_arg(c, t_room*);
-			if (!ft_has_gate(node->links[i], node))
-			{
-				ft_g_insert(node->links[i], 1, node);
-			}
+			node->links = ft_realloc(node->links, sizeof(t_link *) * (i + 1), sizeof(t_link *) * (i + 2));
+			node->links[i] = con;
+			node->links[1 + i] = NULL;
 		}
 	}
+
+	size_t	j = 0;
+	if (con->moorv->links == NULL)
+	{
+		con->moorv->links = malloc(2 * sizeof(t_link *));
+		con->moorv->links[j] = con;
+		con->moorv->links[j + 1] = NULL;
+	}
 	else
 	{
-		size_t size = ft_array_size((void **)node->links);
-		size_t newSize = size + amount;
-		node->links = ft_realloc(node->links, sizeof(t_room *) * size, sizeof(t_room *) * (newSize + 1));
-		while (size < newSize)
+		while (!ft_is_link(con->moorv->links[j], con->moorv, con->moorv))
+			j++;
+		if (!con->moorv->links[j])
 		{
-			t_room *in = va_arg(c, t_room*);
-			if (!in)
-				break;
-			node->links[size] = in;
-			if (!ft_has_gate(node->links[size], node))
-				ft_g_insert(node->links[size], 1, node);
-			size++;
+			con->moorv->links = ft_realloc(node->links, sizeof(t_link *) * (j + 1), sizeof(t_link *) * (j + 2));
+			con->moorv->links[j] = con;
+			con->moorv->links[j + 1] = NULL;
 		}
 	}
 }

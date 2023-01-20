@@ -74,6 +74,7 @@ SRCFILES =	mem/ft_calloc.c \
 		graph/ft_g_insert.c \
 		graph/ft_g_remove.c \
 		graph/ft_graph.c \
+		graph/ft_link.c \
 
 
 # Process Variables
