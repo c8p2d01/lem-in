@@ -17,7 +17,7 @@ typedef struct globe {
 
 void	readData(globe *data);
 
-void	level(globe *data);
+void	first_level(globe *data);
 
 void	leveling(globe *data);
 
