@@ -17,59 +17,51 @@
  */
 void	ft_g_insert_single(t_graph *node, t_graph *next)
 {
-	if (node->gates == NULL)
+	t_link	*con = malloc(sizeof(t_link) * 1);
+
+	con->next = next;
+	con->prev = node;
+	con->fCapa = 0;
+	con->bCapa = 0;
+	con->active = true;
+
+	size_t	i = 0;
+	if (node->links == NULL)
 	{
-		node->gates = ft_calloc(2, sizeof(t_graph *));
-		node->gates[0] = next;
-		if (!ft_has_gate(node->gates[0], node))
-			ft_g_insert_single(node->gates[0], node);
+		node->links = malloc(2 * sizeof(t_link *));
+		node->links[i] = con;
+		node->links[1 + i] = NULL;
 	}
 	else
 	{
-		size_t size = ft_array_size((void **)node->gates);
-		size_t newSize = size + 1;
-		node->gates = ft_realloc(node->gates, sizeof(t_graph *) * size, sizeof(t_graph *) * (newSize + 1));
-		t_graph *in = next;
-		node->gates[size] = in;
-		if (!ft_has_gate(node->gates[size], node))
-			ft_g_insert_single(node->gates[size], node);
-	}
-}
-
-/**
- * @brief Insert one node to other nodes
- */
-void	ft_g_insert(t_graph *node, size_t amount, ...)
-{
-	va_list c;
-	va_start(c, amount);
-	if (node->gates == NULL)
-	{
-		node->gates = ft_calloc((amount + 1), sizeof(t_graph *));
-		node->gates[amount] = NULL;
-		for (size_t i = 0; i < amount; i++)
+		while ((node->links[i]->next != con->next && node->links[i]->prev != con->prev) ||
+				(node->links[i]->prev != con->next && node->links[i]->next != con->prev))
+			i++;
+		if (!node->links[i])
 		{
-			node->gates[i] = va_arg(c, t_graph*);
-			if (!ft_has_gate(node->gates[i], node))
-			{
-				ft_g_insert(node->gates[i], 1, node);
-			}
+			node->links = ft_realloc(node->links, sizeof(t_link *) * (i + 1), sizeof(t_link *) * (i + 2));
+			node->links[i] = con;
+			node->links[1 + i] = NULL;
 		}
 	}
+
+	size_t	j = 0;
+	if (con->next->links == NULL)
+	{
+		con->next->links = malloc(2 * sizeof(t_link *));
+		con->next->links[j] = con;
+		con->next->links[j + 1] = NULL;
+	}
 	else
 	{
-		size_t size = ft_array_size((void **)node->gates);
-		size_t newSize = size + amount;
-		node->gates = ft_realloc(node->gates, sizeof(t_graph *) * size, sizeof(t_graph *) * (newSize + 1));
-		while (size < newSize)
+		while (((con->next->links[j])->next != con->next && (con->next->links[j])->prev != con->prev) ||
+				((con->next->links[j])->prev != con->next && (con->next->links[j])->next != con->prev))
+			j++;
+		if (!con->next->links[j])
 		{
-			t_graph *in = va_arg(c, t_graph*);
-			if (!in)
-				break;
-			node->gates[size] = in;
-			if (!ft_has_gate(node->gates[size], node))
-				ft_g_insert(node->gates[size], 1, node);
-			size++;
+			con->next->links = ft_realloc(node->links, sizeof(t_link *) * (j + 1), sizeof(t_link *) * (j + 2));
+			con->next->links[j] = con;
+			con->next->links[j + 1] = NULL;
 		}
 	}
 }

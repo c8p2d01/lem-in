@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:07 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/19 14:19:56 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/19 17:51:22 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct t_link {
 	t_graph *prev;
 	double	fCapa;
 	double	bCapa;
+	bool	active;
 }	t_link;
 
 t_graph	*ft_g_new_node(char *data);

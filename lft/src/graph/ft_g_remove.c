@@ -24,12 +24,12 @@ void	ft_g_unlink(t_graph *a, t_graph *b)
 		return;
 	i = 0;
 	t = false;
-	while (a->gates && a->gates[i])
+	while (a->links && (a->links[i])->next != a)
 	{
-		if (a->gates[i] == b)
+		if (a->links[i] == b)
 			t = true;
 		if (t)
-			a->gates[i] = a->gates[i + 1];
+			a->links[i] = a->links[i + 1];
 		i++;
 	}
 	if (t)
