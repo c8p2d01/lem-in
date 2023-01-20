@@ -54,39 +54,3 @@ t_link	*ft_g_insert(t_room *node, t_room *next)
 	}
 	return (con);
 }
-
-
-void    print_nodes(t_room **node)
-{
-    for (size_t i = 0; node[i]; ++i)
-    {
-        printf("node '%s'\tlevel %li\n", node[i]->name, node[i]->lvl);
-        for (size_t j = 0; node[i]->links && node[i]->links[j]; ++j)
-        {
-            printf("\t link to '%s'\n", (otherside(node[i]->links[j], node[i]))->name);
-        }
-    }
-}
-
-int main()
-{
-	t_room *a = ft_g_new_node("eins");
-	t_room *b = ft_g_new_node("zwei");
-	t_room *c = ft_g_new_node("drei");
-	t_room *d = ft_g_new_node("vier");
-	t_room *arr[5];
-
-	arr[0] = a;
-	arr[1] = b;
-	arr[2] = c;
-	arr[3] = d;
-	arr[4] = NULL;
-
-	ft_g_insert(a, b);
-	ft_g_insert(b, c);
-	ft_g_insert(b, d);
-	ft_g_insert(c, d);
-	ft_g_insert(a, c);
-
-	print_nodes(arr);
-}
