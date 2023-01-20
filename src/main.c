@@ -6,29 +6,29 @@ int main()
 	ft_bzero(&data, sizeof(globe));
 	readData(&data);
 	//establish connection()
-	//BFS_M(&data);
+	level(&data);
 
 	//delete dead ends()
 
 	//while(1)
 	// {
 	// 	find path based on flow then level;
-	// 	BFS_M();
+	// 	leveling();
 	// }
 
-	// unlink all 0 flow connections
+	// deactivate all 0 flow connections
 	// establith all viable paths;
 	// print()
 
-	level_sort(&data);
+	// level_sort(&data);
 
-	print_nodes(data.graph);
+	// print_nodes(data.graph);
 
-	ft_g_unlink(data.start->links[0], data.start);
+	// ft_g_unlink(data.start->links[0], data.start);
 
-	printf("\e[38;5;234m");
-	print_nodes(data.graph);
-	printf("\e[0m");
+	// printf("\e[38;5;234m");
+	// print_nodes(data.graph);
+	// printf("\e[0m");
 
-	freeGlobe(&data);
+	// freeGlobe(&data);
 }

@@ -1,5 +1,12 @@
 #include "../inc/lem_in.h"
 
+t_room * other_end(t_link *link, t_room *origin)
+{
+	if (link->vroom == origin)
+		return (link->moorv);
+	return (link->vroom);
+}
+
 /**
  * @brief Free globe struct
  */
@@ -17,7 +24,7 @@ void	freeGlobe(globe *data)
 		free(data->graph);
 }
 
-void	level(globe *data)
+void	first_level(globe *data)
 {
 	t_list	*q = ft_lstnew(data->start);
 	t_list	*t = q;
@@ -30,9 +37,9 @@ void	level(globe *data)
 			((t_room *)(q->content))->lvl = level;
 		for(int i = 0; ((t_room *)(q->content))->links[i] ; i++)
 		{
-			if (((t_room *)(q->content))->links[i]->lvl < 0)
+			if ((other_end(((t_room *)(q->content))->links[i], (t_room *)(q->content)))->lvl < 0)
 			{
-				ft_lstadd_back(&q, ft_lstnew(((t_room *)(q->content))->links[i]));
+				ft_lstadd_back(&q, ft_lstnew(other_end(((t_room *)(q->content))->links[i], (t_room *)(q->content))));
 				count2++;
 			}
 		}
@@ -41,6 +48,43 @@ void	level(globe *data)
 			level++;
 			count1 = count2;
 			count2 = 0;
+		}
+		q = q->next;
+	}
+	ft_lstclear(&t, NULL);
+}
+
+void leveling(globe *data)
+{
+	t_list	*q = ft_lstnew(data->start);
+	t_list	*t = q;
+	t_room *tmp = NULL;
+	size_t	level = 0;
+	size_t	count1 = 1;
+	size_t	count2 = 0;
+	bool end = false;
+	while(q)
+	{
+		if (((t_room *)(q->content))->lvl < 0)
+			((t_room *)(q->content))->lvl = level;
+		for(int i = 0; ((t_room *)(q->content))->links[i] ; i++)
+		{
+			tmp = other_end(((t_room *)(q->content))->links[i], (t_room *)(q->content));
+			if (tmp->lvl < 0 && !ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))))
+			{
+				ft_lstadd_back(&q, ft_lstnew(other_end(((t_room *)(q->content))->links[i], (t_room *)(q->content))));
+				count2++;
+			}
+			if (other_end(((t_room *)(q->content))->links[i], (t_room *)(q->content)) == data->end)
+				end = true;
+		}
+		if (--count1 == 0)
+		{
+			level++;
+			count1 = count2;
+			count2 = 0;
+			if (end)
+				break;
 		}
 		q = q->next;
 	}
