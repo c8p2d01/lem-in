@@ -4,8 +4,10 @@ int main()
 {
 	globe data;
 	ft_bzero(&data, sizeof(globe));
-	readData(&data);
-	//establish connection()
+
+	read_data(&data);
+	remove_deadend(&data);
+
 	//BFS_M(&data);
 
 	//delete dead ends()
@@ -20,15 +22,7 @@ int main()
 	// establith all viable paths;
 	// print()
 
-	level_sort(&data);
-
 	print_nodes(data.graph);
-
-	ft_g_unlink(data.start->links[0], data.start);
-
-	printf("\e[38;5;234m");
-	print_nodes(data.graph);
-	printf("\e[0m");
-
-	freeGlobe(&data);
+	free_globe(&data);
+	return (0);
 }

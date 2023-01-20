@@ -10,21 +10,40 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_room.h"
+#include "ft_graph.h"
 
 /**
  * @brief Allocate a new node
  */
-t_room	*ft_g_new_node(char *name)
+t_room	*ft_g_new_room(char *name)
 {
 	t_room *res = ft_calloc(sizeof(t_room), 1);
-	if (res)
-	{
-		res->links = NULL;
-		res->name = name;
-		res->x = 0;
-		res->y = 0;
-		res->lvl = -1
-	}
+	if (res == NULL)
+		return (NULL);
+	*res = (t_room){
+		.links = NULL,
+		.name = name,
+		.x = 0,
+		.y = 0,
+		.lvl = -1
+	};
 	return (res);
 }
+
+/**
+ * @brief Print all the nodes and their links
+ * @note For debug purposes
+*/
+void	print_nodes(t_room **node)
+{
+	for (size_t i = 0; node[i]; ++i)
+	{
+		printf("node '%s'\tlevel %li\n", node[i]->name, node[i]->lvl);
+		for (size_t j = 0; node[i]->links && node[i]->links[j]; ++j)
+		{
+			if (node[i]->links[j]->active)
+				printf("\t link to '%s'\n", ft_otherside(node[i]->links[j], node[i])->name);
+		}
+	}
+}
+
