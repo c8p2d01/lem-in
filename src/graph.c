@@ -69,6 +69,8 @@ void leveling(globe *data)
 			((t_room *)(q->content))->lvl = level;
 		for(int i = 0; ((t_room *)(q->content))->links[i] ; i++)
 		{
+			if (!ft_active_link(((t_room *)(q->content))->links[i]))
+				continue ;
 			tmp = other_end(((t_room *)(q->content))->links[i], (t_room *)(q->content));
 			if (tmp->lvl < 0 && !ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))))
 			{
