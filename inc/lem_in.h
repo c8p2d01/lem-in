@@ -12,19 +12,18 @@ typedef struct globe {
 	struct s_room	**graph;
 	struct s_room	*start;
 	struct s_room	*end;
+	struct s_link	**linkedlist;
 	size_t			nAnts;
 }	globe;
 
-void	readData(globe *data);
+void	read_data(globe *data);
 
 void	first_level(globe *data);
 
 void	leveling(globe *data);
 
-void	level_sort(globe *data);
+void	remove_deadend(globe *data);
 
-size_t	arraySize(void **array);
-
-void	freeGlobe(globe *data);
+void	free_globe(globe *data);
 
 #endif

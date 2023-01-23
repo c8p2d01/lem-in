@@ -1,20 +1,9 @@
 #include "../inc/lem_in.h"
 
 /**
- * @brief Get 2D array size
- */
-size_t	arraySize(void **array)
-{
-	size_t i = 0;
-	while (array && array[i])
-		i++;
-	return i;
-}
-
-/**
  * @brief Check if a line is a comment
  */
-static bool	isComment(char *line)
+static bool	is_comment(char *line)
 {
 	if (line[0] == '#' && line[1] != '#')
 		return true;
@@ -24,25 +13,23 @@ static bool	isComment(char *line)
 /**
  * @brief Get node index by name
  */
-static ssize_t	getNodeIndex(globe *data, char *name)
+static ssize_t	get_node_index(globe *data, char *name)
 {
-	size_t i = 0;
-	while (data->graph[i])
+	for (size_t i = 0; data->graph[i]; ++i)
 	{
 		if (ft_strncmp(data->graph[i]->name, name, ft_strlen(name) + 1) == 0)
-			return i;
-		i++;
+			return (i);
 	}
-	return -1;
+	return (-1);
 }
 
 /**
  * @brief Add a node to all nodes list
  */
-static bool	addNode(globe *data, char *line)
+static bool	add_node(globe *data, char *line)
 {
 	char **split = ft_split(line, ' ');
-	if (arraySize((void **)split) != 3)
+	if (ft_array_size((void **)split) != 3)
 	{
 		ft_putendl_fd("error: wrong node format", STDERR_FILENO);
 		free_2dstr(split);
@@ -55,7 +42,7 @@ static bool	addNode(globe *data, char *line)
 		free_2dstr(split);
 		return false;
 	}
-	t_room*node = ft_g_new_node(ft_strdup(split[0]));
+	t_room *node = ft_g_new_room(ft_strdup(split[0]));
 
 	if (!ft_isnumeric(split[1]) || !ft_isnumeric(split[2]))
 	{
@@ -81,8 +68,8 @@ static bool	addNode(globe *data, char *line)
 	}
 	else
 	{
-		size_t size = arraySize((void **)data->graph);
-		data->graph = ft_realloc(data->graph, sizeof(t_room*) * size, sizeof(t_room*) * (size + 2));
+		size_t size = ft_array_size((void **)data->graph);
+		data->graph = ft_realloc(data->graph, sizeof(t_room *) * (size + 1), sizeof(t_room *));
 		data->graph[size] = node;
 	}
 
@@ -93,9 +80,9 @@ static bool	addNode(globe *data, char *line)
 /**
  * @brief Extract data from line to globe struct
  */
-static bool	extractData(char *line, globe *data)
+static bool	extract_data(char *line, globe *data)
 {
-	static bool isGateParse = false;
+	static bool is_gate_parsed = false;
 
 	if (data->nAnts == 0) {
 		if (!ft_isnumeric(line))
@@ -115,63 +102,74 @@ static bool	extractData(char *line, globe *data)
 		return true;
 	}
 
-	if (!isGateParse && (ft_strncmp(line, "##start", 8) == 0 || ft_strncmp(line, "##end", 6) == 0))
+	if (!is_gate_parsed && (ft_strncmp(line, "##start", 8) == 0 || ft_strncmp(line, "##end", 6) == 0))
 	{
-		char *nodeLine;
-		if (get_next_line(0, &nodeLine) <= 0)
+		char *node_line;
+		if (get_next_line(0, &node_line) <= 0)
 		{
 			ft_putendl_fd("error: get_next_line() after ##start or ##end", STDERR_FILENO);
 			return false;
 		}
 
-		if (!addNode(data, nodeLine))
+		if (!add_node(data, node_line))
 		{
-			free(nodeLine);
+			free(node_line);
 			return false;
 		}
 
-		if (nodeLine)
-			free(nodeLine);
+		if (node_line)
+			free(node_line);
 
 		if (ft_strncmp(line, "##start", 8) == 0)
-			data->start = data->graph[arraySize((void **)data->graph) - 1];
+			data->start = data->graph[ft_array_size((void **)data->graph) - 1];
 		else
-			data->end = data->graph[arraySize((void **)data->graph) - 1];
+			data->end = data->graph[ft_array_size((void **)data->graph) - 1];
 
 		return true;
 	}
 
-	if (!isGateParse && ft_strchr(line, ' ') != NULL)
-		return addNode(data, line);
+	if (!is_gate_parsed && ft_strchr(line, ' ') != NULL)
+		return add_node(data, line);
 
-	if (isGateParse == false)
+	if (is_gate_parsed == false)
 	{
 		if (data->start == NULL || data->end == NULL)
 		{
 			ft_putendl_fd("error: start or end not set", STDERR_FILENO);
 			return 0;
 		}
-		isGateParse = true;
+		is_gate_parsed = true;
 	}
 
 	char **split = ft_split(line, '-');
-	if (arraySize((void **)split) != 2 || getNodeIndex(data, split[0]) == -1
-		|| getNodeIndex(data, split[1]) == -1)
+	if (ft_array_size((void **)split) != 2 || get_node_index(data, split[0]) == -1
+		|| get_node_index(data, split[1]) == -1)
 	{
 		ft_putendl_fd("error: wrong link format", STDERR_FILENO);
 		free_2dstr(split);
 		return 0;
 	}
 
-	ssize_t node1Index = getNodeIndex(data, split[0]);
-	ssize_t node2Index = getNodeIndex(data, split[1]);
-	if (node1Index == -1 || node2Index == -1)
+	ssize_t node1_index = get_node_index(data, split[0]);
+	ssize_t node2_index = get_node_index(data, split[1]);
+	if (node1_index == -1 || node2_index == -1)
 	{
 		ft_putendl_fd("error: node not found for linking", STDERR_FILENO);
 		free_2dstr(split);
 		return 0;
 	}
-	ft_g_insert_single(data->graph[getNodeIndex(data, split[0])], data->graph[getNodeIndex(data, split[1])]);
+
+	if (data->linkedlist == NULL)
+	{
+		data->linkedlist = ft_calloc(sizeof(t_room *), 2);
+		data->linkedlist[0] = ft_g_insert(data->graph[get_node_index(data, split[0])], data->graph[get_node_index(data, split[1])]);
+	}
+	else
+	{
+		size_t size = ft_array_size((void **)data->linkedlist);
+		data->linkedlist = ft_realloc(data->linkedlist, sizeof(t_room *) * (size + 1), sizeof(t_room *));
+		data->linkedlist[size] = ft_g_insert(data->graph[get_node_index(data, split[0])], data->graph[get_node_index(data, split[1])]);
+	}
 
 	free_2dstr(split);
 	return true;
@@ -180,62 +178,62 @@ static bool	extractData(char *line, globe *data)
 /**
  * @brief Read data from standard input
  */
-void	readData(globe *data)
+void	read_data(globe *data)
 {
 	char *line = NULL;
-	ssize_t readRet;
+	int read_size;
 
 	do
 	{
-		readRet = get_next_line(STDIN_FILENO, &line);
-		if (readRet != 1)
+		read_size = get_next_line(STDIN_FILENO, &line);
+		if (read_size != 1)
 		{
-			if (readRet == 0)
+			if (read_size == 0)
 				free(line);
 			break;
 		}
 
-		if (ft_strlen(line) == 0 || isComment(line))
+		if (ft_strlen(line) == 0 || is_comment(line))
 		{
 			free(line);
 			continue;
 		}
 
-		if (!extractData(line, data))
+		if (!extract_data(line, data))
 		{
 			free(line);
-			freeGlobe(data);
+			free_globe(data);
 			exit(EXIT_FAILURE);
 		}
 
 		free(line);
 	} while (69);
 
-	if (readRet == -1)
+	if (read_size == -1)
 	{
 		ft_putendl_fd("error: get_next_line()", STDERR_FILENO);
-		freeGlobe(data);
+		free_globe(data);
 		exit(EXIT_FAILURE);
 	}
 
 	if (data->nAnts == 0)
 	{
 		ft_putendl_fd("error: no ants", STDERR_FILENO);
-		freeGlobe(data);
+		free_globe(data);
 		exit(EXIT_FAILURE);
 	}
 
 	if (data->graph == NULL)
 	{
 		ft_putendl_fd("error: no nodes", STDERR_FILENO);
-		freeGlobe(data);
+		free_globe(data);
 		exit(EXIT_FAILURE);
 	}
 
 	if (data->start == NULL || data->end == NULL)
 	{
 		ft_putendl_fd("error: start or end not set", STDERR_FILENO);
-		freeGlobe(data);
+		free_globe(data);
 		exit(EXIT_FAILURE);
 	}
 }

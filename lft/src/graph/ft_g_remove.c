@@ -10,29 +10,44 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_room.h"
+#include "ft_graph.h"
 
-/* 
-remove a link between two nodes
+/**
+ * @brief Deactive a link between 2
  */
 void	ft_g_unlink(t_room *a, t_room *b)
 {
-	printf("\e[38;5;196mWork in Progess, (Soon™)\n\e[0m");
-	// int i;
-	// bool t;
+	size_t	i;
 
-	// if (!a || !b)
-	// 	return;
-	// i = 0;
-	// t = false;
-	// while (a->links && a->links[i])
-	// {
-	// 	if (a->links[i] == b)
-	// 		t = true;
-	// 	if (t)
-	// 		a->links[i] = a->links[i + 1];
-	// 	i++;
-	// }
-	// if (t)
-	// 	ft_g_unlink(b, a);
+	if (!a || !b)
+		return ;
+	i = 0;
+	while (a->links && a->links[i])
+	{
+		if (ft_is_link(a->links[i], a, b))
+			(a->links[i])->active = false;
+		i++;
+	}
+}
+
+/**
+ * @brief Delete a node and deactive all links to it
+ */
+void	ft_g_del_node(t_room *node)
+{
+	size_t	i;
+
+	if (!node)
+		return ;
+	i = 0;
+	while (node->links && node->links[i])
+	{
+		(node->links[i])->active = false;
+		i++;
+	}
+	if (node->name)
+		free(node->name);
+	if (node->links)
+		free(node->links);
+	free(node);
 }

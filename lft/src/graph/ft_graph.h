@@ -17,7 +17,7 @@
 
 # include "../../inc/libft.h"
 
-typedef struct s_room 
+typedef struct s_room
 {
 	struct s_link	**links;
 	char			*name;
@@ -26,24 +26,28 @@ typedef struct s_room
 	ssize_t			lvl;
 }	t_room;
 
-typedef struct s_link 
+typedef struct s_link
 {
 	struct	s_room *vroom;
 	int		flow;
-	int		r_flow;
 	struct	s_room *moorv;
 	bool	active;
 }	t_link;
 
-t_room	*ft_g_new_node(char *data);
+t_room	*ft_g_new_room(char *name);
+void    print_nodes(t_room **node);
 
 t_link	*ft_new_link(t_room *in, t_room *out);
 bool	ft_is_link(t_link *link, t_room *a, t_room *b);
-int		ft_flow(t_link *link, t_room *r);
 t_link	*ft_active_link(t_link *link);
+int		ft_flow(t_link *link, t_room *node);
+bool	ft_has_link(t_room *a, t_room *b);
+t_room	*ft_otherside(t_link *link, t_room *myside);
+size_t	ft_active_link_size(t_room *node);
 
 t_link	*ft_g_insert(t_room *node, t_room *next);
 
 void	ft_g_unlink(t_room *a, t_room *b);
+void	ft_g_del_node(t_room *node);
 
 #endif
