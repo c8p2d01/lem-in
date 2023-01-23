@@ -24,11 +24,22 @@ void	freeGlobe(globe *data)
 		free(data->graph);
 }
 
+void reset_level(globe *data)
+{
+	for (int i = 0; data->graph[i]; i++)
+	{
+		if (data->graph[i] == data->start || data->graph[i] == data->end)
+			continue;
+		data->graph[i]->lvl = -1;
+	}
+	data->start->lvl = 0;
+}
+
 void	first_level(globe *data)
 {
 	t_list	*q = ft_lstnew(data->start);
 	t_list	*t = q;
-	size_t	level = 0;
+	size_t	level = 1;
 	size_t	count1 = 1;
 	size_t	count2 = 0;
 	while(q)
@@ -51,6 +62,7 @@ void	first_level(globe *data)
 		}
 		q = q->next;
 	}
+	data->start->lvl = 0;
 	ft_lstclear(&t, NULL);
 }
 
@@ -59,10 +71,11 @@ void leveling(globe *data)
 	t_list	*q = ft_lstnew(data->start);
 	t_list	*t = q;
 	t_room *tmp = NULL;
-	size_t	level = 0;
+	size_t	level = 1;
 	size_t	count1 = 1;
 	size_t	count2 = 0;
 	bool end = false;
+	reset_level(data);
 	while(q)
 	{
 		if (((t_room *)(q->content))->lvl < 0)
@@ -72,7 +85,7 @@ void leveling(globe *data)
 			if (!ft_active_link(((t_room *)(q->content))->links[i]))
 				continue ;
 			tmp = other_end(((t_room *)(q->content))->links[i], (t_room *)(q->content));
-			if (tmp->lvl < 0 && !ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))))
+			if (tmp->lvl < 0 && ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))) < 1)
 			{
 				ft_lstadd_back(&q, ft_lstnew(other_end(((t_room *)(q->content))->links[i], (t_room *)(q->content))));
 				count2++;
@@ -90,6 +103,8 @@ void leveling(globe *data)
 		}
 		q = q->next;
 	}
+	data->end->lvl = level;
+	data->start->lvl = 0;
 	ft_lstclear(&t, NULL);
 }
 
