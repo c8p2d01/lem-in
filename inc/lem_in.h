@@ -18,6 +18,10 @@ typedef struct globe {
 
 void	read_data(globe *data);
 
+void	first_level(globe *data);
+
+void	leveling(globe *data);
+
 void	remove_deadend(globe *data);
 
 void	free_globe(globe *data);

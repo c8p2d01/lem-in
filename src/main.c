@@ -8,19 +8,9 @@ int main()
 	read_data(&data);
 	remove_deadend(&data);
 
-	//BFS_M(&data);
+	first_level(&data);
 
-	//delete dead ends()
-
-	//while(1)
-	// {
-	// 	find path based on flow then level;
-	// 	BFS_M();
-	// }
-
-	// unlink all 0 flow connections
-	// establith all viable paths;
-	// print()
+	// level_sort(&data);
 
 	print_nodes(data.graph);
 	free_globe(&data);

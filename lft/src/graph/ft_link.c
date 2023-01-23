@@ -81,6 +81,13 @@ bool	ft_has_link(t_room *a, t_room *b)
 	return (false);
 }
 
+t_link	*ft_active_link(t_link *link)
+{
+	if (!link->active)
+		return(NULL);
+	return(link);
+}
+
 /**
  * @brief returns the node being linked to
  */

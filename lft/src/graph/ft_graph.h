@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_graph.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
+/*   By: cdahlhof <cdahlhof@students.42wolfsburg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:07 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/20 17:57:21 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/22 16:01:45 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void    print_nodes(t_room **node);
 
 t_link	*ft_new_link(t_room *in, t_room *out);
 bool	ft_is_link(t_link *link, t_room *a, t_room *b);
+t_link	*ft_active_link(t_link *link);
 int		ft_flow(t_link *link, t_room *node);
 bool	ft_has_link(t_room *a, t_room *b);
 t_room	*ft_otherside(t_link *link, t_room *myside);
