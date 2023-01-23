@@ -47,6 +47,8 @@ void	first_level(globe *data)
 			((t_room *)(q->content))->lvl = level;
 		for(int i = 0; ((t_room *)(q->content))->links[i] ; i++)
 		{
+			if (!((t_room *)(q->content))->links[i]->active)
+				continue;
 			if ((ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content)))->lvl < 0)
 			{
 				ft_lstadd_back(&q, ft_lstnew(ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content))));
@@ -84,12 +86,12 @@ void leveling(globe *data)
 			if (!ft_active_link(((t_room *)(q->content))->links[i]))
 				continue ;
 			tmp = ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content));
-			if (tmp->lvl < 0 && ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))) < 1)
+			if (tmp->lvl < 0 && ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))) > -1)
 			{
 				ft_lstadd_back(&q, ft_lstnew(ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content))));
 				count2++;
 			}
-			if (ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content)) == data->end)
+			if (ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content)) == data->end && ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))) > -1)
 				end = true;
 		}
 		if (--count1 == 0)

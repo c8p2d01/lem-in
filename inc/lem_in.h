@@ -16,6 +16,8 @@ typedef struct globe {
 	size_t			nAnts;
 }	globe;
 
+bool	flow(t_room *node, globe *data);
+
 void	read_data(globe *data);
 
 void	first_level(globe *data);
