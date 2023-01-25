@@ -14,9 +14,8 @@ typedef struct globe {
 	struct s_room	*end;
 	struct s_link	**linkedlist;
 	size_t			nAnts;
+	size_t			maxLevel;
 }	globe;
-
-bool	flow(t_room *node, globe *data);
 
 void	read_data(globe *data);
 

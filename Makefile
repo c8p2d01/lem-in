@@ -7,8 +7,7 @@ CFLAGS = -Wall -Werror -Wextra -Wno-unused-variable -g
 SD = ./src/
 SRC =	main.c \
 		graph.c \
-		parser.c \
-		flow.c	  
+		parser.c
 SRF = $(addprefix $(SD),$(SRC))
 
 OD = ./obj/
