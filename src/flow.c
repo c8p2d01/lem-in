@@ -81,7 +81,7 @@ bool after_flow(t_room *node, globe *data)
 				next = other;
 				link = node->links[i];
 			}
-			else if (!next && other->after_lvl < node->after_lvl && ft_flow(node->links[i], node) == 0)
+			else if (!next && other->after_lvl < node->after_lvl && ft_flow(node->links[i], node) == 0)// maybe <= 
 			{
 				next = other;
 				link = node->links[i];
