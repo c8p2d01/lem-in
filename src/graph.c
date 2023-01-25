@@ -29,9 +29,11 @@ void reset_level(globe *data)
 	{
 		if (data->graph[i] == data->start || data->graph[i] == data->end)
 			continue;
-		data->graph[i]->lvl = -1;
+		data->graph[i]->after_lvl = -1;
+
 	}
-	data->start->lvl = 0;
+	data->start->first_lvl = 0;
+	data->start->after_lvl = 0;
 }
 
 void	first_level(globe *data)
@@ -43,13 +45,13 @@ void	first_level(globe *data)
 	size_t	count2 = 0;
 	while(q)
 	{
-		if (((t_room *)(q->content))->lvl < 0)
-			((t_room *)(q->content))->lvl = level;
+		if (((t_room *)(q->content))->first_lvl < 0)
+			((t_room *)(q->content))->first_lvl = level;
 		for(int i = 0; ((t_room *)(q->content))->links[i] ; i++)
 		{
 			if (!((t_room *)(q->content))->links[i]->active)
 				continue;
-			if ((ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content)))->lvl < 0)
+			if ((ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content)))->first_lvl < 0)
 			{
 				ft_lstadd_back(&q, ft_lstnew(ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content))));
 				count2++;
@@ -63,7 +65,8 @@ void	first_level(globe *data)
 		}
 		q = q->next;
 	}
-	data->start->lvl = 0;
+	data->end->first_lvl = ++level;
+	data->start->first_lvl = 0;
 	ft_lstclear(&t, NULL);
 }
 
@@ -79,14 +82,14 @@ void leveling(globe *data)
 	reset_level(data);
 	while(q)
 	{
-		if (((t_room *)(q->content))->lvl < 0)
-			((t_room *)(q->content))->lvl = level;
+		if (((t_room *)(q->content))->after_lvl < 0)
+			((t_room *)(q->content))->after_lvl = level;
 		for(int i = 0; ((t_room *)(q->content))->links[i] ; i++)
 		{
 			if (!ft_active_link(((t_room *)(q->content))->links[i]))
 				continue ;
 			tmp = ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content));
-			if (tmp->lvl < 0 && ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))) > -1)
+			if (tmp->after_lvl < 0 && ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))) > -1)
 			{
 				ft_lstadd_back(&q, ft_lstnew(ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content))));
 				count2++;
@@ -104,8 +107,8 @@ void leveling(globe *data)
 		}
 		q = q->next;
 	}
-	data->end->lvl = level;
-	data->start->lvl = 0;
+	data->end->after_lvl = level;
+	data->start->after_lvl = 0;
 	ft_lstclear(&t, NULL);
 }
 
