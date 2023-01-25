@@ -10,9 +10,14 @@ int main()
 
 	first_level(&data);
 
-	// level_sort(&data);
+	while (flow(data.end, &data))
+	{
+		printf("\n------\n");
+		leveling(&data);
+		print_nodes(data.graph);
+	}
 
-	print_nodes(data.graph);
+	// print_nodes(data.graph);
 	free_globe(&data);
 	return (0);
 }

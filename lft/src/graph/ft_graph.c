@@ -42,7 +42,7 @@ void	print_nodes(t_room **node)
 		for (size_t j = 0; node[i]->links && node[i]->links[j]; ++j)
 		{
 			if (node[i]->links[j]->active)
-				printf("\t link to '%s'\n", ft_otherside(node[i]->links[j], node[i])->name);
+				printf("\t link to '%s'\tflow %d\n", ft_otherside(node[i]->links[j], node[i])->name, ft_flow(node[i]->links[j], node[i]));
 		}
 	}
 }

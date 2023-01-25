@@ -44,6 +44,8 @@ int		ft_flow(t_link *link, t_room *node);
 bool	ft_has_link(t_room *a, t_room *b);
 t_room	*ft_otherside(t_link *link, t_room *myside);
 size_t	ft_active_link_size(t_room *node);
+void 	ft_setflow(t_link *link, t_room *next);
+void 	ft_resetflow(t_link *link, t_room *next);
 
 t_link	*ft_g_insert(t_room *node, t_room *next);
 
