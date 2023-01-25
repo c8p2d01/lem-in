@@ -25,7 +25,8 @@ t_room	*ft_g_new_room(char *name)
 		.name = name,
 		.x = 0,
 		.y = 0,
-		.lvl = -1
+		.first_lvl = -1,
+		.after_lvl = -1
 	};
 	return (res);
 }
@@ -38,7 +39,8 @@ void	print_nodes(t_room **node)
 {
 	for (size_t i = 0; node[i]; ++i)
 	{
-		printf("node '%s'\tlevel %li\n", node[i]->name, node[i]->lvl);
+		printf("node '%s'\tfirst_level %li\n", node[i]->name, node[i]->first_lvl);
+		printf("node '%s'\tafter_level %li\n", node[i]->name, node[i]->after_lvl);
 		for (size_t j = 0; node[i]->links && node[i]->links[j]; ++j)
 		{
 			if (node[i]->links[j]->active)
