@@ -122,3 +122,19 @@ size_t	ft_active_link_size(t_room *node)
 	}
 	return (size);
 }
+
+void ft_setflow(t_link *link, t_room *next)
+{
+	if (next == link->moorv)
+		link->flow++;
+	else if (next == link->vroom)
+		link->flow--;
+}
+
+void ft_resetflow(t_link *link, t_room *next)
+{
+	if (next == link->moorv)
+		link->flow--;
+	else if (next == link->vroom)
+		link->flow++;
+}
