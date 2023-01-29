@@ -43,6 +43,8 @@ void	first_level(globe *data)
 	size_t	level = 0;
 	size_t	count1 = 1;
 	size_t	count2 = 0;
+	t_link	*next = NULL;
+	t_room	*lst = NULL;
 	while(q)
 	{
 		if (((t_room *)(q->content))->first_lvl < 0)
@@ -53,7 +55,7 @@ void	first_level(globe *data)
 				continue;
 			if ((ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content)))->first_lvl < 0)
 			{
-				ft_lstadd_back(&q, ft_lstnew(ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content))));
+				ft_lstadd_back(&q, ft_lstnew(ft_otherside(next, lst)));
 				count2++;
 			}
 		}
@@ -74,7 +76,9 @@ void leveling(globe *data)
 {
 	t_list	*q = ft_lstnew(data->start);
 	t_list	*t = q;
-	t_room *tmp = NULL;
+	t_room	*tmp = NULL;
+	t_room	*lst = NULL;
+	t_link	*link_next = NULL;
 	size_t	level = 0;
 	size_t	count1 = 1;
 	size_t	count2 = 0;
@@ -86,15 +90,15 @@ void leveling(globe *data)
 			((t_room *)(q->content))->after_lvl = level;
 		for(int i = 0; ((t_room *)(q->content))->links[i] ; i++)
 		{
-			if (!ft_active_link(((t_room *)(q->content))->links[i]))
+			if (!ft_active_link(link_next))
 				continue ;
 			tmp = ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content));
 			if (tmp->after_lvl < 0 && ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))) > -1)
 			{
-				ft_lstadd_back(&q, ft_lstnew(ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content))));
+				ft_lstadd_back(&q, ft_lstnew(ft_otherside(link_next, lst)));
 				count2++;
 			}
-			if (ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content)) == data->end && ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))) > -1)
+			if (ft_otherside(link_next, lst) == data->end)
 				end = true;
 		}
 		if (--count1 == 0)
@@ -127,3 +131,6 @@ void	remove_deadend(globe *data)
 		}
 	}
 }
+
+
+

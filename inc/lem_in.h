@@ -14,9 +14,19 @@ typedef struct globe {
 	struct s_room	*end;
 	struct s_link	**linkedlist;
 	size_t			nAnts;
+	size_t			maxLevel;
+	struct s_path	*paths;
 }	globe;
 
+typedef struct s_path {
+	struct	s_room **path;
+	size_t	len;
+}	t_path;
+
+bool	flow(t_room *node, globe *data);
+
 bool	first_flow(t_room *node, globe *data);
+
 bool 	after_flow(t_room *node, globe *data);
 
 void	read_data(globe *data);

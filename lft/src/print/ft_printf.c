@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 10:47:42 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/02 20:25:19 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/23 15:18:19 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	out_spread(char n, va_list ap)
 
 	if (n == 'c')
 	{
-		n = va_arg(ap, int);
+		n = (char)va_arg(ap, int);
 		return (write(1, &n, 1));
 	}
 	else if (n == 'x')
@@ -48,30 +48,6 @@ int	out_spread(char n, va_list ap)
 	return (-2147483648);
 }
 
-int	indidentify(const char *str)
-{
-	if (str[0] == '%')
-	{
-		if (str[1] == 'c')
-			return (1);
-		else if (str[1] == 'x')
-			return (2);
-		else if (str[1] == 'i' || str[1] == 'd')
-			return (3);
-		else if (str[1] == 'p')
-			return (4);
-		else if (str[1] == 's')
-			return (5);
-		else if (str[1] == 'u')
-			return (6);
-		else if (str[1] == '%')
-			return (7);
-		else if (str[1] == 'X')
-			return (8);
-	}
-	return (0);
-}
-
 // 0 -> normal
 // 1 -> char
 // 2 -> hexa
@@ -85,20 +61,16 @@ int	ft_printf(const char *str, ...)
 {
 	va_list	ap;
 	int		i;
-	int		n;
 	int		total;
 
 	i = -1;
-	n = 0;
 	total = 0;
 	va_start(ap, str);
-	while (str[++i] && n >= 0)
+	while (str[++i])
 	{
-		n = indidentify(&str[i]);
 		if (str[i] != '%')
 		{
-			write(1, str + i, 1);
-			total++;
+			total += write(1, str + i, 1);
 			continue ;
 		}
 		else

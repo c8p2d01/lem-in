@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:07 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/02 15:15:49 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/29 16:13:15 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ struct		s_list
 {
 	void	*content;
 	t_list	*next;
+	t_list	*prev;
 };
 
 t_list		*ft_lstnew(void *content);

@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:42:13 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/02 15:14:54 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/29 16:16:09 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,6 @@ t_list	*ft_lstnew(void *content)
 		return (NULL);
 	new->content = content;
 	new->next = NULL;
+	new->prev = NULL;
 	return (new);
 }
