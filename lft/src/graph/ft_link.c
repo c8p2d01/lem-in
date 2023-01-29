@@ -123,6 +123,24 @@ size_t	ft_active_link_size(t_room *node)
 	return (size);
 }
 
+size_t	ft_flow_link_size(t_room *node)
+{
+	size_t i;
+	size_t size;
+
+	if (!node)
+		return (0);
+	i = 0;
+	size = 0;
+	while (node->links && node->links[i])
+	{
+		if (node->links[i]->flow == -1)
+			size++;
+		i++;
+	}
+	return (size);
+}
+
 void ft_setflow(t_link *link, t_room *next)
 {
 	if (next == link->moorv)

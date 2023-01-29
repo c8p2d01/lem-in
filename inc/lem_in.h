@@ -8,7 +8,7 @@
 # include <stdbool.h>
 # include <sys/time.h>
 
-# define READ_INPUT 3 //STDIN_FILENO
+# define READ_INPUT STDIN_FILENO
 
 typedef struct globe {
 	struct s_room	**graph;
