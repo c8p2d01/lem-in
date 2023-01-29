@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
+/*   ft_lstfirst.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/10 17:41:51 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/29 16:14:57 by cdahlhof         ###   ########.fr       */
+/*   Created: 2022/05/10 17:42:04 by cdahlhof          #+#    #+#             */
+/*   Updated: 2023/01/02 15:14:54 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/libft.h"
 
-void	ft_lstadd_front(t_list **lst, t_list *new)
+t_list	*ft_lstlast(t_list *lst)
 {
-	if (*lst && new)
-	{
-		new->next = *lst;
-		(*lst)->prev = new;
-	}
-	*lst = new;
+	if (!lst)
+		return (NULL);
+	while (lst->prev != NULL)
+		lst = lst->prev;
+	return (lst);
 }

@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:47 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/02 15:14:54 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/29 16:14:01 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 	{
 		i = ft_lstlast((*lst));
 		i->next = new;
+		new->prev = i;
 	}
 }

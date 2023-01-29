@@ -17,7 +17,9 @@ int main()
 		print_nodes(data.graph);
 	}
 
-	// print_nodes(data.graph);
+	// path_diver
+	// ant_coordination
+	print_nodes(data.graph);
 	free_globe(&data);
 	return (0);
 }
