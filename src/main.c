@@ -9,16 +9,24 @@ int main()
 	remove_deadend(&data);
 
 	first_level(&data);
-
-	while (flow(data.end, &data))
+	first_flow(data.end, &data);
+	int i = 1;
+	printf("%d------\n",i);
+	leveling(&data);
+	//print_nodes(data.graph);
+	//after_flow(data.end, &data);
+	while (after_flow(data.end, &data))
 	{
-		printf("\n------\n");
+		i ++;
+		printf("%d------\n",i);
 		leveling(&data);
-		print_nodes(data.graph);
+		//print_nodes(data.graph);
+		
 	}
 
 	// path_diver
 	// ant_coordination
+  
 	print_nodes(data.graph);
 	free_globe(&data);
 	return (0);

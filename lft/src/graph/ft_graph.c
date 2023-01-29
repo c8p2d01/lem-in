@@ -25,7 +25,8 @@ t_room	*ft_g_new_room(char *name)
 		.name = name,
 		.x = 0,
 		.y = 0,
-		.lvl = -1
+		.first_lvl = -1,
+		.after_lvl = -1
 	};
 	return (res);
 }
@@ -42,8 +43,9 @@ void	print_nodes(t_room **node)
 
 	for (size_t i = 0; (current = node[i]) != NULL; ++i)
 	{
-		ft_printf("node \e[38;5;%im'%s'\e[0m\tlevel %i\n", colorflow(current->lvl * 5), current->name, current->lvl);
-		for (size_t j = 0; current->links && (linked = current->links[j]) != NULL; ++j)
+		printf("node '%s'\tfirst_level \e[38;5;%im%li\e[0m\n", node[i]->name, colorflow(node[i]->first_lvl), node[i]->first_lvl);
+		printf("node '%s'\tafter_level \e[38;5;%im%li\e[0m\n", node[i]->name, colorflow(node[i]->after_lvl), node[i]->after_lvl);
+		for (size_t j = 0; node[i]->links && node[i]->links[j]; ++j)
 		{
 			if (linked->active)
 				ft_printf("\t link to \e[38;5;%im'%s'\e[0m\tflow %i\n", 

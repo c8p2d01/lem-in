@@ -23,7 +23,8 @@ typedef struct s_room
 	char			*name;
 	size_t			x;
 	size_t			y;
-	ssize_t			lvl;
+	ssize_t			first_lvl;
+	ssize_t			after_lvl;
 }	t_room;
 
 typedef struct s_link

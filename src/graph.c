@@ -29,9 +29,11 @@ void reset_level(globe *data)
 	{
 		if (data->graph[i] == data->start || data->graph[i] == data->end)
 			continue;
-		data->graph[i]->lvl = -1;
+		data->graph[i]->after_lvl = -1;
+
 	}
-	data->start->lvl = 0;
+	data->start->first_lvl = 0;
+	data->start->after_lvl = 0;
 }
 
 void	first_level(globe *data)
@@ -45,12 +47,13 @@ void	first_level(globe *data)
 	t_room	*lst = NULL;
 	while(q)
 	{
-		lst = (t_room *)(q->content);
-		if ((lst)->lvl < 0)
-			(lst)->lvl = level;
-		for(int i = 0; (next = (lst)->links[i]) != NULL ; i++)
+		if (((t_room *)(q->content))->first_lvl < 0)
+			((t_room *)(q->content))->first_lvl = level;
+		for(int i = 0; ((t_room *)(q->content))->links[i] ; i++)
 		{
-			if ((ft_otherside(next, lst))->lvl < 0)
+			if (!((t_room *)(q->content))->links[i]->active)
+				continue;
+			if ((ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content)))->first_lvl < 0)
 			{
 				ft_lstadd_back(&q, ft_lstnew(ft_otherside(next, lst)));
 				count2++;
@@ -64,7 +67,8 @@ void	first_level(globe *data)
 		}
 		q = q->next;
 	}
-	data->start->lvl = 0;
+	data->end->first_lvl = ++level;
+	data->start->first_lvl = 0;
 	ft_lstclear(&t, NULL);
 }
 
@@ -82,15 +86,14 @@ void leveling(globe *data)
 	reset_level(data);
 	while(q)
 	{
-		lst = (t_room *)(q->content);
-		if ((lst)->lvl < 0)
-			(lst)->lvl = level;
-		for(int i = 0; (link_next = (lst)->links[i]) != NULL ; i++)
+		if (((t_room *)(q->content))->after_lvl < 0)
+			((t_room *)(q->content))->after_lvl = level;
+		for(int i = 0; ((t_room *)(q->content))->links[i] ; i++)
 		{
 			if (!ft_active_link(link_next))
 				continue ;
-			tmp = ft_otherside(link_next, lst);
-			if (tmp->lvl < 0 && ft_flow(link_next, (lst)) < 1)
+			tmp = ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content));
+			if (tmp->after_lvl < 0 && ft_flow(((t_room *)(q->content))->links[i], ((t_room *)(q->content))) > -1)
 			{
 				ft_lstadd_back(&q, ft_lstnew(ft_otherside(link_next, lst)));
 				count2++;
@@ -108,8 +111,8 @@ void leveling(globe *data)
 		}
 		q = q->next;
 	}
-	data->end->lvl = level;
-	data->start->lvl = 0;
+	data->end->after_lvl = level;
+	data->start->after_lvl = 0;
 	ft_lstclear(&t, NULL);
 }
 

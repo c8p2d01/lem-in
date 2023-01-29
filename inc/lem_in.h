@@ -25,6 +25,10 @@ typedef struct s_path {
 
 bool	flow(t_room *node, globe *data);
 
+bool	first_flow(t_room *node, globe *data);
+
+bool 	after_flow(t_room *node, globe *data);
+
 void	read_data(globe *data);
 
 void	first_level(globe *data);
