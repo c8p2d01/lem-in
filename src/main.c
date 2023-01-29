@@ -26,7 +26,7 @@ int main()
 
 	// path_diver
 	// ant_coordination
-  
+
 	print_nodes(data.graph);
 	free_globe(&data);
 	return (0);

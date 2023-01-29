@@ -23,8 +23,6 @@ typedef struct s_path {
 	size_t	len;
 }	t_path;
 
-bool	flow(t_room *node, globe *data);
-
 bool	first_flow(t_room *node, globe *data);
 
 bool 	after_flow(t_room *node, globe *data);
