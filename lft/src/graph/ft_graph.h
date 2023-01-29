@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_graph.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdahlhof <cdahlhof@students.42wolfsburg    +#+  +:+       +#+        */
+/*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:07 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/22 16:01:45 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/29 16:50:55 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,7 @@ t_link	*ft_g_insert(t_room *node, t_room *next);
 
 void	ft_g_unlink(t_room *a, t_room *b);
 void	ft_g_del_node(t_room *node);
+void ft_setflow(t_link *link, t_room *next);
+void ft_resetflow(t_link *link, t_room *next);
 
 #endif

@@ -8,6 +8,8 @@
 # include <stdbool.h>
 # include <sys/time.h>
 
+# define READ_INPUT 3 //STDIN_FILENO
+
 typedef struct globe {
 	struct s_room	**graph;
 	struct s_room	*start;
@@ -22,8 +24,6 @@ typedef struct s_path {
 	struct	s_room **path;
 	size_t	len;
 }	t_path;
-
-bool	flow(t_room *node, globe *data);
 
 bool	first_flow(t_room *node, globe *data);
 

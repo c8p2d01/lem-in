@@ -51,7 +51,8 @@ SRCFILES =	mem/ft_calloc.c \
 		string/ft_strmapi.c \
 		string/ft_striteri.c \
 		\
-		print/ft_colorflow.c \
+		print/ft_color.c \
+		print/ft_printfile.c \
 		print/ft_putchar_fd.c \
 		print/ft_putstr_fd.c \
 		print/ft_putendl_fd.c \
