@@ -45,11 +45,11 @@ void	print_nodes(t_room **node)
 	{
 		printf("node '%s'\tfirst_\e[38;5;%imlevel %li\e[0m\n", node[i]->name, colorflow(node[i]->first_lvl), node[i]->first_lvl);
 		printf("node '%s'\tafter_\e[38;5;%imlevel %li\e[0m\n", node[i]->name, colorflow(node[i]->after_lvl), node[i]->after_lvl);
-		for (size_t j = 0; node[i]->links && node[i]->links[j]; ++j)
+		for (size_t j = 0; node[i]->links && (linked = node[i]->links[j]); ++j)
 		{
 			if (linked->active)
-				ft_printf("\t link to \e[38;5;%im'%s'\e[0m\tflow %i\n", 
-				colorflow(ft_otherside(linked, current)->after_lvl * 5), 
+				printf("\t link to \e[38;5;%im'%s'\e[0m\tflow %i\n", 
+				colorflow(ft_otherside(linked, current)->after_lvl), 
 						ft_otherside(linked, node[i])->name,
 						ft_flow(linked, current));
 		}

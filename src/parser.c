@@ -105,7 +105,7 @@ static bool	extract_data(char *line, globe *data)
 	if (!is_gate_parsed && (ft_strncmp(line, "##start", 8) == 0 || ft_strncmp(line, "##end", 6) == 0))
 	{
 		char *node_line;
-		if (get_next_line(0, &node_line) <= 0)
+		if (get_next_line(READ_INPUT, &node_line) <= 0)
 		{
 			ft_putendl_fd("error: get_next_line() after ##start or ##end", STDERR_FILENO);
 			return false;
@@ -185,7 +185,7 @@ void	read_data(globe *data)
 
 	do
 	{
-		read_size = get_next_line(STDIN_FILENO, &line);
+		read_size = get_next_line(READ_INPUT, &line);
 		if (read_size != 1)
 		{
 			if (read_size == 0)
