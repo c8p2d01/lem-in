@@ -6,7 +6,11 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:43:47 by cdahlhof          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/01/29 16:27:06 by cdahlhof         ###   ########.fr       */
+=======
+/*   Updated: 2023/01/23 15:06:10 by cdahlhof         ###   ########.fr       */
+>>>>>>> 80148c10b9c1afb10ecbb5b18d558946d92ab058
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +88,7 @@ void		ft_striteri(char *s, void (*f)(unsigned int, char*));
 	Printing
 */
 
+int			ft_printf(const char *str, ...);
 int			colorflow(int i);
 void		ft_putchar_fd(char c, int fd);
 void		ft_putstr_fd(char *s, int fd);
