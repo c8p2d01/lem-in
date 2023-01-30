@@ -12,6 +12,8 @@ int main()
 
 	read_data(&data);
 
+	close(3);
+
 	remove_deadend(&data);
 
 	first_level(&data);
@@ -19,22 +21,20 @@ int main()
 	int i = 1;
 	printf("%d------\n",i);
 	leveling(&data);
-	//print_nodes(data.graph);
-	//after_flow(data.end, &data);
 	while (after_flow(data.end, &data))
 	{
-		i ++;
+		i++;
 		printf("%d------\n",i);
 		leveling(&data);
-		//print_nodes(data.graph);
-		
 	}
 
 	print_nodes(data.graph);
 
 	data.paths = cartograph(&data);
 
-	// ant_coordination
+	path_sort(&data);
+
+	ant_march(&data);
 
 	free_globe(&data);
 	return (0);

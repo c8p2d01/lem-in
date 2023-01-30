@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:56 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/29 18:50:08 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/01/30 18:12:04 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@ void	ft_lstdelone(t_list *lst, void (*del)(void*))
 	}
 	if (lst && del)
 		del(lst->content);
-	free(lst);
+	if (lst)
+		free(lst);
 }
