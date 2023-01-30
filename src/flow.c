@@ -70,7 +70,7 @@ bool after_flow(t_room *node, globe *data)
 		}
 		else
 		{
-			if (other != data->start && (other->first_lvl <= node->first_lvl || other->after_lvl <= node->after_lvl) && ft_flow(node->links[i], node) == -1)
+			if (other != data->start && (/*other->first_lvl <= node->first_lvl &&*/ other->after_lvl <= node->after_lvl) && ft_flow(node->links[i], node) == -1)
 			{
 				next = other;
 				link = node->links[i];
@@ -81,16 +81,18 @@ bool after_flow(t_room *node, globe *data)
 				next = other;
 				link = node->links[i];
 			}
-			else if (!next && other->after_lvl < node->after_lvl && ft_flow(node->links[i], node) == 0)// maybe <= 
+			else if (!next && other->after_lvl <= node->after_lvl && ft_flow(node->links[i], node) == 0)// maybe <= 
 			{
 				next = other;
 				link = node->links[i];
 			}
 		}
 	}
+	if (next)
+		printf("%s -> node : %s\n", node->name, next->name);
 	if (!next)
 		return (false);
-	printf("%s -> node : %s\n", node->name, next->name);
+	//printf("%s -> node : %s\n", node->name, next->name);
 	if (!after_flow(next, data))
 		return (false);
 	ft_setflow(link, next);

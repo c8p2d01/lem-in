@@ -24,3 +24,32 @@
 7-4
 6-5
 #another comment Npq9
+
+11:
+Ctt0 -> node : Wer2
+Wer2 -> node : Nyd2
+Nyd2 -> node : Mkv2
+Mkv2 -> node : F_a4
+F_a4 -> node : Hnp4
+
+12:
+Gqo2 -> node : Ctt0
+Ctt0 -> node : Wer2
+Wer2 -> node : Nyd2
+Nyd2 -> node : Xej1
+Xej1 -> node : R_f6
+R_f6 -> node : Ny_5
+
+node 'Xej1'		first_level 14
+node 0x7fbdbf410fc0	after_level 73
+	 link to 'Onk3'	flow -1
+	 link to 'R_f6'	flow 1
+	 link to 'Nyd2'	flow -1
+	 link to 'Dtw6'	flow 1
+
+node 'Nyd2'		first_level 15
+node 0x7fbdbf410d90	after_level 74
+	 link to 'Bzm8'	flow -1
+	 link to 'Mkv2'	flow 1
+	 link to 'Xej1'	flow 1
+	 link to 'Wer2'	flow -1

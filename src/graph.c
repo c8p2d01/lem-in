@@ -96,7 +96,9 @@ void leveling(globe *data)
 			if (!ft_active_link(link_next))
 				continue ;
 			tmp = ft_otherside(link_next, lst);
-			if (tmp->after_lvl < 0 && ft_flow(link_next, lst) > -1)
+			if ((t_room *)(q->content) == data->start && ft_flow(link_next, lst) == -1)
+				continue;
+			else if (tmp->after_lvl < 0 && ft_flow(link_next, lst) < 1)
 			{
 				ft_lstadd_back(&q, ft_lstnew(tmp));
 				count2++;

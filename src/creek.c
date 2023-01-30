@@ -1,18 +1,18 @@
 #include "../inc/lem_in.h"
 
-// void	mapper(t_path *river)
-// {
-// 	int i = 0;
+void	mapper(t_path *river)
+{
+	int i = 0;
 
-// 	if (!river)
-// 		return ;
-// 	printf("riverlen %zu\n", river->len);
-// 	while(river && river->path && river->path[i])
-// 	{
-// 		printf("\tnode '%s'\n", river->path[i]->name);
-// 		i++;
-// 	}
-// }
+	if (!river)
+		return ;
+	printf("riverlen %zu\n", river->len);
+	while(river && river->path && river->path[i])
+	{
+		printf("\tnode '%s'\n", river->path[i]->name);
+		i++;
+	}
+}
 
 t_path	**cartograph(globe *data)
 {
@@ -27,7 +27,7 @@ t_path	**cartograph(globe *data)
 			link = data->end->links[++i];
 		map[m++] = river(link, data->end, data->start);
 		link = data->end->links[++i];
-			// mapper(map[m - 1]);
+			//mapper(map[m - 1]);
 	}
 	return(map);
 }

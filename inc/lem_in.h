@@ -43,4 +43,8 @@ t_path	**cartograph(globe *data);
 
 void	free_globe(globe *data);
 
+void 	path_sort(globe *data);
+
+void	mapper(t_path *river);
+
 #endif

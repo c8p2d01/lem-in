@@ -10,7 +10,8 @@ SRC =	main.c \
 		parser.c \
 		creek.c \
 		flow.c \
-		flood.c
+		flood.c \
+		path.c 
 SRF = $(addprefix $(SD),$(SRC))
 
 OD = ./obj/
