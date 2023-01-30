@@ -53,6 +53,8 @@ bool	ft_is_link(t_link *link, t_room *a, t_room *b)
  */
 int	ft_flow(t_link *link, t_room *node)
 {
+	if (!link || !node || !link->vroom || !link->moorv)
+		return(FLOW_ERROR);
 	if (link->vroom == node)
 		return (link->flow);
 	if (link->moorv == node)

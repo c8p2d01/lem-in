@@ -1,18 +1,43 @@
 #include "../inc/lem_in.h"
 
-// void	mapper(t_path *river)
-// {
-// 	int i = 0;
+void	mapper(t_path *river)
+{
+	int i = 0;
 
-// 	if (!river)
-// 		return ;
-// 	printf("riverlen %zu\n", river->len);
-// 	while(river && river->path && river->path[i])
-// 	{
-// 		printf("\tnode '%s'\n", river->path[i]->name);
-// 		i++;
-// 	}
-// }
+	if (!river)
+		return ;
+	printf("riverlen %zu\n", river->len);
+	while(river && river->path && river->path[i])
+	{
+		printf("\tnode '%s'\n", river->path[i]->name);
+		i++;
+	}
+}
+
+void path_sort(globe *data)
+{
+	int max = ft_flow_link_size(data->end);
+	t_path **paths = calloc(max + 1, sizeof(t_path *));
+	int x = 0;
+	int i = 0;
+	t_path *tmp = NULL;
+	while (data->paths[i])
+	{
+		tmp = data->paths[i];
+		x = i;
+		while (x > 0)
+		{
+			if (tmp->len >= paths[x - 1]->len)
+				break ;
+			paths[x] = paths[x - 1];
+			x --;
+		}
+		paths[x] = tmp;
+		i ++;
+	}
+	free(data->paths);
+	data->paths = paths;
+}
 
 t_path	**cartograph(globe *data)
 {
@@ -21,21 +46,24 @@ t_path	**cartograph(globe *data)
 	int m = 0;
 
 	t_path	**map = ft_calloc((maxFlow + 1), sizeof(t_path *));
-	for (t_link *link = data->end->links[i];map && link; )
+	for (t_link *link = data->start->links[i];map && link; )
 	{
-		while ( data->end->links[i] && !ft_active_link(link))
-			link = data->end->links[++i];
-		map[m++] = river(link, data->end, data->start);
-		link = data->end->links[++i];
-			// mapper(map[m - 1]);
+		while (link && !ft_active_link(link))
+			link = data->start->links[++i];
+		map[m++] = river(link, data->start, data->end);
+		link = data->start->links[++i];
+			mapper(map[m - 1]);
 	}
+	printf("riviisisi");
 	return(map);
 }
 
 t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 {
+	printf("spring %p estuary %p flow %p flowto %i\n", spring, estuary, flow, ft_flow(flow, spring));
 	size_t	len = 1;
 	int		n = 0;
+	int		flw;
 
 	for (t_room *node = ft_otherside(flow, spring);node && node != estuary; )
 	{
@@ -43,7 +71,8 @@ t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 		n = 0;
 		while (node->links && node->links[n])
 		{
-			if (ft_flow(node->links[n], node) == 1)
+			flw = ft_flow(node->links[n], node);
+			if (flw == -1)
 			{
 				len++;
 				node = ft_otherside(node->links[n], node);
@@ -58,6 +87,7 @@ t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 	if (!river || !river->path)
 		return(NULL);
 	river->len = len;
+	river->ant = -1;
 
 	len = 0;
 	river->path[len] = spring;
@@ -66,11 +96,13 @@ t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 		n = 0;
 		while (node->links && node->links[n])
 		{
-			if (ft_flow(node->links[n], node) == 1)
+			flw = ft_flow(node->links[n], node);
+			if (flw == -1)
 			{
 				len++;
 				node = ft_otherside(node->links[n], node);
 				river->path[len] = node;
+				n = 0;
 			}
 			n++;
 		}

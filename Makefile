@@ -19,6 +19,11 @@ OBF = $(SRF:$(SD)%.c=$(OD)%.o)
 
 all: $(NAME)
 
+debug: fclean $(OBF)
+	make -s -C ./lft
+	$(CC) $(OBF) -D READ_INPUT=3 ./lft/libft.a -o $(NAME)
+
+
 e: re
 	cat map/default.map | ./$(NAME)
 
