@@ -54,13 +54,11 @@ t_path	**cartograph(globe *data)
 		link = data->start->links[++i];
 			mapper(map[m - 1]);
 	}
-	printf("riviisisi");
 	return(map);
 }
 
 t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 {
-	printf("spring %p estuary %p flow %p flowto %i\n", spring, estuary, flow, ft_flow(flow, spring));
 	size_t	len = 1;
 	int		n = 0;
 	int		flw;
