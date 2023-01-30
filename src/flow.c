@@ -70,7 +70,7 @@ bool after_flow(t_room *node, globe *data)
 		}
 		else
 		{
-			if (other != data->start && other->first_lvl <= node->first_lvl && ft_flow(node->links[i], node) == -1)
+			if (other != data->start && (other->first_lvl <= node->first_lvl || other->after_lvl <= node->after_lvl) && ft_flow(node->links[i], node) == -1)
 			{
 				next = other;
 				link = node->links[i];

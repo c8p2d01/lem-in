@@ -10,8 +10,8 @@ void	ant_march(globe *data)
 	{
 
 	}
-	while (i < maxflow)
+	for (int i = 0; i < maxflow; i++)
 	{
-		
+		break;
 	}
 }

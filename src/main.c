@@ -8,7 +8,7 @@ int main()
 	globe data;
 	ft_bzero(&data, sizeof(globe));
 
-	openat(3, "/Users/cdahlhof/Documents/lem-in/map/default.map", O_RDONLY);
+	openat(3, "/Users/cdahlhof/Documents/lem-in/map/ex3", O_RDONLY);
 
 	read_data(&data);
 
@@ -30,11 +30,12 @@ int main()
 		
 	}
 
+	print_nodes(data.graph);
 
-	// path_diver
+	data.paths = cartograph(&data);
+
 	// ant_coordination
 
-	print_nodes(data.graph);
 	free_globe(&data);
 	return (0);
 }

@@ -43,8 +43,8 @@ void	print_nodes(t_room **node)
 
 	for (size_t i = 0; (current = node[i]) != NULL; ++i)
 	{
-		printf("node '\e[38;5;%im%s\e[0m'\tfirst_level %li\n", colorflow(5 * node[i]->first_lvl), node[i]->name, node[i]->first_lvl);
-		printf("node '%s'\tafter_level \e[38;5;%im%li\e[0m\n", node[i]->name, colorflow(5 * node[i]->after_lvl), node[i]->after_lvl);
+		printf("node '\e[38;5;%im%s\e[0m'\t\tfirst_level %li\n", colorflow(5 * node[i]->first_lvl), node[i]->name, node[i]->first_lvl);
+		printf("node %p\tafter_level \e[38;5;%im%li\e[0m\n", node[i], colorflow(5 * node[i]->after_lvl), node[i]->after_lvl);
 		for (size_t j = 0; node[i]->links && (linked = node[i]->links[j]); ++j)
 		{
 			if (linked->active)

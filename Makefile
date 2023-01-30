@@ -8,7 +8,9 @@ SD = ./src/
 SRC =	main.c \
 		graph.c \
 		parser.c \
-		flow.c
+		creek.c \
+		flow.c \
+		flood.c
 SRF = $(addprefix $(SD),$(SRC))
 
 OD = ./obj/
@@ -18,7 +20,7 @@ OBF = $(SRF:$(SD)%.c=$(OD)%.o)
 all: $(NAME)
 
 e: re
-	cat map/ex3 | ./$(NAME)
+	cat map/default.map | ./$(NAME)
 
 $(OD)%.o: $(SD)%.c
 	@mkdir -p $(OD)

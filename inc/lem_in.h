@@ -8,7 +8,7 @@
 # include <stdbool.h>
 # include <sys/time.h>
 
-# define READ_INPUT STDIN_FILENO
+# define READ_INPUT 3//STDIN_FILENO
 
 typedef struct globe {
 	struct s_room	**graph;
@@ -17,7 +17,7 @@ typedef struct globe {
 	struct s_link	**linkedlist;
 	size_t			nAnts;
 	size_t			maxLevel;
-	struct s_path	*paths;
+	struct s_path	**paths;
 }	globe;
 
 typedef struct s_path {
@@ -25,17 +25,21 @@ typedef struct s_path {
 	size_t	len;
 }	t_path;
 
-bool	first_flow(t_room *node, globe *data);
-
-bool 	after_flow(t_room *node, globe *data);
-
 void	read_data(globe *data);
+
+void	remove_deadend(globe *data);
 
 void	first_level(globe *data);
 
+bool	first_flow(t_room *node, globe *data);
+
 void	leveling(globe *data);
 
-void	remove_deadend(globe *data);
+bool 	after_flow(t_room *node, globe *data);
+
+t_path	*river(t_link *flow, t_room *spring, t_room *estuary);
+
+t_path	**cartograph(globe *data);
 
 void	free_globe(globe *data);
 
