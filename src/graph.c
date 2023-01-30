@@ -84,6 +84,11 @@ void leveling(globe *data)
 	reset_level(data);
 	while(q)
 	{
+		if ((t_room *)(q->content) == data->end)
+		{
+			q = q->next;
+			continue;
+		}
 		if ((lst = (t_room *)(q->content))->after_lvl < 0)
 			(lst)->after_lvl = level;
 		for(int i = 0; (link_next = lst->links[i]) ; i++)
@@ -96,7 +101,7 @@ void leveling(globe *data)
 				ft_lstadd_back(&q, ft_lstnew(tmp));
 				count2++;
 			}
-			if (tmp == data->end)
+			if (tmp == data->end && ft_flow(link_next, lst) > -1)
 				end = true;
 		}
 		if (--count1 == 0)

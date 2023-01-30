@@ -15,7 +15,6 @@ int main()
 	remove_deadend(&data);
 
 	first_level(&data);
-	printf("\ndebug %i\n", 42);
 	first_flow(data.end, &data);
 	int i = 1;
 	printf("%d------\n",i);
@@ -31,11 +30,12 @@ int main()
 		
 	}
 
+	print_nodes(data.graph);
 
-	// path_diver
+	data.paths = cartograph(&data);
+
 	// ant_coordination
 
-	print_nodes(data.graph);
 	free_globe(&data);
 	return (0);
 }
