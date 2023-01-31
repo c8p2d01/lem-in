@@ -86,8 +86,9 @@ void leveling(globe *data)
 	{
 		if ((t_room *)(q->content) == data->end)
 		{
+			printf("************\nEND\n");
 			q = q->next;
-			continue;
+			continue ;
 		}
 		if ((lst = (t_room *)(q->content))->after_lvl < 0)
 			(lst)->after_lvl = level;
@@ -98,7 +99,7 @@ void leveling(globe *data)
 			tmp = ft_otherside(link_next, lst);
 			if ((t_room *)(q->content) == data->start && ft_flow(link_next, lst) == -1)
 				continue;
-			else if (tmp->after_lvl < 0 && ft_flow(link_next, lst) < 1)
+			else if (tmp->after_lvl < 0 && ft_flow(link_next, lst) > -1)
 			{
 				ft_lstadd_back(&q, ft_lstnew(tmp));
 				count2++;

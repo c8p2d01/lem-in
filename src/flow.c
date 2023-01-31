@@ -70,18 +70,25 @@ bool after_flow(t_room *node, globe *data)
 		}
 		else
 		{
-			if (other != data->start && (/*other->first_lvl <= node->first_lvl &&*/ other->after_lvl <= node->after_lvl) && ft_flow(node->links[i], node) == -1)
+			if (other == data->start && ft_flow(node->links[i], node) == 0)
 			{
 				next = other;
 				link = node->links[i];
 				break ;
 			}
-			else if (next && other->first_lvl < next->first_lvl && other->after_lvl <= node->after_lvl && ft_flow(node->links[i], node) == 0)
+			else if (other != data->start && (/*other->first_lvl <= node->first_lvl && */other->after_lvl <= node->after_lvl) && ft_flow(node->links[i], node) == -1)
 			{
 				next = other;
 				link = node->links[i];
+				break ;
 			}
-			else if (!next && other->after_lvl <= node->after_lvl && ft_flow(node->links[i], node) == 0)// maybe <= 
+			else if (other->first_lvl < node->first_lvl && other->after_lvl == node->after_lvl && ft_flow(node->links[i], node) == 0)
+			{
+				next = other;
+				link = node->links[i];
+				break;
+			}
+			else if (!next && other->after_lvl < node->after_lvl && ft_flow(node->links[i], node) == 0)// maybe <= 
 			{
 				next = other;
 				link = node->links[i];
