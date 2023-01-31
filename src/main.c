@@ -11,6 +11,8 @@ int main()
 	openat(3, "/Users/vheymans/Documents/code/github/lem-in/map/test.map", O_RDONLY);
 	read_data(&data);
 
+	close(3);
+
 	remove_deadend(&data);
 
 	first_level(&data);
@@ -21,12 +23,11 @@ int main()
 	//print_nodes(data.graph);
 	//after_flow(data.end, &data);
 	while (after_flow(data.end, &data) && i < 10)
+	while (after_flow(data.end, &data))
 	{
-		i ++;
+		i++;
 		printf("%d------\n",i);
 		leveling(&data);
-		//print_nodes(data.graph);
-		
 	}
 
 	print_nodes(data.graph);
@@ -40,7 +41,9 @@ int main()
 	/*mapper(data.paths[0]);
 	mapper(data.paths[1]);*/
 
-	// ant_coordination
+	path_sort(&data);
+
+	ant_march(&data);
 
 	free_globe(&data);
 	return (0);

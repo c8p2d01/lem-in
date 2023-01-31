@@ -64,6 +64,7 @@ SRCFILES =	mem/ft_calloc.c \
 		lst/ft_lstadd_front.c \
 		lst/ft_lstsize.c \
 		lst/ft_lstlast.c \
+		lst/ft_lstfirst.c \
 		lst/ft_lstadd_back.c \
 		lst/ft_lstdelone.c \
 		lst/ft_lstclear.c \
