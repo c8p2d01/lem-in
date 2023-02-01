@@ -34,6 +34,9 @@ int main()
 
 	path_sort(&data);
 
+	// for the tester
+	printf("TESTER:%s\n", data.end->name);
+
 	ant_march(&data);
 
 	free_globe(&data);

@@ -46,7 +46,7 @@ t_path	**cartograph(globe *data)
 	int m = 0;
 
 	t_path	**map = ft_calloc((maxFlow + 1), sizeof(t_path *));
-	for (t_link *link = data->start->links[i];map && link; )
+	for (t_link *link = data->start->links[i];map && link && m < maxFlow; )
 	{
 		while (link && !ft_active_link(link))
 			link = data->start->links[++i];
@@ -76,7 +76,13 @@ t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 				node = ft_otherside(node->links[n], node);
 				n = 0;
 			}
-			n++;
+			else
+				n++;
+		}
+		if (node == estuary)
+		{
+			len++;
+			break;
 		}
 	}
 
@@ -98,11 +104,18 @@ t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 			if (flw == -1)
 			{
 				len++;
-				node = ft_otherside(node->links[n], node);
 				river->path[len] = node;
+				node = ft_otherside(node->links[n], node);
 				n = 0;
 			}
-			n++;
+			else
+				n++;
+		}
+		if (node == estuary)
+		{
+			len++;
+			river->path[len] = node;
+			break;
 		}
 	}
 	return (river);
