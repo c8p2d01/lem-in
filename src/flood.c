@@ -25,10 +25,10 @@ void	drought(void *content)
 	}
 }
 
-int		len_of_prev(t_path **paths, int i)
+unsigned long	len_of_prev(t_path **paths, int i)
 {
-	int lens = 0;
-	for (int x = 0; x < i; x ++)
+	unsigned long lens = 0;
+	for (int x = 0; x <= i; x ++)
 		lens += paths[x]->len;
 	return (lens);
 }
@@ -72,14 +72,13 @@ void	ant_march(globe *data)
 			temp = tmp;
 		}
 		printf("\n");
-		for (int i = 0; i < maxflow && marched < data->nAnts; )
+		for (unsigned long i = 0; data->paths[i] && marched < data->nAnts; i ++)
 		{
-			if (i != 0 && data->paths[i]->len > (data->nAnts - marched))
+			if (i != 0 && data->paths[i]->len > data->paths[0]->len && i > (data->nAnts - marched ) /  (data->paths[i]->len - data->paths[0]->len))
 				break;
 			t_path	*newAnt = copy_path(data->paths[i], marched + 1); // <-> start counting at 0 '+ 1'
 			ft_lstadd_back(&ants, ft_lstnew(newAnt));
 			marched++;
-			i++;
 		}
 	}
 }

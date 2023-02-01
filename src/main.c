@@ -39,6 +39,8 @@ int main()
 	printf("done cartography\n");
 
 	path_sort(&data);
+	for (int i = 0; data.paths[i]; i ++)
+		mapper(data.paths[i]);
 	printf("done sorter\n");
 
 	/*mapper(data.paths[0]);
