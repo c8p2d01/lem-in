@@ -23,9 +23,11 @@ debug: fclean $(OBF)
 	make -s -C ./lft
 	$(CC) $(OBF) -D READ_INPUT=3 ./lft/libft.a -o $(NAME)
 
+test:
+	make e | ./tester/tester.sh
 
 e: re
-	cat map/default.map | ./$(NAME)
+	cat map/overlap.map | ./$(NAME)
 
 $(OD)%.o: $(SD)%.c
 	@mkdir -p $(OD)
