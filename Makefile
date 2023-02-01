@@ -10,8 +10,7 @@ SRC =	main.c \
 		parser.c \
 		creek.c \
 		flow.c \
-		flood.c \
-		path.c 
+		flood.c 
 SRF = $(addprefix $(SD),$(SRC))
 
 OD = ./obj/
@@ -28,7 +27,7 @@ test:
 	make e | ./tester/tester.sh
 
 e: re
-	cat map/overlap.map | ./$(NAME)
+	cat map/test.map | ./$(NAME)
 
 $(OD)%.o: $(SD)%.c
 	@mkdir -p $(OD)

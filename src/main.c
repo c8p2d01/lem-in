@@ -8,18 +8,22 @@ int main()
 	globe data;
 	ft_bzero(&data, sizeof(globe));
 
-	openat(3, "/Users/vheymans/Documents/code/github/lem-in/map/test.map", O_RDONLY);
+	openat(3, "/Users/vheymans/Documents/code/github/lem-in/map/tes.map", O_RDONLY);
 	read_data(&data);
 
 	close(3);
+	printf("something1\n");
 
 	remove_deadend(&data);
+	printf("something1\n");
 
 	first_level(&data);
 	first_flow(data.end, &data);
 	int i = 1;
 	printf("%d------\n",i);
+	
 	leveling(&data);
+	//print_nodes(data.graph);
 	//print_nodes(data.graph);
 	//after_flow(data.end, &data);
 	while (after_flow(data.end, &data))

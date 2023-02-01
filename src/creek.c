@@ -48,7 +48,7 @@ t_path	**cartograph(globe *data)
 	t_path	**map = ft_calloc((maxFlow + 1), sizeof(t_path *));
 	for (t_link *link = data->start->links[i];map && link && m < maxFlow; )
 	{
-		while (link && !ft_active_link(link) && ft_flow(link, data->start) != -1)
+		while (link && (!ft_active_link(link) || ft_flow(link, data->start) != -1))
 			link = data->start->links[++i];
 		map[m++] = river(link, data->start, data->end);
 		link = data->start->links[++i];
