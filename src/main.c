@@ -44,10 +44,10 @@ int main()
 	/*mapper(data.paths[0]);
 	mapper(data.paths[1]);*/
 
-	path_sort(&data);
 
 	// for the tester
 	printf("TESTER:%s\n", data.end->name);
+	printf("shortest path len: %zu \t\t longest: %zu\n", data.paths[0]->len, data.paths[3]->len);
 
 	ant_march(&data);
 

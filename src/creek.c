@@ -37,6 +37,7 @@ void path_sort(globe *data)
 	}
 	free(data->paths);
 	data->paths = paths;
+	printf("shortest path len: %zu \t\t longest: %zu\n", data->paths[0]->len, data->paths[max - 1]->len);
 }
 
 t_path	**cartograph(globe *data)
