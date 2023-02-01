@@ -22,7 +22,6 @@ int main()
 	leveling(&data);
 	//print_nodes(data.graph);
 	//after_flow(data.end, &data);
-	while (after_flow(data.end, &data) && i < 10)
 	while (after_flow(data.end, &data))
 	{
 		i++;
@@ -42,6 +41,9 @@ int main()
 	mapper(data.paths[1]);*/
 
 	path_sort(&data);
+
+	// for the tester
+	printf("TESTER:%s\n", data.end->name);
 
 	ant_march(&data);
 

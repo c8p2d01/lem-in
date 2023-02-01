@@ -18,8 +18,8 @@ void	drought(void *content)
 	t_path *river = (t_path *)content;
 	if (river)
 	{
-		if(river->path)
-			free(river->path);
+		// if(river->path)
+		// 	free(river->path);		LEAKS?
 		if (river)
 			free(river);
 	}
@@ -32,8 +32,9 @@ void	ant_march(globe *data)
 	t_list	*tmp;
 	size_t	marched = 0;
 	int		maxflow = ft_array_size((void**)(data->paths));
+	bool	last = false;
 
-	while (marched < data->nAnts || ants)
+	while ((marched < data->nAnts) || ants)
 	{
 		temp = ants;
 		while (temp)
@@ -44,10 +45,21 @@ void	ant_march(globe *data)
 			if ((current_ant)->len > 0)
 				printf("L%i-%s ", (current_ant)->ant, ((current_ant)->path[0])->name);
 			tmp = temp->next;
-			if ((current_ant)->path[0] == data->end)
+			if (*(current_ant->path) == data->end)
 			{
-				ft_lstdelone(temp, NULL /* drought */); // Big time memory LEAK
-				ants = ft_lstfirst(tmp);
+				int annn = current_ant->ant;
+				ft_lstdelone(temp, drought); // Big time memory LEAK
+				if (tmp)
+					ants = ft_lstfirst(tmp);
+				if (ft_lstsize(ants) == 1)
+				{
+					if (last == true) //Janky
+					{
+						ants = NULL;
+						break;
+					}
+					last = true;
+				}
 			}
 			temp = tmp;
 		}
