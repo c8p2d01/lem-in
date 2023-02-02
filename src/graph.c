@@ -112,8 +112,8 @@ void leveling(globe *data)
 			level++;
 			count1 = count2;
 			count2 = 0;
-			if (end)
-				break;
+			// if (end)
+			// 	break;
 		}
 		q = q->next;
 	}
