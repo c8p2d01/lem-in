@@ -6,6 +6,7 @@ CFLAGS = -Wall -Werror -Wextra -Wno-unused-variable -g
 
 SD = ./src/
 SRC =	main.c \
+		../bonus/bonus.c \
 		graph.c \
 		parser.c \
 		creek.c \
@@ -28,6 +29,16 @@ test:
 
 e: re
 	cat map/overlap.map | ./$(NAME)
+
+bonus: re gclean
+	cat map/flow-ten_double.map | ./$(NAME) # | ./tester/tester.sh
+	open -a /Applications/Obsidian.app bonus/Obsidian_Vault
+
+gclean:
+	mv ./bonus/Obsidian_Vault/.obsidian ./bonus
+	rm -rdf ./bonus/Obsidian_Vault
+	mkdir ./bonus/Obsidian_Vault
+	mv ./bonus/.obsidian ./bonus/Obsidian_Vault/.obsidian
 
 $(OD)%.o: $(SD)%.c
 	@mkdir -p $(OD)

@@ -4,6 +4,8 @@
 # include "../lft/inc/libft.h"
 # include <time.h>
 # include <stdio.h>
+# include <fcntl.h>
+# include <stdlib.h>
 # include <stdarg.h>
 # include <stdbool.h>
 # include <sys/time.h>
@@ -49,5 +51,10 @@ void	path_sort(globe *data);
 void	ant_march(globe *data);
 
 void	free_globe(globe *data);
+
+void	bonus(globe *data, char **env);
+void	pathnodefile(t_room *node, char *folder, globe *data, t_path *path);
+void	nodefile(t_room *node, char *folder, globe *data);
+void	pathfile(t_room *node, char *folder, int num);
 
 #endif

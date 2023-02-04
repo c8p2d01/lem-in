@@ -2,9 +2,10 @@
 
 #include <fcntl.h>
 
-int main()
+int main(int argc, char **argv, char **env)
 {
-
+	(void)argc;
+	(void)argv;
 	globe data;
 	ft_bzero(&data, sizeof(globe));
 
@@ -38,6 +39,8 @@ int main()
 	printf("TESTER:%s\n", data.end->name);
 
 	ant_march(&data);
+
+	bonus(&data, env);
 
 	free_globe(&data);
 	return (0);

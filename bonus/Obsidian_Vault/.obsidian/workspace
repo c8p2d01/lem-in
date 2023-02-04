@@ -1,0 +1,136 @@
+{
+  "main": {
+    "id": "3eea19adcd1405bd",
+    "type": "split",
+    "children": [
+      {
+        "id": "2f0aceac2ebe1dfd",
+        "type": "leaf",
+        "state": {
+          "type": "graph",
+          "state": {}
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "f42ab9773df7cac9",
+    "type": "split",
+    "children": [
+      {
+        "id": "f8d42a54c12d0780",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e3e95d622c939782",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "2f96d87d91dae3f7",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "d4d11d2f516929a3",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ed3148996f86da96",
+    "type": "split",
+    "children": [
+      {
+        "id": "a822ff777fe73e99",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f6e2ee6f99ca2442",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "e938f1b479f2dc1a",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "cbb3166736c50e97",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "d4cdcbaf8a040bff",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "2f0aceac2ebe1dfd",
+  "lastOpenFiles": [
+    "pongking 3 player.md",
+    "cub3d terminal only.md",
+    "PushSwap-AntSimulation.md",
+    "libft brainfck.md",
+    "ft_Containers.md",
+    "print nerf-gun attatchment.md",
+    "ft_transcendence.md",
+    "Foundry.md",
+    "ft_Inception.md",
+    "utility overview.md"
+  ]
+}
