@@ -147,6 +147,8 @@ size_t	ft_flow_link_size(t_room *node)
 
 void ft_setflow(t_link *link, t_room *next)
 {
+	if (link->flow != 0)
+		link->active = false;
 	if (next == link->moorv)
 		link->flow++;
 	else if (next == link->vroom)

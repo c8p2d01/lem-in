@@ -37,6 +37,7 @@ void path_sort(globe *data)
 	}
 	free(data->paths);
 	data->paths = paths;
+	printf("shortest path len: %zu \t\t longest: %zu\n", data->paths[0]->len, data->paths[max - 1]->len);
 }
 
 t_path	**cartograph(globe *data)
@@ -48,11 +49,11 @@ t_path	**cartograph(globe *data)
 	t_path	**map = ft_calloc((maxFlow + 1), sizeof(t_path *));
 	for (t_link *link = data->start->links[i];map && link && m < maxFlow; )
 	{
-		while (link && !ft_active_link(link))
+		while (link && (!ft_active_link(link) || ft_flow(link, data->start) != -1))
 			link = data->start->links[++i];
 		map[m++] = river(link, data->start, data->end);
 		link = data->start->links[++i];
-			mapper(map[m - 1]);
+			//mapper(map[m - 1]);
 	}
 	return(map);
 }

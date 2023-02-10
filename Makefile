@@ -11,7 +11,7 @@ SRC =	main.c \
 		parser.c \
 		creek.c \
 		flow.c \
-		flood.c
+		flood.c 
 SRF = $(addprefix $(SD),$(SRC))
 
 OD = ./obj/
@@ -28,7 +28,7 @@ test:
 	make e | ./tester/tester.sh
 
 e: re
-	cat map/overlap.map | ./$(NAME)
+	cat map/test.map | ./$(NAME)
 
 bonus: re gclean
 	cat map/flow-ten_double.map | ./$(NAME) # | ./tester/tester.sh

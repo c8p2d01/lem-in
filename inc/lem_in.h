@@ -56,5 +56,8 @@ void	bonus(globe *data, char **env);
 void	pathnodefile(t_room *node, char *folder, globe *data, t_path *path);
 void	nodefile(t_room *node, char *folder, globe *data);
 void	pathfile(t_room *node, char *folder, int num);
+void 	path_sort(globe *data);
+
+void	mapper(t_path *river);
 
 #endif

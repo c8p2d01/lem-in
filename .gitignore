@@ -63,3 +63,9 @@ dkms.conf
 
 # 42
 lem-in
+
+# random map
+text
+
+# example
+example/
