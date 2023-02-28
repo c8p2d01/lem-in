@@ -14,6 +14,10 @@
 #  define READ_INPUT STDIN_FILENO
 # endif
 
+# define FORWARDFLOW -1
+# define COUNTERFLOW 1
+# define NOFLOW 0
+
 typedef struct globe {
 	struct s_room	**graph;
 	struct s_room	*start;
@@ -40,7 +44,7 @@ bool	first_flow(t_room *node, globe *data);
 
 void	leveling(globe *data);
 
-bool 	after_flow(t_room *node, globe *data);
+bool 	after_flow(t_room *node, globe *data, int x);
 
 t_path	*river(t_link *flow, t_room *spring, t_room *estuary);
 

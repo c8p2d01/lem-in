@@ -35,10 +35,10 @@ bonus: re gclean
 	open -a /Applications/Obsidian.app bonus/Obsidian_Vault
 
 gclean:
-	mv ./bonus/Obsidian_Vault/.obsidian ./bonus
-	rm -rdf ./bonus/Obsidian_Vault
-	mkdir ./bonus/Obsidian_Vault
-	mv ./bonus/.obsidian ./bonus/Obsidian_Vault/.obsidian
+	@mv ./bonus/Obsidian_Vault/.obsidian ./bonus
+	@rm -rdf ./bonus/Obsidian_Vault
+	@mkdir ./bonus/Obsidian_Vault
+	@mv ./bonus/.obsidian ./bonus/Obsidian_Vault/.obsidian
 
 $(OD)%.o: $(SD)%.c
 	@mkdir -p $(OD)

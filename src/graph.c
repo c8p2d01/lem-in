@@ -38,84 +38,90 @@ void reset_level(globe *data)
 
 void	first_level(globe *data)
 {
-	t_list	*q = ft_lstnew(data->start);
-	t_list	*t = q;
+	t_list	*queue = ft_lstnew(data->start);
+	t_list	*temp = queue;
+	t_room	*current;
 	size_t	level = 0;
-	size_t	count1 = 1;
-	size_t	count2 = 0;
-	while(q)
+	size_t	group_0 = 1;
+	size_t	new_group = 0;
+
+	while (queue)
 	{
-		if (((t_room *)(q->content))->first_lvl < 0)
-			((t_room *)(q->content))->first_lvl = level;
-		for(int i = 0; ((t_room *)(q->content))->links[i] ; i++)
+		current = ((t_room*)(queue->content));
+		if (current->first_lvl == -1)
+			current->first_lvl = level;
+		for (int i = 0; current->links[i]; i++)
 		{
-			if (!((t_room *)(q->content))->links[i]->active)
-				continue;
-			if ((ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content)))->first_lvl < 0)
+			if (!ft_active_link(current->links[i]))
+				continue ;
+			if (ft_otherside(current->links[i], current)->first_lvl == -1)
 			{
-				ft_lstadd_back(&q, ft_lstnew(ft_otherside(((t_room *)(q->content))->links[i], (t_room *)(q->content))));
-				count2++;
+				ft_lstadd_back(&queue, ft_lstnew(ft_otherside(current->links[i], current)));
+				new_group++;
 			}
 		}
-		if (--count1 == 0)
+		if (--group_0 == 0)
 		{
+			group_0 = new_group;
+			new_group = 0;
 			level++;
-			count1 = count2;
-			count2 = 0;
 		}
-		q = q->next;
+		queue = queue->next;
 	}
-	data->end->first_lvl = ++level;
-	data->start->first_lvl = 0;
-	ft_lstclear(&t, NULL);
+	ft_lstclear(&temp, NULL);
 }
 
 void leveling(globe *data)
 {
-	t_list	*q = ft_lstnew(data->start);
-	t_list	*t = q;
-	t_room	*tmp = NULL;
-	t_room	*lst = NULL;
-	t_link	*link_next = NULL;
+	t_list	*queue = ft_lstnew(data->start);
+	t_list	*t = queue;
+	t_room	*current = NULL;
+	t_room	*target = NULL;
+	t_link	*target_link = NULL;
 	size_t	level = 0;
-	size_t	count1 = 1;
-	size_t	count2 = 0;
+	size_t	group_0 = 1;
+	size_t	new_group = 0;
 	bool end = false;
+
 	reset_level(data);
-	while(q)
+
+	while(queue)
 	{
-		if ((t_room *)(q->content) == data->end)
+		current =(t_room *)(queue->content);
+
+		if (current == data->end)
 		{
-			printf("************\nEND\n");
-			q = q->next;
+			queue = queue->next;
 			continue ;
 		}
-		if ((lst = (t_room *)(q->content))->after_lvl < 0)
-			(lst)->after_lvl = level;
-		for(int i = 0; (link_next = lst->links[i]) ; i++)
+		if (current->after_lvl < 0)
+			current->after_lvl = level;
+		for(int i = 0; (target_link = current->links[i]) ; i++)
 		{
-			if (!ft_active_link(link_next))
+			if (!ft_active_link(target_link))
 				continue ;
-			tmp = ft_otherside(link_next, lst);
-			if ((t_room *)(q->content) == data->start && ft_flow(link_next, lst) == -1)
+			target = ft_otherside(target_link, current);
+			if (current == data->start && ft_flow(target_link, current) == FORWARDFLOW)
 				continue;
-			else if (tmp->after_lvl < 0 && ft_flow(link_next, lst) > -1)
+			else if (target->after_lvl < 0 && ft_flow(target_link, current) > FORWARDFLOW)
 			{
-				ft_lstadd_back(&q, ft_lstnew(tmp));
-				count2++;
+				if (target == data->end && ft_flow(target_link, current) != NOFLOW)
+					continue;
+				ft_lstadd_back(&queue, ft_lstnew(target));
+				new_group++;
 			}
-			if (tmp == data->end && ft_flow(link_next, lst) > -1)
+			if (target == data->end && ft_flow(target_link, current) == NOFLOW)
 				end = true;
 		}
-		if (--count1 == 0)
+		if (--group_0 == 0)
 		{
 			level++;
-			count1 = count2;
-			count2 = 0;
-			// if (end)
-			// 	break;
+			group_0 = new_group;
+			new_group = 0;
+			if (end)
+				break;
 		}
-		q = q->next;
+		queue = queue->next;
 	}
 	data->end->after_lvl = level;
 	data->start->after_lvl = 0;

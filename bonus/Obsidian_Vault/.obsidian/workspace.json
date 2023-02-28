@@ -4,14 +4,14 @@
     "type": "split",
     "children": [
       {
-        "id": "8d5866496af917db",
+        "id": "5774190e543be4f3",
         "type": "tabs",
         "children": [
           {
-            "id": "d9d604764fb319f2",
+            "id": "3fca80ae6ae0a482",
             "type": "leaf",
             "state": {
-              "type": "graph",
+              "type": "empty",
               "state": {}
             }
           }
@@ -138,17 +138,33 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "d9d604764fb319f2",
+  "active": "3fca80ae6ae0a482",
   "lastOpenFiles": [
-    "Jc_4.md",
-    "Pkh7.md",
-    "Gr_1.md",
-    "Rem2.md",
-    "path10.md",
-    "Rmz2.md",
-    "path0.md",
-    "M_.md",
-    "0.md",
-    "infinity.md"
+    "Gbc1.md",
+    "Qc_6.md",
+    "Xmh0.md",
+    "Gwp3.md",
+    "Q_u5.md",
+    "Dje6.md",
+    "Rxn0.md",
+    "Kkk4.md",
+    "Idc3.md",
+    "Hzh1.md",
+    "Nqc6.md",
+    "Uhk1.md",
+    "Zws8.md",
+    "Euv0.md",
+    "Icm7.md",
+    "Wdz4.md",
+    "Wzw6.md",
+    "Dqj7.md",
+    "Xcy2.md",
+    "Ato2.md",
+    "H_p0.md",
+    "P_d4.md",
+    "Hvr9.md",
+    "Qy_3.md",
+    "Tlb6.md",
+    "Dut7.md"
   ]
 }

@@ -157,6 +157,8 @@ void ft_setflow(t_link *link, t_room *next)
 
 void ft_resetflow(t_link *link, t_room *next)
 {
+	if (link->active == false)
+		link->active = true;
 	if (next == link->moorv)
 		link->flow--;
 	else if (next == link->vroom)

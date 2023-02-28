@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:07 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/29 19:48:31 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/02/28 13:41:41 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,6 @@ size_t	ft_active_link_size(t_room *node);
 size_t	ft_flow_link_size(t_room *node);
 
 void	print_nodes(t_room **node);
+void	print_node(t_room *node);
 
 #endif

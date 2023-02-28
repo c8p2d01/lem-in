@@ -1,6 +1,6 @@
 #include "../inc/lem_in.h"
 
-bool first_flow(t_room *node, globe *data)
+bool	first_flow(t_room *node, globe *data)
 {
 	if (node == NULL)
 		return false;
@@ -9,45 +9,36 @@ bool first_flow(t_room *node, globe *data)
 	t_room *next = NULL;
 	t_room *other = NULL;
 	t_link *link = NULL;
-	for (int i = 0; node->links[i]; i++)
+
+	for (int i = 0; node->links[i] != NULL; i++)
 	{
-		other = ft_otherside(node->links[i], node);
-		if (!node->links[i]->active || other->first_lvl < 0)
+		if (!node->links[i]->active)
 			continue;
-		if (node == data->end)
+		other = ft_otherside(node->links[i], node);
+		if (other == data->end)
+			continue;
+		if (other == data->start)
 		{
-			if ((!next || other->first_lvl < next->first_lvl) && ft_flow(node->links[i], node) == 0)
-			{	
-				next = other;
-				link = node->links[i];
-			}
+			next = other;
+			link = node->links[i];
+			break ;
 		}
-		else
+		if ((!next && other->first_lvl < node->first_lvl) || (next && other->first_lvl < next->first_lvl))
 		{
-			if (other != data->end && other != data->start && other->first_lvl <= node->first_lvl && ft_flow(node->links[i], node) == -1)
-			{
-				next = other;
-				link = node->links[i];
-				break ;
-			}
-			else if ((!next || other->first_lvl < next->first_lvl) && ft_flow(node->links[i], node) == 0)
-			{
-				next = other;
-				link = node->links[i];
-			}	
+			next = other;
+			link = node->links[i];
 		}
 	}
-	if (!next)
-		return (false);
-	printf("%s -> node : %s\n", node->name, next->name);
 	if (!first_flow(next, data))
-		return (false);
+		return false;
 	ft_setflow(link, next);
-	return (true);
+	return true;
 }
 
-bool after_flow(t_room *node, globe *data)
+bool after_flow(t_room *node, globe *data, int x)
 {
+	// if (x == 50)
+	// 	return false;
 	if (node == NULL)
 		return false;
 	if (node == data->start)
@@ -55,45 +46,41 @@ bool after_flow(t_room *node, globe *data)
 	t_room *next = NULL;
 	t_room *other = NULL;
 	t_link *link = NULL;
-	for (int i = 0; node->links[i]; i++)
+	for (size_t i = 0; node->links[i]; i++)
 	{
-		other = ft_otherside(node->links[i], node);
-		if (!node->links[i]->active || other->after_lvl < 0 || other == data->end)
+		if (!node->links[i]->active)
 			continue;
-		if (node == data->end)
+		other = ft_otherside(node->links[i], node);
+		if (other->after_lvl < 0 || other == data->end || ft_flow(node->links[i], node) == COUNTERFLOW)
 		{
-			if ((!next || other->after_lvl < next->after_lvl) && ft_flow(node->links[i], node) == 0)
-			{	
-				next = other;
-				link = node->links[i];
-			}
+			continue;
 		}
-		else
+		if(ft_flow(node->links[i], node) == FORWARDFLOW)
 		{
-			if (ft_flow(node->links[i], node) == -1)
-			{
-				printf("node '%s'\t\tfirst_level %li\t\tother_node '%s'\t\tfirst_level %li\n", node->name, node->first_lvl, other->name, other->first_lvl);
-				printf("node '%s'\t\tafter_level %li\t\tother_node '%s'\t\tafter_level %li\n", node->name, node->after_lvl, other->name, other->after_lvl);
-			}
-			/*if (other == data->start && ft_flow(node->links[i], node) == 0)
-			{
-				next = other;
-				link = node->links[i];
-				break ;
-			}
-			else*/ if (other != data->start &&/* (other->first_lvl <= node->first_lvl && other->after_lvl <= node->after_lvl) && */ft_flow(node->links[i], node) == -1)
-			{
-				next = other;
-				link = node->links[i];
-				break ;
-			}
-			else if (other->first_lvl < node->first_lvl && other->after_lvl == node->after_lvl && ft_flow(node->links[i], node) == 0)
+			if (node == data->end)
+				continue;
+			next = other;
+			link = node->links[i];
+			break ;
+		}
+		if (other == data->start && ft_flow(node->links[i], node) == NOFLOW)
+		{
+			next = other;
+			link = node->links[i];
+		}
+		if (next != data->start)
+		{
+			if (!next && (other->after_lvl == node->after_lvl && other->first_lvl < node->first_lvl))
 			{
 				next = other;
 				link = node->links[i];
-				//break;
 			}
-			else if (((!next && other->after_lvl < node->after_lvl) || (next && other->after_lvl < next->after_lvl)) && ft_flow(node->links[i], node) == 0)// maybe <= 
+			else if (!next && (other->after_lvl < node->after_lvl))
+			{
+				next = other;
+				link = node->links[i];
+			}
+			else if (next && (other->after_lvl < next->after_lvl))
 			{
 				next = other;
 				link = node->links[i];
@@ -101,16 +88,21 @@ bool after_flow(t_room *node, globe *data)
 		}
 	}
 	if (next)
+		printf("%s[%zi] -%i> %s[%zi] \n",node->name, node->after_lvl, ft_flow(link, node), next->name, next->after_lvl);
+	if (ft_flow(link, node) == -1)
 	{
-		// printf("node '%s'\t\tfirst_level %li\t\tother_node '%s'\t\tfirst_level %li\n", node->name, node->first_lvl, next->name, next->first_lvl);
-		// printf("node '%s'\t\tafter_level %li\t\tnext_node '%s'\t\tafter_level %li\n", node->name, node->after_lvl, next->name, next->after_lvl);
-		printf("%s -> node : %s\n", node->name, next->name);
+		ft_setflow(link, next);
+		if (!after_flow(next, data, ++x))
+		{
+			ft_resetflow(link, next);
+			return (false);
+		}
 	}
-	if (!next)
-		return (false);
-	//printf("%s -> node : %s\n", node->name, next->name);
-	if (!after_flow(next, data))
-		return (false);
-	ft_setflow(link, next);
+	else
+	{
+		if (!after_flow(next, data, ++x))
+			return (false);
+		ft_setflow(link, next);
+	}
 	return (true);
 }

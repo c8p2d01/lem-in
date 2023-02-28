@@ -55,3 +55,20 @@ void	print_nodes(t_room **node)
 	}
 }
 
+
+
+void	print_node(t_room *node)
+{
+	t_link	*linked = NULL;
+
+	printf("node '%s'\t\tfirst_level %li\n", node->name, node->first_lvl);
+	printf("node %p\tafter_level %li\n", node, node->after_lvl);
+	for (size_t j = 0; node->links && (linked = node->links[j]); ++j)
+	{
+		if (linked->active)
+			printf("\t link to '%s'\tflow %i\n",
+				ft_otherside(linked, node)->name,
+				ft_flow(linked, node));
+	}
+	
+}
