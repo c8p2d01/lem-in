@@ -26,24 +26,20 @@ int main(int argc, char **argv, char **env)
 		printf("%d------\n",i);
 		
 		leveling(&data);
-		//print_nodes(data.graph);
-		//print_nodes(data.graph);
-		//after_flow(data.end, &data);
-		while (after_flow(data.end, &data, 0))
+		while (after_flow(data.end, &data, false))
 		{
 			if (data.end->after_lvl == -1)
 				break;
 			i++;
 			printf("%d------\n",i);
+			dry(data.graph);
 			leveling(&data);
-			// if (i == 7)
-			// 	break;
 		}
 
 		print_nodes(data.graph);
 
-		data.paths = cartograph(&data);
-		printf("done cartography\n");
+		 data.paths = cartograph(&data);
+		 printf("done cartography\n");
 
 		path_sort(&data);
 		for (int i = 0; data.paths[i]; i ++)
@@ -51,16 +47,16 @@ int main(int argc, char **argv, char **env)
 		printf("done sorter\n");
 
 
-		// for the tester
-		printf("TESTER:%s\n", data.end->name);
-		printf("shortest path len: %zu \t\t longest: %zu\n", data.paths[0]->len, data.paths[3]->len);
+		// // for the tester
+		 printf("TESTER:%s\n", data.end->name);
 
-		ant_march(&data);
+		 ant_march(&data);
 
 		bonus(&data, env);
+		(void)env;
 	}
 	else
 		printf("no connection between start and end found\n");
-	free_globe(&data);
+	// free_globe(&data);
 	return (0);
 }

@@ -11,7 +11,7 @@
 # include <sys/time.h>
 
 # ifndef READ_INPUT
-#  define READ_INPUT STDIN_FILENO
+#  define READ_INPUT 3//STDIN_FILENO
 # endif
 
 # define FORWARDFLOW -1
@@ -30,7 +30,7 @@ typedef struct globe {
 
 typedef struct s_path {
 	struct	s_room **path;
-	size_t	len;
+	int		len;
 	int		ant;
 }	t_path;
 
@@ -44,7 +44,7 @@ bool	first_flow(t_room *node, globe *data);
 
 void	leveling(globe *data);
 
-bool 	after_flow(t_room *node, globe *data, int x);
+bool 	after_flow(t_room *node, globe *data, bool x);
 
 t_path	*river(t_link *flow, t_room *spring, t_room *estuary);
 

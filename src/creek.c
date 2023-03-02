@@ -6,7 +6,7 @@ void	mapper(t_path *river)
 
 	if (!river)
 		return ;
-	printf("riverlen %zu\n", river->len);
+	printf("riverlen %i\n", river->len);
 	while(river && river->path && river->path[i])
 	{
 		printf("\tnode '%s'\n", river->path[i]->name);
@@ -37,7 +37,8 @@ void path_sort(globe *data)
 	}
 	free(data->paths);
 	data->paths = paths;
-	printf("shortest path len: %zu \t\t longest: %zu\n", data->paths[0]->len, data->paths[max - 1]->len);
+	//if (data->paths[0] && max > 0)
+	//	printf("shortest path len: %zu \t\t longest: %zu\n", data->paths[0]->len, data->paths[max - 1]->len);
 }
 
 t_path	**cartograph(globe *data)
@@ -49,7 +50,7 @@ t_path	**cartograph(globe *data)
 	t_path	**map = ft_calloc((maxFlow + 1), sizeof(t_path *));
 	for (t_link *link = data->start->links[i];map && link && m < maxFlow; )
 	{
-		while (link && (!ft_active_link(link) || ft_flow(link, data->start) != -1))
+		while (link && (!ft_active_link(link) || ft_flow(link, data->start) != 1))
 			link = data->start->links[++i];
 		map[m++] = river(link, data->start, data->end);
 		link = data->start->links[++i];
@@ -71,7 +72,7 @@ t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 		while (node->links && node->links[n])
 		{
 			flw = ft_flow(node->links[n], node);
-			if (flw == -1)
+			if (flw == 1)
 			{
 				len++;
 				node = ft_otherside(node->links[n], node);
@@ -102,7 +103,7 @@ t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 		while (node->links && node->links[n])
 		{
 			flw = ft_flow(node->links[n], node);
-			if (flw == -1)
+			if (flw == 1)
 			{
 				len++;
 				river->path[len] = node;

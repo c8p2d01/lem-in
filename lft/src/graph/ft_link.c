@@ -85,7 +85,7 @@ bool	ft_has_link(t_room *a, t_room *b)
 
 t_link	*ft_active_link(t_link *link)
 {
-	if (!link->active)
+	if (!link || !link->active)
 		return(NULL);
 	return(link);
 }
@@ -136,7 +136,7 @@ size_t	ft_flow_link_size(t_room *node)
 	size = 0;
 	while (node->links && node->links[i])
 	{
-		if (ft_flow(node->links[i], node) == 1)
+		if (ft_flow(node->links[i], node) == -1)
 		{
 			size++;
 		}
@@ -150,9 +150,9 @@ void ft_setflow(t_link *link, t_room *next)
 	if (link->flow != 0)
 		link->active = false;
 	if (next == link->moorv)
-		link->flow++;
-	else if (next == link->vroom)
 		link->flow--;
+	else if (next == link->vroom)
+		link->flow++;
 }
 
 void ft_resetflow(t_link *link, t_room *next)

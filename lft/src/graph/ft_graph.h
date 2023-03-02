@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:07 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/02/28 13:41:41 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/02/28 17:11:03 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_room
 	size_t			y;
 	ssize_t			first_lvl;
 	ssize_t			after_lvl;
+	bool			flown;
 }	t_room;
 
 typedef struct s_link
@@ -47,6 +48,7 @@ bool	ft_has_link(t_room *a, t_room *b);
 
 t_link	*ft_active_link(t_link *link);
 
+void	dry(t_room **all);
 int		ft_flow(t_link *link, t_room *node);
 void	ft_setflow(t_link *link, t_room *next);
 void	ft_resetflow(t_link *link, t_room *next);

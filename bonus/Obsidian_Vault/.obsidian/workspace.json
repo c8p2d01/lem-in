@@ -4,14 +4,14 @@
     "type": "split",
     "children": [
       {
-        "id": "5774190e543be4f3",
+        "id": "721d50878f449584",
         "type": "tabs",
         "children": [
           {
-            "id": "3fca80ae6ae0a482",
+            "id": "acbdd4fe32de3cdf",
             "type": "leaf",
             "state": {
-              "type": "empty",
+              "type": "graph",
               "state": {}
             }
           }
@@ -138,33 +138,33 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "3fca80ae6ae0a482",
+  "active": "acbdd4fe32de3cdf",
   "lastOpenFiles": [
-    "Gbc1.md",
-    "Qc_6.md",
-    "Xmh0.md",
-    "Gwp3.md",
-    "Q_u5.md",
-    "Dje6.md",
-    "Rxn0.md",
-    "Kkk4.md",
-    "Idc3.md",
-    "Hzh1.md",
-    "Nqc6.md",
-    "Uhk1.md",
-    "Zws8.md",
-    "Euv0.md",
-    "Icm7.md",
-    "Wdz4.md",
-    "Wzw6.md",
-    "Dqj7.md",
-    "Xcy2.md",
-    "Ato2.md",
-    "H_p0.md",
-    "P_d4.md",
-    "Hvr9.md",
-    "Qy_3.md",
-    "Tlb6.md",
-    "Dut7.md"
+    "Sqg3.md",
+    "Tqv9.md",
+    "Ckr4.md",
+    "I_e3.md",
+    "Wcm7.md",
+    "Hza5.md",
+    "P__9.md",
+    "Yhm4.md",
+    "Duh1.md",
+    "Pvr3.md",
+    "D_t4.md",
+    "Gqx8.md",
+    "V_a9.md",
+    "Npy7.md",
+    "Wby3.md",
+    "Fw_9.md",
+    "Vcw7.md",
+    "N_h0.md",
+    "Kig7.md",
+    "Ofh9.md",
+    "Amf3.md",
+    "Hmt8.md",
+    "Jmb3.md",
+    "Txz6.md",
+    "Pgc0.md",
+    "Hxm8.md"
   ]
 }

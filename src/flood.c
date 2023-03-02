@@ -2,10 +2,10 @@
 
 t_path	*copy_path(t_path *river, size_t	ant)
 {
-	t_path	*copy = malloc(1 * sizeof(t_path));
+	t_path	*copy = ft_calloc(1, sizeof(t_path));
 	copy->len = river->len;
-	copy->path = ft_calloc(copy->len + 1, sizeof(t_room *));
-	for(int i = 0; river->path[i]; i++)
+	copy->path = ft_calloc(copy->len + 2, sizeof(t_room *));
+	for(int i = 0; i < copy->len; i++)
 	{
 		copy->path[i] = river->path[i];
 	}
@@ -36,40 +36,29 @@ unsigned long	len_of_prev(t_path **paths, int i)
 void	ant_march(globe *data)
 {
 	t_list	*ants = NULL;
-	t_list	*temp = ants;
-	t_list	*tmp;
+	t_list	*curr_lst = ants;
+	t_list	*next_lst;
 	size_t	marched = 0;
 	int		maxflow = ft_array_size((void**)(data->paths));
-	bool	last = false;
 
 	while ((marched < data->nAnts) || ants)
 	{
-		temp = ants;
-		while (temp)
+		curr_lst = ants;
+		while (curr_lst)
 		{
-			t_path *current_ant = (t_path *)(temp->content);
-			(current_ant)->path++;
-			(current_ant)->len--;
-			if ((current_ant)->len > 0)
-				printf("L%i-%s ", (current_ant)->ant, ((current_ant)->path[0])->name);
-			tmp = temp->next;
-			if (*(current_ant->path) == data->end)
+			t_path *current_ant = (t_path *)(curr_lst->content);
+			current_ant->path++;
+			current_ant->len--;
+			if (current_ant->len > 0)
+				printf("L%i-%s ", current_ant->ant, (current_ant->path[0])->name);
+			next_lst = curr_lst->next;
+			if ((current_ant->path[0]) == data->end)
 			{
-				int annn = current_ant->ant;
-				ft_lstdelone(temp, drought); // Big time memory LEAK
-				if (tmp)
-					ants = ft_lstfirst(tmp);
-				if (ft_lstsize(ants) == 1)
-				{
-					if (last == true) //Janky
-					{
-						ants = NULL;
-						break;
-					}
-					last = true;
-				}
+				if (curr_lst == ants)
+					ants = next_lst;
+				ft_lstdelone(curr_lst, drought);
 			}
-			temp = tmp;
+			curr_lst = next_lst;
 		}
 		printf("\n");
 		for (unsigned long i = 0; data->paths[i] && marched < data->nAnts; i ++)

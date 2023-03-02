@@ -35,7 +35,7 @@ bool	first_flow(t_room *node, globe *data)
 	return true;
 }
 
-bool after_flow(t_room *node, globe *data, int x)
+bool after_flow(t_room *node, globe *data, bool x)
 {
 	// if (x == 50)
 	// 	return false;
@@ -46,19 +46,24 @@ bool after_flow(t_room *node, globe *data, int x)
 	t_room *next = NULL;
 	t_room *other = NULL;
 	t_link *link = NULL;
+	if (!ft_strncmp(node->name, "G_o2", 4))
+		print_node(node);
 	for (size_t i = 0; node->links[i]; i++)
 	{
 		if (!node->links[i]->active)
 			continue;
 		other = ft_otherside(node->links[i], node);
-		if (other->after_lvl < 0 || other == data->end || ft_flow(node->links[i], node) == COUNTERFLOW)
+		if (!ft_strncmp(node->name, "G_o2", 4))
+			print_node(other);
+		if (other->after_lvl < 0 || other->flown == true || other == data->end || ft_flow(node->links[i], node) == COUNTERFLOW)
 		{
 			continue;
 		}
-		if(ft_flow(node->links[i], node) == FORWARDFLOW)
+		if(!x && ft_flow(node->links[i], node) == FORWARDFLOW)
 		{
 			if (node == data->end)
 				continue;
+			x = true;
 			next = other;
 			link = node->links[i];
 			break ;
@@ -88,21 +93,26 @@ bool after_flow(t_room *node, globe *data, int x)
 		}
 	}
 	if (next)
+	{
 		printf("%s[%zi] -%i> %s[%zi] \n",node->name, node->after_lvl, ft_flow(link, node), next->name, next->after_lvl);
-	if (ft_flow(link, node) == -1)
-	{
-		ft_setflow(link, next);
-		if (!after_flow(next, data, ++x))
-		{
-			ft_resetflow(link, next);
-			return (false);
-		}
+		next->flown = true;
 	}
-	else
-	{
-		if (!after_flow(next, data, ++x))
+	// if (ft_flow(link, node) == -1)
+	// {
+	// 	ft_setflow(link, next);
+	// 	if (!after_flow(next, data, ++x))
+	// 	{
+	// 		ft_resetflow(link, next);
+	// 		return (false);
+	// 	}
+	// }
+	// else
+	// {
+		if (x && next && ft_flow(link, node) == NOFLOW)
+			x = false;
+		if (!after_flow(next, data, x))
 			return (false);
 		ft_setflow(link, next);
-	}
+	//}
 	return (true);
 }

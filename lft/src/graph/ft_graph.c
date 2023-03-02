@@ -26,9 +26,18 @@ t_room	*ft_g_new_room(char *name)
 		.x = 0,
 		.y = 0,
 		.first_lvl = -1,
-		.after_lvl = -1
+		.after_lvl = -1,
+		.flown = false
 	};
 	return (res);
+}
+
+void	dry(t_room **all)
+{
+	for (int i = 0; all[i]; i++)
+	{
+		all[i]->flown = false;
+	}
 }
 
 /**
