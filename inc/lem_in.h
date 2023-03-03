@@ -11,7 +11,7 @@
 # include <sys/time.h>
 
 # ifndef READ_INPUT
-#  define READ_INPUT 3//STDIN_FILENO
+#  define READ_INPUT STDIN_FILENO
 # endif
 
 # define FORWARDFLOW -1

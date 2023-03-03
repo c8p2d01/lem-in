@@ -9,7 +9,7 @@ int main(int argc, char **argv, char **env)
 	globe data;
 	ft_bzero(&data, sizeof(globe));
 
-	openat(3, "/Users/vheymans/Documents/code/github/lem-in/map/big-superposition.map", O_RDONLY);
+	// openat(3, "/Users/cdahlhof/Documents/lem-in/test", O_RDONLY);
 	read_data(&data);
 
 	close(3);
@@ -53,7 +53,7 @@ int main(int argc, char **argv, char **env)
 
 		 ant_march(&data);
 
-		// bonus(&data, env);
+		bonus(&data, env);
 		(void)env;
 		// printf("----END----\n");
 	}
