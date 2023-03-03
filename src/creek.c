@@ -92,7 +92,6 @@ t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 	if (!river || !river->path)
 		return(NULL);
 	river->len = len;
-	river->ant = -1;
 
 	len = 0;
 	river->path[len] = spring;

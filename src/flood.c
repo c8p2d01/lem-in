@@ -1,15 +1,11 @@
 #include "../inc/lem_in.h"
 
-t_path	*copyAnt(t_path *river, size_t	ant)
+t_ant	*copyAnt(int path, int position, int number)
 {
-	t_path	*copy = malloc(1 * sizeof(t_path));
-	copy->len = river->len;
-	copy->path = ft_calloc(copy->len + 1, sizeof(t_room *));
-	for(int i = 0; river->path[i]; i++)
-	{
-		copy->path[i] = river->path[i];
-	}
-	copy->ant = ant;
+	t_ant	*copy = malloc(1 * sizeof(t_ant));
+	copy->path = path;
+	copy->position = position;
+	copy->position = number;
 	return (copy);
 }
 
@@ -45,11 +41,11 @@ void	ant_march(globe *data)
 		curr_lst = ft_lstfirst(ants);
 		while (curr_lst)
 		{
-			t_path *current_ant = (t_path *)(curr_lst->content);
-			current_ant->len--;
+			t_ant *current_ant = (t_ant *)(curr_lst->content);
+			current_ant->position++;
 			next_lst = curr_lst->next;
-			if (current_ant->len > 0)
-				printf("L%i-%s ", (current_ant)->ant, ((current_ant)->path[0])->name);
+			if (current_ant->position != data->paths[current_ant->path]->len)
+				printf("L%i-%s ", (current_ant)->number, (data->paths[current_ant->path])->path[current_ant->position]->name);
 			else
 			{
 				if (curr_lst == ants)
@@ -59,12 +55,12 @@ void	ant_march(globe *data)
 			}
 			curr_lst = next_lst;
 		}
-		printf("\n");
+		printf("-c-%i--%i-d-\n", created, deleted);
 		for (unsigned long i = 0; data->paths[i] && marched < data->nAnts; i ++)
 		{
 			if (i != 0 && data->paths[i]->len > data->paths[0]->len && (data->nAnts - marched ) < len_of_prev(data->paths, i))
 				break;
-			t_path	*ant = copyAnt(data->paths[i], marched + 1);
+			t_ant	*ant = copyAnt(i, 0, marched + 1);
 			ft_lstadd_back(&ants, ft_lstnew(ant));
 			created++;
 			marched++;

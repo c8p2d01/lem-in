@@ -32,12 +32,12 @@ typedef struct globe {
 typedef struct s_path {
 	struct	s_room **path;
 	int		len;
-	int		ant;
 }	t_path;
 
 typedef struct s_ant {
 	int path;
 	int position;
+	int number;
 }	t_ant;
 
 void	read_data(globe *data);
