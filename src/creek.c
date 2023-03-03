@@ -54,7 +54,7 @@ t_path	**cartograph(globe *data)
 			link = data->start->links[++i];
 		map[m++] = river(link, data->start, data->end);
 		link = data->start->links[++i];
-			mapper(map[m - 1]);
+			//mapper(map[m - 1]);
 	}
 	return(map);
 }

@@ -58,11 +58,11 @@ bool after_flow(t_room *node, globe *data, bool x)
 		other = ft_otherside(node->links[i], node);
 		if (!ft_strncmp(node->name, "G_o2", 4))
 			print_node(other);
-		if (other->after_lvl < 0 || other->flown == true || other == data->end || ft_flow(node->links[i], node) == COUNTERFLOW)
+		if (other->after_lvl < 0 || other->flown == true || other == data->end || ft_flow(node->links[i], node) == FORWARDFLOW)
 		{
 			continue;
 		}
-		if(!x && ft_flow(node->links[i], node) == FORWARDFLOW)
+		if(!x && ft_flow(node->links[i], node) == COUNTERFLOW && other != data->start)
 		{
 			if (node == data->end)
 				continue;
@@ -72,7 +72,7 @@ bool after_flow(t_room *node, globe *data, bool x)
 			r = 1;
 			break ;
 		}
-		if (other == data->start )//&& ft_flow(node->links[i], node) == NOFLOW)
+		if (other == data->start && ft_flow(node->links[i], node) == NOFLOW)
 		{
 			next = other;
 			link = node->links[i];
