@@ -49,15 +49,11 @@ bool after_flow(t_room *node, globe *data, bool x)
 	t_room *next = NULL;
 	t_room *other = NULL;
 	t_link *link = NULL;
-	if (!ft_strncmp(node->name, "G_o2", 4))
-		print_node(node);
 	for (size_t i = 0; node->links[i]; i++)
 	{
 		if (!node->links[i]->active)
 			continue;
 		other = ft_otherside(node->links[i], node);
-		if (!ft_strncmp(node->name, "G_o2", 4))
-			print_node(other);
 		if (other->after_lvl < 0 || other->flown == true || other == data->end || ft_flow(node->links[i], node) == FORWARDFLOW)
 		{
 			continue;
