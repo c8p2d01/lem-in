@@ -8,19 +8,27 @@ void	free_globe(globe *data)
 	for (size_t i = 0; data->graph && data->graph[i] != NULL; ++i)
 	{
 		if (data->graph[i]->name)
-			free(data->graph[i]->name);
+			unreach(data->graph[i]->name);
 		if (data->graph[i]->links)
-			free(data->graph[i]->links);
-		free(data->graph[i]);
+			unreach(data->graph[i]->links);
+		unreach(data->graph[i]);
 	}
+	if (data->graph)
+		unreach(data->graph);
 	for (size_t i = 0; data->linkedlist && data->linkedlist[i] != NULL; ++i)
 	{
-		free(data->linkedlist[i]);
+		unreach(data->linkedlist[i]);
 	}
 	if (data->linkedlist)
-		free(data->linkedlist);
-	if (data->graph)
-		free(data->graph);
+		unreach(data->linkedlist);
+	for (size_t i = 0; data->paths && data->paths[i] != NULL; ++i)
+	{
+		if (data->paths[i]->path)
+			unreach(data->paths[i]->path);
+		unreach(data->paths[i]);
+	}
+	if (data->paths)
+		unreach(data->paths);
 }
 
 void reset_level(globe *data)

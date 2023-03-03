@@ -1,4 +1,5 @@
 #include "../inc/lem_in.h"
+#include "bonus.h"
 
 void	bonus(globe *data, char **env)
 {
@@ -82,7 +83,7 @@ void	pathnodefile(t_room *node, char *folder, globe *data, t_path *path)
 void	pathfile(t_room *node, char *folder, int num)
 {
 	char	*tmp = ft_strjoin(folder, node->name);
-	char	*number = num < 18 ? ft_itoa(num) : "";
+	char	*number = ft_itoa(num);
 	char	*name = ft_strjoin(tmp, ".md");
 	char	*add = ft_strjoin("path", number);
 	free(number);

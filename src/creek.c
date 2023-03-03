@@ -6,7 +6,7 @@ void	mapper(t_path *river)
 
 	if (!river)
 		return ;
-	printf("riverlen %i\n", river->len);
+	printf("riverlen %zi\n", river->len);
 	while(river && river->path && river->path[i])
 	{
 		printf("\tnode '%s'\n", river->path[i]->name);
@@ -17,7 +17,7 @@ void	mapper(t_path *river)
 void path_sort(globe *data)
 {
 	int max = ft_flow_link_size(data->end);
-	t_path **paths = calloc(max + 1, sizeof(t_path *));
+	t_path **paths = ft_calloc(max + 1, sizeof(t_path *));
 	int x = 0;
 	int i = 0;
 	t_path *tmp = NULL;
@@ -35,10 +35,9 @@ void path_sort(globe *data)
 		paths[x] = tmp;
 		i ++;
 	}
-	free(data->paths);
+	if (data->paths)
+		free(data->paths);
 	data->paths = paths;
-	//if (data->paths[0] && max > 0)
-	//	printf("shortest path len: %zu \t\t longest: %zu\n", data->paths[0]->len, data->paths[max - 1]->len);
 }
 
 t_path	**cartograph(globe *data)
@@ -92,6 +91,8 @@ t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 	river->path = ft_calloc((len + 1), sizeof(t_room *));
 	if (!river || !river->path)
 		return(NULL);
+	river->pathNumber = -1;
+	river->position = -1;
 	river->len = len;
 	river->ant = -1;
 

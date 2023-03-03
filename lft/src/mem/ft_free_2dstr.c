@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:22 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/04 13:52:02 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/03/03 16:38:54 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,10 @@ int	free_2dstr(char **s)
 	}
 	free(s);
 	return (0);
+}
+
+void	unreach(void *freeMe)
+{
+	free(freeMe);
+	freeMe = NULL;
 }

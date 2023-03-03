@@ -1,14 +1,12 @@
 #include "../inc/lem_in.h"
 
-t_path	*copy_path(t_path *river, size_t	ant)
+t_path	*newAnt(ssize_t path, ssize_t len, ssize_t	ant)
 {
 	t_path	*copy = ft_calloc(1, sizeof(t_path));
-	copy->len = river->len;
-	copy->path = ft_calloc(copy->len + 2, sizeof(t_room *));
-	for(int i = 0; i < copy->len; i++)
-	{
-		copy->path[i] = river->path[i];
-	}
+	copy->path = NULL;
+	copy->pathNumber = path;
+	copy->position = 0;
+	copy->len = len;
 	copy->ant = ant;
 	return (copy);
 }
@@ -17,12 +15,8 @@ void	drought(void *content)
 {
 	t_path *river = (t_path *)content;
 	if (river)
-	{
-		// if(river->path)
-		// 	free(river->path);		LEAKS?
-		if (river)
-			free(river);
-	}
+		unreach(river);
+	river = NULL;
 }
 
 unsigned long	len_of_prev(t_path **paths, int i)
@@ -41,32 +35,39 @@ void	ant_march(globe *data)
 	size_t	marched = 0;
 	int		maxflow = ft_array_size((void**)(data->paths));
 
+	int created = 0;
+	int deleted = 0;
+
 	while ((marched < data->nAnts) || ants)
 	{
-		curr_lst = ants;
+		curr_lst = ft_lstfirst(ants);
 		while (curr_lst)
 		{
 			t_path *current_ant = (t_path *)(curr_lst->content);
-			current_ant->path++;
+			printf("READ ANT %zi pId %zi POS %zi pLen %zi\n", current_ant->ant, current_ant->pathNumber, current_ant->position, current_ant->len);
 			current_ant->len--;
-			if (current_ant->len > 0)
-				printf("L%i-%s ", current_ant->ant, (current_ant->path[0])->name);
-			next_lst = curr_lst->next;
-			if ((current_ant->path[0]) == data->end)
-			{
-				if (curr_lst == ants)
-					ants = next_lst;
-				ft_lstdelone(curr_lst, drought);
-			}
-			curr_lst = next_lst;
+			// current_ant->position++;
+			// next_lst = curr_lst->next;
+			// if (current_ant->len > 0)
+			// 	printf("L%zi-%s ", current_ant->ant, data->paths[current_ant->pathNumber]->path[current_ant->position]->name);
+			// else
+			// {
+			// 	if (curr_lst == ants)
+			// 		ants = next_lst;
+			// 	ft_lstdelone(curr_lst, drought);
+			// 	deleted ++;
+			// }
+			// curr_lst = next_lst;
 		}
 		printf("\n");
 		for (unsigned long i = 0; data->paths[i] && marched < data->nAnts; i ++)
 		{
 			if (i != 0 && data->paths[i]->len > data->paths[0]->len && (data->nAnts - marched ) < len_of_prev(data->paths, i))
 				break;
-			t_path	*newAnt = copy_path(data->paths[i], marched + 1); // <-> start counting at 0 '+ 1'
+			t_path	*ant = newAnt(i, data->paths[i]->len, marched + 1);
+			printf("NEW ANT %zi pId %zi POS %zi pLen %zi\n", ant->ant, ant->pathNumber, ant->position, ant->len);
 			ft_lstadd_back(&ants, ft_lstnew(newAnt));
+			created++;
 			marched++;
 		}
 	}

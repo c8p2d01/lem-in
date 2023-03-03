@@ -9,7 +9,8 @@ int main(int argc, char **argv, char **env)
 	globe data;
 	ft_bzero(&data, sizeof(globe));
 
-	// openat(3, "/Users/cdahlhof/Documents/lem-in/test", O_RDONLY);
+	openat(3, "/Users/cdahlhof/Documents/lem-in/test", O_RDONLY);
+
 	read_data(&data);
 
 	close(3);
@@ -36,29 +37,20 @@ int main(int argc, char **argv, char **env)
 			leveling(&data);
 		}
 
-		//print_nodes(data.graph);
-		// printf("----done printing\n");
-
 		data.paths = cartograph(&data);
-		// printf("done cartography\n");
 
 		path_sort(&data);
-		// for (int i = 0; data.paths[i]; i ++)
-		// 	mapper(data.paths[i]);
-		// printf("done sorter\n");
 
+		ant_march(&data);
 
-		// // for the tester
-		//  printf("TESTER:%s\n", data.end->name);
-
-		 ant_march(&data);
+		// for the tester
+		printf("TESTER:%s\n", data.end->name);
 
 		bonus(&data, env);
 		(void)env;
-		// printf("----END----\n");
 	}
 	else
 		printf("no connection between start and end found\n");
-	// free_globe(&data);
+	free_globe(&data);
 	return (0);
 }

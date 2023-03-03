@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:43:47 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/01/30 17:54:40 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/03/03 16:39:05 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 void		*ft_calloc(size_t nmemb, size_t size);
 void		*ft_realloc(void *old, size_t old_len, size_t add_len);
 int			free_2dstr(char **s);
+void		unreach(void *freeMe);
 void		ft_bzero(void *s, size_t n);
 void		*ft_memset(void *s, int c, size_t n);
 void		*ft_memcpy(void *dest, const void *src, size_t n);

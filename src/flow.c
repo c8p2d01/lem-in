@@ -40,8 +40,6 @@ bool	first_flow(t_room *node, globe *data)
 bool after_flow(t_room *node, globe *data, bool x, bool notstart)
 {
 	int r = 0;
-	// if (x == 50)
-	// 	return false;
 	if (node == NULL)
 		return false;
 	if (node == data->start || (notstart && node == data->end))
@@ -60,8 +58,6 @@ bool after_flow(t_room *node, globe *data, bool x, bool notstart)
 		}
 		if(!x && ft_flow(node->links[i], node) == COUNTERFLOW && other != data->start)
 		{
-			// if (node == data->end)
-			// 	continue;
 			x = true;
 			next = other;
 			link = node->links[i];
@@ -99,25 +95,12 @@ bool after_flow(t_room *node, globe *data, bool x, bool notstart)
 	}
 	if (next)
 	{
-		//printf("%s[%zi] -%i> %s[%zi]\t%s \n",node->name, node->after_lvl, ft_flow(link, node), next->name, next->after_lvl, reason[r]);
 		next->flown = true;
 	}
-	// if (ft_flow(link, node) == -1)
-	// {
-	// 	ft_setflow(link, next);
-	// 	if (!after_flow(next, data, ++x))
-	// 	{
-	// 		ft_resetflow(link, next);
-	// 		return (false);
-	// 	}
-	// }
-	// else
-	// {
 		if (x && next && ft_flow(link, node) == NOFLOW)
 			x = false;
 		if (!after_flow(next, data, x, true))
 			return (false);
 		ft_setflow(link, next);
-	//}
 	return (true);
 }
