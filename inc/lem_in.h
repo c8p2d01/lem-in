@@ -10,23 +10,14 @@
 # include <stdbool.h>
 # include <sys/time.h>
 
-# ifdef BONUS
-#  include "../bonus/bonus.h"
-# else
-#  define BONUS true
-# endif
-
-# ifndef TEST
-#  define TEST false
-# endif
-
 # ifndef READ_INPUT
-#  define READ_INPUT STDIN_FILENO
+#  define READ_INPUT 3//STDIN_FILENO
 # endif
 
 # define FORWARDFLOW -1
 # define COUNTERFLOW 1
 # define NOFLOW 0
+
 
 typedef struct globe {
 	struct s_room	**graph;
@@ -40,11 +31,14 @@ typedef struct globe {
 
 typedef struct s_path {
 	struct	s_room **path;
-	ssize_t		pathNumber;
-	ssize_t		position;
-	ssize_t		len;
-	ssize_t		ant;
+	int		len;
+	int		ant;
 }	t_path;
+
+typedef struct s_ant {
+	int path;
+	int position;
+}	t_ant;
 
 void	read_data(globe *data);
 
@@ -68,6 +62,9 @@ void	ant_march(globe *data);
 
 void	free_globe(globe *data);
 
+void	bonus(globe *data, char **env);
+void	pathnodefile(t_room *node, char *folder, globe *data, t_path *path);
+void	nodefile(t_room *node, char *folder, globe *data);
 void	pathfile(t_room *node, char *folder, int num);
 void 	path_sort(globe *data);
 

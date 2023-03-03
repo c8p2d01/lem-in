@@ -17,7 +17,7 @@ int main(int argc, char **argv, char **env)
 	//printf("something1\n");
 
 	remove_deadend(&data);
-	//printf("something1\n");
+	printf("something1\n");
 
 	first_level(&data);
 	if (data.end->first_lvl != -1)
@@ -41,10 +41,10 @@ int main(int argc, char **argv, char **env)
 
 		path_sort(&data);
 
-		ant_march(&data);
-
 		// for the tester
 		printf("TESTER:%s\n", data.end->name);
+
+		ant_march(&data);
 
 		bonus(&data, env);
 		(void)env;

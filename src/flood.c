@@ -1,12 +1,14 @@
 #include "../inc/lem_in.h"
 
-t_path	*newAnt(ssize_t path, ssize_t len, ssize_t	ant)
+t_path	*copyAnt(t_path *river, size_t	ant)
 {
-	t_path	*copy = ft_calloc(1, sizeof(t_path));
-	copy->path = NULL;
-	copy->pathNumber = path;
-	copy->position = 0;
-	copy->len = len;
+	t_path	*copy = malloc(1 * sizeof(t_path));
+	copy->len = river->len;
+	copy->path = ft_calloc(copy->len + 1, sizeof(t_room *));
+	for(int i = 0; river->path[i]; i++)
+	{
+		copy->path[i] = river->path[i];
+	}
 	copy->ant = ant;
 	return (copy);
 }
@@ -44,29 +46,26 @@ void	ant_march(globe *data)
 		while (curr_lst)
 		{
 			t_path *current_ant = (t_path *)(curr_lst->content);
-			printf("READ ANT %zi pId %zi POS %zi pLen %zi\n", current_ant->ant, current_ant->pathNumber, current_ant->position, current_ant->len);
 			current_ant->len--;
-			// current_ant->position++;
-			// next_lst = curr_lst->next;
-			// if (current_ant->len > 0)
-			// 	printf("L%zi-%s ", current_ant->ant, data->paths[current_ant->pathNumber]->path[current_ant->position]->name);
-			// else
-			// {
-			// 	if (curr_lst == ants)
-			// 		ants = next_lst;
-			// 	ft_lstdelone(curr_lst, drought);
-			// 	deleted ++;
-			// }
-			// curr_lst = next_lst;
+			next_lst = curr_lst->next;
+			if (current_ant->len > 0)
+				printf("L%i-%s ", (current_ant)->ant, ((current_ant)->path[0])->name);
+			else
+			{
+				if (curr_lst == ants)
+					ants = next_lst;
+				ft_lstdelone(curr_lst, drought);
+				deleted ++;
+			}
+			curr_lst = next_lst;
 		}
 		printf("\n");
 		for (unsigned long i = 0; data->paths[i] && marched < data->nAnts; i ++)
 		{
 			if (i != 0 && data->paths[i]->len > data->paths[0]->len && (data->nAnts - marched ) < len_of_prev(data->paths, i))
 				break;
-			t_path	*ant = newAnt(i, data->paths[i]->len, marched + 1);
-			printf("NEW ANT %zi pId %zi POS %zi pLen %zi\n", ant->ant, ant->pathNumber, ant->position, ant->len);
-			ft_lstadd_back(&ants, ft_lstnew(newAnt));
+			t_path	*ant = copyAnt(data->paths[i], marched + 1);
+			ft_lstadd_back(&ants, ft_lstnew(ant));
 			created++;
 			marched++;
 		}

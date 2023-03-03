@@ -6,7 +6,7 @@ void	mapper(t_path *river)
 
 	if (!river)
 		return ;
-	printf("riverlen %zi\n", river->len);
+	printf("riverlen %i\n", river->len);
 	while(river && river->path && river->path[i])
 	{
 		printf("\tnode '%s'\n", river->path[i]->name);
@@ -91,8 +91,6 @@ t_path	*river(t_link *flow, t_room *spring, t_room *estuary)
 	river->path = ft_calloc((len + 1), sizeof(t_room *));
 	if (!river || !river->path)
 		return(NULL);
-	river->pathNumber = -1;
-	river->position = -1;
 	river->len = len;
 	river->ant = -1;
 

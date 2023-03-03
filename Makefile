@@ -2,7 +2,7 @@ NAME = lem-in
 
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra -Wno-unused-variable -g -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -g -Wno-unused-variable
 
 SD = ./src/
 SRC =	main.c \
