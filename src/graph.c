@@ -101,9 +101,9 @@ void leveling(globe *data)
 			if (!ft_active_link(target_link))
 				continue ;
 			target = ft_otherside(target_link, current);
-			if (current == data->start && ft_flow(target_link, current) == FORWARDFLOW)
+			if (current == data->start && ft_flow(target_link, current) == COUNTERFLOW)
 				continue;
-			else if (target->after_lvl < 0 && ft_flow(target_link, current) > FORWARDFLOW)
+			else if (target->after_lvl < 0 && ft_flow(target_link, current) < COUNTERFLOW)
 			{
 				if (target == data->end && ft_flow(target_link, current) != NOFLOW)
 					continue;

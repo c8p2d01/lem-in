@@ -43,7 +43,7 @@ void path_sort(globe *data)
 
 t_path	**cartograph(globe *data)
 {
-	int maxFlow = ft_flow_link_size(data->end);
+	int maxFlow = ft_flow_link_size(data->start);
 	int i = 0;
 	int m = 0;
 
@@ -54,7 +54,7 @@ t_path	**cartograph(globe *data)
 			link = data->start->links[++i];
 		map[m++] = river(link, data->start, data->end);
 		link = data->start->links[++i];
-			//mapper(map[m - 1]);
+			mapper(map[m - 1]);
 	}
 	return(map);
 }

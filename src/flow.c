@@ -1,5 +1,7 @@
 #include "../inc/lem_in.h"
 
+char *reason[] = {"Unknown","Forwardflow", "Start", "= After, Lower first", "Lower After", "Smallest After"};
+
 bool	first_flow(t_room *node, globe *data)
 {
 	if (node == NULL)
@@ -37,6 +39,7 @@ bool	first_flow(t_room *node, globe *data)
 
 bool after_flow(t_room *node, globe *data, bool x)
 {
+	int r = 0;
 	// if (x == 50)
 	// 	return false;
 	if (node == NULL)
@@ -66,35 +69,41 @@ bool after_flow(t_room *node, globe *data, bool x)
 			x = true;
 			next = other;
 			link = node->links[i];
+			r = 1;
 			break ;
 		}
-		if (other == data->start && ft_flow(node->links[i], node) == NOFLOW)
+		if (other == data->start )//&& ft_flow(node->links[i], node) == NOFLOW)
 		{
 			next = other;
 			link = node->links[i];
+			r = 2;
+			break ;
 		}
-		if (next != data->start)
+		if (next != data->start && other != data->start)
 		{
 			if (!next && (other->after_lvl == node->after_lvl && other->first_lvl < node->first_lvl))
 			{
 				next = other;
 				link = node->links[i];
+				r = 3;
 			}
 			else if (!next && (other->after_lvl < node->after_lvl))
 			{
 				next = other;
 				link = node->links[i];
+				r = 4;
 			}
 			else if (next && (other->after_lvl < next->after_lvl))
 			{
 				next = other;
 				link = node->links[i];
+				r = 5;
 			}
 		}
 	}
 	if (next)
 	{
-		printf("%s[%zi] -%i> %s[%zi] \n",node->name, node->after_lvl, ft_flow(link, node), next->name, next->after_lvl);
+		printf("%s[%zi] -%i> %s[%zi]\t%s \n",node->name, node->after_lvl, ft_flow(link, node), next->name, next->after_lvl, reason[r]);
 		next->flown = true;
 	}
 	// if (ft_flow(link, node) == -1)

@@ -18,6 +18,7 @@
 # define COUNTERFLOW 1
 # define NOFLOW 0
 
+
 typedef struct globe {
 	struct s_room	**graph;
 	struct s_room	*start;

@@ -37,23 +37,25 @@ int main(int argc, char **argv, char **env)
 		}
 
 		print_nodes(data.graph);
+		printf("----done printing\n");
 
-		 data.paths = cartograph(&data);
-		 printf("done cartography\n");
+		data.paths = cartograph(&data);
+		printf("done cartography\n");
 
-		path_sort(&data);
-		for (int i = 0; data.paths[i]; i ++)
-			mapper(data.paths[i]);
-		printf("done sorter\n");
+		// path_sort(&data);
+		// for (int i = 0; data.paths[i]; i ++)
+		// 	mapper(data.paths[i]);
+		// printf("done sorter\n");
 
 
-		// // for the tester
-		 printf("TESTER:%s\n", data.end->name);
+		// // // for the tester
+		//  printf("TESTER:%s\n", data.end->name);
 
-		 ant_march(&data);
+		//  ant_march(&data);
 
-		bonus(&data, env);
+		// bonus(&data, env);
 		(void)env;
+		printf("----END----\n");
 	}
 	else
 		printf("no connection between start and end found\n");

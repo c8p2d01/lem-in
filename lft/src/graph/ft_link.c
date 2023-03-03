@@ -136,7 +136,7 @@ size_t	ft_flow_link_size(t_room *node)
 	size = 0;
 	while (node->links && node->links[i])
 	{
-		if (ft_flow(node->links[i], node) == -1)
+		if (ft_flow(node->links[i], node) != 0)
 		{
 			size++;
 		}
