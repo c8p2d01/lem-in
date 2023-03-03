@@ -9,53 +9,53 @@ int main(int argc, char **argv, char **env)
 	globe data;
 	ft_bzero(&data, sizeof(globe));
 
-	openat(3, "/Users/vheymans/Documents/code/github/lem-in/test", O_RDONLY);
+	openat(3, "/Users/vheymans/Documents/code/github/lem-in/map/big-superposition.map", O_RDONLY);
 	read_data(&data);
 
 	close(3);
-	printf("something1\n");
+	//printf("something1\n");
 
 	remove_deadend(&data);
-	printf("something1\n");
+	//printf("something1\n");
 
 	first_level(&data);
 	if (data.end->first_lvl != -1)
 	{
 		int i = 1;
 		first_flow(data.end, &data);
-		printf("%d------\n",i);
+		// printf("%d------\n",i);
 		
 		leveling(&data);
-		while (after_flow(data.end, &data, false))
+		while (after_flow(data.end, &data, false, false))
 		{
 			if (data.end->after_lvl == -1)
 				break;
 			i++;
-			printf("%d------\n",i);
+			// printf("%d------\n",i);
 			dry(data.graph);
 			leveling(&data);
 		}
 
-		print_nodes(data.graph);
-		printf("----done printing\n");
+		//print_nodes(data.graph);
+		// printf("----done printing\n");
 
 		data.paths = cartograph(&data);
-		printf("done cartography\n");
+		// printf("done cartography\n");
 
 		path_sort(&data);
-		for (int i = 0; data.paths[i]; i ++)
-			mapper(data.paths[i]);
-		printf("done sorter\n");
+		// for (int i = 0; data.paths[i]; i ++)
+		// 	mapper(data.paths[i]);
+		// printf("done sorter\n");
 
 
 		// // for the tester
-		 printf("TESTER:%s\n", data.end->name);
+		//  printf("TESTER:%s\n", data.end->name);
 
 		 ant_march(&data);
 
 		// bonus(&data, env);
 		(void)env;
-		printf("----END----\n");
+		// printf("----END----\n");
 	}
 	else
 		printf("no connection between start and end found\n");

@@ -45,7 +45,7 @@ bool	first_flow(t_room *node, globe *data);
 
 void	leveling(globe *data);
 
-bool 	after_flow(t_room *node, globe *data, bool x);
+bool 	after_flow(t_room *node, globe *data, bool x, bool notstart);
 
 t_path	*river(t_link *flow, t_room *spring, t_room *estuary);
 
