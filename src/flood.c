@@ -2,7 +2,7 @@
 
 t_ant	*copyAnt(int number, int path, int position)
 {
-	t_ant	*copy = ft_calloc(2, sizeof(t_ant));
+	t_ant	*copy = ft_calloc(1, sizeof(t_ant));
 	copy->path = path;
 	copy->position = position ;
 	copy->number = number;
@@ -11,10 +11,9 @@ t_ant	*copyAnt(int number, int path, int position)
 
 void	drought(void *content)
 {
-	t_ant	*ant = (t_ant *)content;
-	if (ant)
-		free(ant);
-	ant = NULL;
+	// if (content)
+	// 	free((t_ant*)content);
+	content = NULL;
 }
 
 unsigned long	len_of_prev(t_path **paths, int i)
@@ -52,7 +51,7 @@ void	ant_march(globe *data)
 			{
 				if (curr_lst == ants)
 					ants = next_lst;
-				ft_lstdelone(curr_lst, &drought);
+				ft_lstdelone(curr_lst, drought);
 				deleted ++;
 			}
 			current_ant->position++;
