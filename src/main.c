@@ -46,11 +46,12 @@ int main(int argc, char **argv, char **env)
 
 		ant_march(&data);
 
-		bonus(&data, env);
+		// bonus(&data, env);
 		(void)env;
 	}
 	else
 		printf("no connection between start and end found\n");
 	free_globe(&data);
+	close(4);
 	return (0);
 }
