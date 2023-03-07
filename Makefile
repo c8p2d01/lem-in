@@ -6,12 +6,13 @@ CFLAGS = -Wall -Werror -Wextra -g -Wno-unused-variable
 
 SD = ./src/
 SRC =	main.c \
-		../bonus/bonus.c \
 		graph.c \
 		parser.c \
 		creek.c \
 		flow.c \
-		flood.c 
+		flood.c \
+		../bonus/bonus.c
+
 SRF = $(addprefix $(SD),$(SRC))
 
 OD = ./obj/
@@ -20,18 +21,14 @@ OBF = $(SRF:$(SD)%.c=$(OD)%.o)
 
 all: $(NAME)
 
-debug: fclean $(OBF)
-	make -s -C ./lft
-	$(CC) $(OBF) -D READ_INPUT=3 ./lft/libft.a -o $(NAME)
-
 test:
 	make e | ./tester/tester.sh
 
 e: re
 	cat map/test.map | ./$(NAME)
 
-bonus: re gclean
-	cat map/flow-ten_double.map | ./$(NAME) # | ./tester/tester.sh
+bonus: gclean re
+	cat map/Whyy.map | ./$(NAME) # | ./tester/tester.sh
 	open -a /Applications/Obsidian.app bonus/Obsidian_Vault
 
 gclean:
@@ -47,7 +44,6 @@ $(OD)%.o: $(SD)%.c
 $(NAME): $(OBF)
 	make -s -C ./lft
 	$(CC) $(OBF) ./lft/libft.a -o $(NAME)
-
 clean:
 	make -s -C ./lft clean
 	rm -rdf $(OD)
@@ -55,6 +51,8 @@ clean:
 fclean: clean
 	make -s -C ./lft fclean
 	rm -rdf $(NAME)
+	rm -f bonus/*.o
+
 
 re: fclean all
 

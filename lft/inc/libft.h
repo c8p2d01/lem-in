@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:43:47 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/03/03 16:39:05 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/03/04 13:14:46 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,11 @@ void		ft_striteri(char *s, void (*f)(unsigned int, char*));
 */
 
 int			ft_printf(const char *str, ...);
+int			ft_printf_fd(int fd, const char *str, ...);
 void		printfile(int fd);
 int			colorflow(int i);
+long		createGradientColor(float fraction, int r1, short g1, short b1, short r2, short g2, short b2);
+long		createMultiGradient(float fraction, int nColor, ...);
 void		ft_putchar_fd(char c, int fd);
 void		ft_putstr_fd(char *s, int fd);
 void		ft_putendl_fd(char *s, int fd);

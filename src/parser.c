@@ -83,6 +83,7 @@ static bool	add_node(globe *data, char *line)
 static bool	extract_data(char *line, globe *data)
 {
 	static bool is_gate_parsed = false;
+	ft_printf("%s\n", line);
 
 	if (data->nAnts == 0) {
 		if (!ft_isnumeric(line))
@@ -110,6 +111,7 @@ static bool	extract_data(char *line, globe *data)
 			ft_putendl_fd("error: get_next_line() after ##start or ##end", STDERR_FILENO);
 			return false;
 		}
+		ft_printf("%s\n", node_line);
 
 		if (!add_node(data, node_line))
 		{

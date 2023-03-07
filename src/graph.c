@@ -143,7 +143,7 @@ void	remove_deadend(globe *data)
 {
 	for (size_t i = 0; data->graph[i]; ++i)
 	{
-		if (ft_active_link_size(data->graph[i]) < 2)
+		if (ft_active_link_size(data->graph[i]) < 2 && !(data->graph[i] == data->start || data->graph[i] == data->end))
 		{
 			ft_g_del_node(data->graph[i]);
 			ft_memmove(&data->graph[i], &data->graph[i + 1], sizeof(t_room *) * (ft_array_size((void **)&data->graph[i + 1]) + 1));

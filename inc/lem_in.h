@@ -10,14 +10,15 @@
 # include <stdbool.h>
 # include <sys/time.h>
 
+# include "../bonus/bonus.h"
+
 # ifndef READ_INPUT
-#  define READ_INPUT 3//STDIN_FILENO
+#  define READ_INPUT STDIN_FILENO
 # endif
 
 # define FORWARDFLOW -1
 # define COUNTERFLOW 1
 # define NOFLOW 0
-
 
 typedef struct globe {
 	struct s_room	**graph;

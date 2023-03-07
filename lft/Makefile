@@ -59,6 +59,7 @@ SRCFILES =	mem/ft_calloc.c \
 		print/ft_putnbr_fd.c \
 		print/ft_putnbr_base_fd.c \
 		print/ft_printf.c \
+		print/ft_printf_fd.c \
 		\
 		lst/ft_lstnew.c \
 		lst/ft_lstadd_front.c \

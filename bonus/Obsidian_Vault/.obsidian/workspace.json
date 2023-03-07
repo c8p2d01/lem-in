@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "d9728b5ccb40b76f",
+        "id": "cc41c9cafccbb2c4",
         "type": "tabs",
         "children": [
           {
-            "id": "5b1bfda3f5cfa4d5",
+            "id": "8ace98eb4dbca4e3",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -125,8 +125,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -138,33 +137,33 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "5b1bfda3f5cfa4d5",
+  "active": "8ace98eb4dbca4e3",
   "lastOpenFiles": [
-    "Jgf0.md",
-    "Tqh6.md",
-    "Vow3.md",
-    "Uhc1.md",
-    "Ahp6.md",
-    "Q_d4.md",
-    "Kg_4.md",
-    "Vza2.md",
-    "Qbe8.md",
-    "Rff9.md",
-    "Won7.md",
-    "Ppz6.md",
-    "U__4.md",
-    "T__0.md",
-    "Efz7.md",
-    "Ipz2.md",
-    "Ebs8.md",
-    "Umx9.md",
-    "Avl0.md",
-    "V_j7.md",
-    "Aq_4.md",
-    "Rbs2.md",
-    "Orl8.md",
-    "Wig3.md",
-    "Bqy7.md",
-    "Tzx8.md"
+    "Hdx9.md",
+    "Xnl1.md",
+    "I__9.md",
+    "Gia9.md",
+    "Xek1.md",
+    "Qxk9.md",
+    "Sws4.md",
+    "Wda9.md",
+    "A_b9.md",
+    "Xp_2.md",
+    "Jst2.md",
+    "Hou7.md",
+    "Uln0.md",
+    "Xof1.md",
+    "Da_5.md",
+    "V_d0.md",
+    "Jht4.md",
+    "Jiy8.md",
+    "Xpy0.md",
+    "Qmk4.md",
+    "Gb_8.md",
+    "T__2.md",
+    "Szd5.md",
+    "Ocl1.md",
+    "Wux3.md",
+    "Doa3.md"
   ]
 }

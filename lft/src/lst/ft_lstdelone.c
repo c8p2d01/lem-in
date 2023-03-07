@@ -6,7 +6,7 @@
 /*   By: cdahlhof <cdahlhof@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:41:56 by cdahlhof          #+#    #+#             */
-/*   Updated: 2023/03/04 02:51:47 by cdahlhof         ###   ########.fr       */
+/*   Updated: 2023/03/07 21:06:14 by cdahlhof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,4 @@ void	ft_lstdelone(t_list *lst, void (*del)(void*))
 // 	printf("b %p  n %p  l %p\n", start, start->next, start->next->next);
 // 	ft_lstdelone(start->next, NULL);
 // 	printf("b %p, n %p\n", start, start->next);
-
 // }

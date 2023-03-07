@@ -52,12 +52,12 @@ void	print_nodes(t_room **node)
 
 	for (size_t i = 0; (current = node[i]) != NULL; ++i)
 	{
-		printf("node '%s'\t\tfirst_level %li\n", node[i]->name, node[i]->first_lvl);
-		printf("node %p\tafter_level %li\n", node[i], node[i]->after_lvl);
+		ft_printf("node '%s'\t\tfirst_level %i\n", node[i]->name, node[i]->first_lvl);
+		ft_printf("node %p\tafter_level %i\n", node[i], node[i]->after_lvl);
 		for (size_t j = 0; node[i]->links && (linked = node[i]->links[j]); ++j)
 		{
 			if (linked->active)
-				printf("\t link to '%s'\tflow %i\n",
+				ft_printf("\t link to '%s'\tflow %i\n",
 						ft_otherside(linked, node[i])->name,
 						ft_flow(linked, current));
 		}
@@ -70,12 +70,12 @@ void	print_node(t_room *node)
 {
 	t_link	*linked = NULL;
 
-	printf("node '%s'\t\tfirst_level %li\n", node->name, node->first_lvl);
-	printf("node %p\tafter_level %li\n", node, node->after_lvl);
+	ft_printf("node '%s'\t\tfirst_level %i\n", node->name, node->first_lvl);
+	ft_printf("node %p\tafter_level %i\n", node, node->after_lvl);
 	for (size_t j = 0; node->links && (linked = node->links[j]); ++j)
 	{
 		if (linked->active)
-			printf("\t link to '%s'\tflow %i\n",
+			ft_printf("\t link to '%s'\tflow %i\n",
 				ft_otherside(linked, node)->name,
 				ft_flow(linked, node));
 	}

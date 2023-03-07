@@ -9,30 +9,23 @@ int main(int argc, char **argv, char **env)
 	globe data;
 	ft_bzero(&data, sizeof(globe));
 
-	openat(3, "/Users/cdahlhof/Documents/lem-in/test", O_RDONLY);
+	// openat(3, "/Users/cdahlhof/Documents/lem-in/test", O_RDONLY);
 
 	read_data(&data);
 
-	close(3);
-	//printf("something1\n");
+	// close(3);
 
 	remove_deadend(&data);
-	printf("something1\n");
 
 	first_level(&data);
 	if (data.end->first_lvl != -1)
 	{
-		int i = 1;
 		first_flow(data.end, &data);
-		// printf("%d------\n",i);
 		
 		leveling(&data);
+		
 		while (after_flow(data.end, &data, false, false))
 		{
-			if (data.end->after_lvl == -1)
-				break;
-			i++;
-			// printf("%d------\n",i);
 			dry(data.graph);
 			leveling(&data);
 		}
@@ -42,7 +35,7 @@ int main(int argc, char **argv, char **env)
 		path_sort(&data);
 
 		// for the tester
-		printf("TESTER:%s\n", data.end->name);
+		// ft_printf("TESTER:%s\n", data.end->name);
 
 		ant_march(&data);
 
@@ -50,8 +43,7 @@ int main(int argc, char **argv, char **env)
 		(void)env;
 	}
 	else
-		printf("no connection between start and end found\n");
+		ft_printf("Error\nno connection between start and end found\n");
 	free_globe(&data);
-	close(4);
 	return (0);
 }

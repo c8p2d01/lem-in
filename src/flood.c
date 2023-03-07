@@ -11,8 +11,8 @@ t_ant	*copyAnt(int number, int path, int position)
 
 void	drought(void *content)
 {
-	// if (content)
-	// 	free((t_ant*)content);
+	if (content)
+		free(content);
 	content = NULL;
 }
 
@@ -45,7 +45,9 @@ void	ant_march(globe *data)
 			if (current_ant->position != data->paths[current_ant->path]->len)
 			{
 				char *s = data->paths[current_ant->path]->path[current_ant->position]->name;
-				printf("L%i-%s ", (current_ant)->number, s);
+				if (s != data->start->name)
+					ft_printf("L%i-%s ", (current_ant)->number, s);
+				current_ant->position++;
 			}
 			else
 			{
@@ -54,10 +56,9 @@ void	ant_march(globe *data)
 				ft_lstdelone(curr_lst, drought);
 				deleted ++;
 			}
-			current_ant->position++;
 			curr_lst = next_lst;
 		}
-		printf("\n");
+		ft_printf("\n");
 		for (unsigned long i = 0; data->paths[i] && marched < data->nAnts; i ++)
 		{
 			if (i != 0 && data->paths[i]->len > data->paths[0]->len && (data->nAnts - marched ) < len_of_prev(data->paths, i))
