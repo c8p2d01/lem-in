@@ -8,192 +8,297 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "infinity",
-      "color": {
-        "a": 1,
-        "rgb": 101010
-      }
-    },
-    {
-      "query": "A_path",
+      "query": "In einem ",
       "color": {
         "a": 1,
         "rgb": 16711680
       }
     },
     {
-      "query": "B_path",
+      "query": "Bächlein helle,",
       "color": {
         "a": 1,
-        "rgb": 16711738
+        "rgb": 16711716
       }
     },
     {
-      "query": "C_path",
+      "query": "Da schoß in",
       "color": {
         "a": 1,
-        "rgb": 16711797
+        "rgb": 16711752
       }
     },
     {
-      "query": "D_path",
+      "query": "froher Eil",
       "color": {
         "a": 1,
-        "rgb": 16711856
+        "rgb": 16711789
       }
     },
     {
-      "query": "E_path",
+      "query": "Die launische",
       "color": {
         "a": 1,
-        "rgb": 16711915
+        "rgb": 16711825
       }
     },
     {
-      "query": "F_path",
+      "query": "Forelle",
       "color": {
         "a": 1,
-        "rgb": 14090495
+        "rgb": 16711862
       }
     },
     {
-      "query": "G_path",
+      "query": "Vorüber, wie",
       "color": {
         "a": 1,
-        "rgb": 10223871
+        "rgb": 16711898
       }
     },
     {
-      "query": "H_path",
+      "query": "ein Pfeil:",
       "color": {
         "a": 1,
-        "rgb": 6422783
+        "rgb": 16711935
       }
     },
     {
-      "query": "I_path",
+      "query": "Ich stand",
       "color": {
         "a": 1,
-        "rgb": 2556159
+        "rgb": 14287103
       }
     },
     {
-      "query": "J_path",
+      "query": "an dem Gestade",
       "color": {
         "a": 1,
-        "rgb": 5119
+        "rgb": 11927807
       }
     },
     {
-      "query": "K_path",
+      "query": "Und sah in",
       "color": {
         "a": 1,
-        "rgb": 20223
+        "rgb": 9502975
       }
     },
     {
-      "query": "L_path",
+      "query": "süßer Ruh",
       "color": {
         "a": 1,
-        "rgb": 35327
+        "rgb": 7143679
       }
     },
     {
-      "query": "M_path",
+      "query": "Des muntern",
       "color": {
         "a": 1,
-        "rgb": 50431
+        "rgb": 4718847
       }
     },
     {
-      "query": "N_path",
+      "query": "Fischleins Bade",
+      "color": {
+        "a": 1,
+        "rgb": 2359551
+      }
+    },
+    {
+      "query": "Im klaren",
+      "color": {
+        "a": 1,
+        "rgb": 255
+      }
+    },
+    {
+      "query": "Bächlein zu.",
+      "color": {
+        "a": 1,
+        "rgb": 9471
+      }
+    },
+    {
+      "query": "Ein Fischer",
+      "color": {
+        "a": 1,
+        "rgb": 18687
+      }
+    },
+    {
+      "query": "mit der Ruthe",
+      "color": {
+        "a": 1,
+        "rgb": 28159
+      }
+    },
+    {
+      "query": "Wol an dem",
+      "color": {
+        "a": 1,
+        "rgb": 37375
+      }
+    },
+    {
+      "query": "Ufer stand,",
+      "color": {
+        "a": 1,
+        "rgb": 46847
+      }
+    },
+    {
+      "query": "Und sahs mit",
+      "color": {
+        "a": 1,
+        "rgb": 56063
+      }
+    },
+    {
+      "query": "kaltem Blute,",
       "color": {
         "a": 1,
         "rgb": 65535
       }
     },
     {
-      "query": "O_path",
+      "query": "Wie sich das",
       "color": {
         "a": 1,
-        "rgb": 65476
+        "rgb": 65498
       }
     },
     {
-      "query": "P_path",
+      "query": "Fischlein wand.",
       "color": {
         "a": 1,
-        "rgb": 65417
+        "rgb": 65462
       }
     },
     {
-      "query": "Q_path",
+      "query": "So lang dem",
       "color": {
         "a": 1,
-        "rgb": 65358
+        "rgb": 65425
       }
     },
     {
-      "query": "R_path",
+      "query": "Wasser Helle,",
       "color": {
         "a": 1,
-        "rgb": 65299
+        "rgb": 65389
       }
     },
     {
-      "query": "S_path",
+      "query": "So dacht ich,",
       "color": {
         "a": 1,
-        "rgb": 2621184
+        "rgb": 65352
       }
     },
     {
-      "query": "T_path",
+      "query": "nicht gebricht,",
       "color": {
         "a": 1,
-        "rgb": 6487808
+        "rgb": 65316
       }
     },
     {
-      "query": "U_path",
+      "query": "So fängt er",
       "color": {
         "a": 1,
-        "rgb": 10288896
+        "rgb": 65280
       }
     },
     {
-      "query": "V_path",
+      "query": "die Forelle",
       "color": {
         "a": 1,
-        "rgb": 14155520
+        "rgb": 2424576
       }
     },
     {
-      "query": "W_path",
+      "query": "Mit seiner",
       "color": {
         "a": 1,
-        "rgb": 16771840
+        "rgb": 4783872
       }
     },
     {
-      "query": "X_path",
+      "query": "Angel nicht.",
       "color": {
         "a": 1,
-        "rgb": 16756736
+        "rgb": 7208704
       }
     },
     {
-      "query": "Y_path",
+      "query": "Doch endlich",
       "color": {
         "a": 1,
-        "rgb": 16741632
+        "rgb": 9568000
       }
     },
     {
-      "query": "Z_path",
+      "query": "ward dem Diebe",
       "color": {
         "a": 1,
-        "rgb": 16726528
+        "rgb": 11992832
+      }
+    },
+    {
+      "query": "Die Zeit zu",
+      "color": {
+        "a": 1,
+        "rgb": 14352128
+      }
+    },
+    {
+      "query": "lang; er macht",
+      "color": {
+        "a": 1,
+        "rgb": 16776960
+      }
+    },
+    {
+      "query": "Das Bächlein",
+      "color": {
+        "a": 1,
+        "rgb": 16767488
+      }
+    },
+    {
+      "query": "tückisch trübe:",
+      "color": {
+        "a": 1,
+        "rgb": 16758272
+      }
+    },
+    {
+      "query": "Und eh ich",
+      "color": {
+        "a": 1,
+        "rgb": 16748800
+      }
+    },
+    {
+      "query": "es gedacht,",
+      "color": {
+        "a": 1,
+        "rgb": 16739584
+      }
+    },
+    {
+      "query": "So zuckte",
+      "color": {
+        "a": 1,
+        "rgb": 16730112
+      }
+    },
+    {
+      "query": "seine Ruthe;",
+      "color": {
+        "a": 1,
+        "rgb": 16720896
       }
     }
   ],
@@ -201,12 +306,12 @@
   "showArrow": false,
   "textFadeMultiplier": 3,
   "nodeSizeMultiplier": 5,
-  "lineSizeMultiplier": 5,
+  "lineSizeMultiplier": 0.1,
   "collapse-forces": false,
-  "centerStrength": 0.1,
+  "centerStrength": 0,
   "repelStrength": 20,
   "linkStrength": 1,
-  "linkDistance": 58,
-  "scale": 0.024104681378625974,
+  "linkDistance": 30,
+  "scale": 0.009946416661546591,
   "close": false
 }

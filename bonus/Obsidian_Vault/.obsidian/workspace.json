@@ -4,14 +4,14 @@
     "type": "split",
     "children": [
       {
-        "id": "cc41c9cafccbb2c4",
+        "id": "8275008268bb5e4a",
         "type": "tabs",
         "children": [
           {
-            "id": "8ace98eb4dbca4e3",
+            "id": "d0d7a99ad0a7da78",
             "type": "leaf",
             "state": {
-              "type": "graph",
+              "type": "empty",
               "state": {}
             }
           }
@@ -61,7 +61,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -129,41 +130,42 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
+      "switcher:Open quick switcher": false,
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false
     }
   },
-  "active": "8ace98eb4dbca4e3",
+  "active": "d0d7a99ad0a7da78",
   "lastOpenFiles": [
-    "Hdx9.md",
-    "Xnl1.md",
-    "I__9.md",
-    "Gia9.md",
-    "Xek1.md",
-    "Qxk9.md",
-    "Sws4.md",
-    "Wda9.md",
-    "A_b9.md",
-    "Xp_2.md",
-    "Jst2.md",
-    "Hou7.md",
-    "Uln0.md",
-    "Xof1.md",
-    "Da_5.md",
-    "V_d0.md",
-    "Jht4.md",
-    "Jiy8.md",
-    "Xpy0.md",
-    "Qmk4.md",
-    "Gb_8.md",
-    "T__2.md",
-    "Szd5.md",
-    "Ocl1.md",
-    "Wux3.md",
-    "Doa3.md"
+    "Ppf6.md",
+    "Dbb4.md",
+    "B_t1.md",
+    "Mc_9.md",
+    "Zd_6.md",
+    "Izr6.md",
+    "R_b5.md",
+    "Xzq8.md",
+    "Fad6.md",
+    "Cmp2.md",
+    "Agg4.md",
+    "Reb1.md",
+    "Ivl6.md",
+    "Ogt9.md",
+    "R__3.md",
+    "Ygp1.md",
+    "Adj9.md",
+    "Bbl6.md",
+    "Dgn6.md",
+    "G_l5.md",
+    "Tob6.md",
+    "Gob0.md",
+    "Ufc3.md",
+    "Bnr1.md",
+    "Qct1.md",
+    "Tuz3.md",
+    "Untitled.canvas"
   ]
 }

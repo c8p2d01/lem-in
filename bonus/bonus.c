@@ -1,6 +1,58 @@
 #include "../inc/lem_in.h"
 #include "bonus.h"
 
+char	*G_Group_Identifier[47] = {
+	"In einem ",
+	"Bächlein helle,",
+	"Da schoß in",
+	"froher Eil",
+	"Die launische",
+	"Forelle",
+	"Vorüber, wie",
+	"ein Pfeil:",
+	"Ich stand",
+	"an dem Gestade",
+	"Und sah in",
+	"süßer Ruh",
+	"Des muntern",
+	"Fischleins Bade",
+	"Im klaren",
+	"Bächlein zu.",
+	"Ein Fischer",
+	"mit der Ruthe",
+	"Wol an dem",
+	"Ufer stand,",
+	"Und sahs mit",
+	"kaltem Blute,",
+	"Wie sich das",
+	"Fischlein wand.",
+	"So lang dem",
+	"Wasser Helle,",
+	"So dacht ich,",
+	"nicht gebricht,",
+	"So fängt er",
+	"die Forelle",
+	"Mit seiner",
+	"Angel nicht.",
+	"Doch endlich",
+	"ward dem Diebe",
+	"Die Zeit zu",
+	"lang; er macht",
+	"Das Bächlein",
+	"tückisch trübe:",
+	"Und eh ich",
+	"es gedacht,",
+	"So zuckte",
+	"seine Ruthe;",
+	"Das Fischlein",
+	"zappelt dran;",
+	"Und ich, mit",
+	"regem Blute,",
+	"Sah die Betrogne an."
+};
+
+
+
 void	assignColorToPath(globe *data, char **env)
 {
 	char	*pwd = NULL;
@@ -17,33 +69,39 @@ void	assignColorToPath(globe *data, char **env)
 
 	int fd = open(folder, O_RDWR | O_TRUNC);
 	
+	char	*tmp = ft_itoa(createGradientColor(1, 255, 255, 255, 0, 0, 0));
 	ft_printf_fd(fd, "%s%s%s%s%s%s%s%s%s",
 				"{\n",
 				"  \"collapse-filter\": false,\n",
 				"  \"search\": \"\",\n",
 				"  \"showTags\": false,\n",
 				"  \"showAttachments\": false,\n",
-				"  \"hideUnresolved\": true,\n",
+				"  \"hideUnresolved\": false,\n",
 				"  \"showOrphans\": true,\n",
-				"  \"collapse-color-groups\": false,\n",
+				"  \"collapse-color-groups\": true,\n",
 				"  \"colorGroups\": [\n");
-	ft_printf_fd(fd, "%s%s%s%s%s%s",
+	ft_printf_fd(fd, "%s%s%s%s%s%s%s%s",
 				"    {\n",
 				"      \"query\": \"infinity\",\n",
 				"      \"color\": {\n",
 				"        \"a\": 1,\n",
-				"        \"rgb\": 101010}\n",
+				"        \"rgb\": ",
+				tmp,
+				"}\n",
 				"    },\n");
+	if (tmp)
+		free(tmp);
 
 	int		nPath = ft_array_size((void *)data->paths);
 	for (int i = 0; i < nPath; i++)
 	{
+		// char	*pathnumber;
 		char	*tmp = ft_itoa(createMultiGradient(((float)i / (float)nPath), 7, 255,0,0, 255,0,255, 0,0,255, 0,255,255, 0,255,0, 255,255,0, 255,0,0));
-		ft_printf_fd(fd, "%s%s%c%s%s%s%s%s%s%s%s%s", 
+		ft_printf_fd(fd, "%s%s%s%s%s%s%s%s%s%s%s%s", 
 				"    {\n",
 				"      \"query\": \"",
-				(char)i+65,
-				"_path\",\n",
+				G_Group_Identifier[i],
+				"\",\n",
 				"      \"color\": {\n",
 				"        \"a\": 1,\n",
 				"        \"rgb\": ",
@@ -52,6 +110,8 @@ void	assignColorToPath(globe *data, char **env)
 				"}\n",
 				"    }",
 				i + 1 < nPath ? ",\n" : "\n");
+		// if (pathnumber)
+			// free(pathnumber);
 		if (tmp)
 			free(tmp);
 	}
@@ -140,8 +200,7 @@ void	pathfile(t_room *node, char *folder, int num)
 	free(tmp);
 	int fd = open(name, O_RDWR | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
 	write(fd, "[[", 2);
-	ft_putchar_fd(num + 65, fd);
-	write(fd, "_path", ft_strlen("_path"));
+	ft_putstr_fd(G_Group_Identifier[num], fd);
 	write(fd, "]]\n", 3);
 	close(fd);
 	free(name);

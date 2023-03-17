@@ -9,11 +9,7 @@ int main(int argc, char **argv, char **env)
 	globe data;
 	ft_bzero(&data, sizeof(globe));
 
-	// openat(3, "/Users/cdahlhof/Documents/lem-in/test", O_RDONLY);
-
 	read_data(&data);
-
-	// close(3);
 
 	remove_deadend(&data);
 
