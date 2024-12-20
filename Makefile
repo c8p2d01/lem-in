@@ -1,50 +1,90 @@
-NAME = lem-in
+#OUTPUT NAME
+NAME := lem-in
 
-CC = cc
+# Folders:
+BUILD	= ./build
+SOURCE	= ./src
 
-CFLAGS = -Wall -Werror -Wextra -Wno-unused-variable -g
+# Other Variables:
+COMPILER:=	cc
+COMPFLAGS:=	-g #-Wall -Werror -Wextra -Wno-unused-variable 
+DEFINES = -D DEBUG=1
 
-SD = ./src/
-SRC =	main.c \
-		graph.c \
-		parser.c \
-		creek.c \
-		flow.c \
-		flood.c
-SRF = $(addprefix $(SD),$(SRC))
+# Source Files:
+SRCFILES:=	main.c \
+			parsing.c \
+			rivers.c \
+			utils.c \
+			cleanup.c
 
-OD = ./obj/
-OBJ = $(SRC:.c=.o)
-OBF = $(SRF:$(SD)%.c=$(OD)%.o)
+# ------------------------------------------
+# Do not change anything beyond this point!
+# ------------------------------------------
 
-all: $(NAME)
+# Process Variables
+CC:=		$(COMPILER)
+CFLAGS:=	$(COMPFLAGS)
+SRCS:=		$(addprefix $(SOURCE)/,$(SRCFILES))
+OBJS:=		$(SRCS:$(SOURCE)/%.c=$(BUILD)/%.o)
+NAME:=		./$(NAME)
+OS:=		$(shell uname -s)
 
-debug: fclean $(OBF)
-	make -s -C ./lft
-	$(CC) $(OBF) -D READ_INPUT=3 ./lft/libft.a -o $(NAME)
+.PHONY: all clean fclean re e red clear green
 
-test:
-	make e | ./tester/tester.sh
+LFT = ./ft_libft
+LIBRARYS = -lm -I include -lglfw  $(LFT)/libft.a
 
-e: re
-	cat map/overlap.map | ./$(NAME)
+ ifeq ($(SUBM_STATE),)
+ SUBM_FLAG	= submodule
+ else 
+ SUBM_FLAG	= 
+ endif
 
-$(OD)%.o: $(SD)%.c
-	@mkdir -p $(OD)
-	$(CC) $(CFLAGS) -c -o $@ $<
+all: $(SUBM_FLAG) lib
+	make -j $(nproc) $(NAME)
 
-$(NAME): $(OBF)
-	make -s -C ./lft
-	$(CC) $(OBF) ./lft/libft.a -o $(NAME)
+submodule: 
+	@git submodule init 
+	@git submodule update --remote
+
+lib:
+	make bonus -C $(LFT)
+
+# Compile .cpp files to .o Files
+$(OBJS): $(BUILD)%.o : $(SOURCE)%.c
+	@mkdir -p $(dir $@)
+	$(CC) -c $(CFLAGS) $< -o $@
+
+# Main Build Rule
+$(NAME): $(OBJS)
+	@echo "--> Compiling Executable"
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBRARYS)
 
 clean:
-	make -s -C ./lft clean
-	rm -rdf $(OD)
+	@make -s red
+	rm -rdf $(BUILD)
+	make clean -C $(LFT)
+	@make -s clear
 
 fclean: clean
-	make -s -C ./lft fclean
+	@make -s red
 	rm -rdf $(NAME)
+	@make -s clear
 
 re: fclean all
 
-phony: all clean fclean re e
+ree: re
+	./$(NAME) map/ex3
+e:
+	make
+	./$(NAME) map/ex3
+
+red:
+	echo $(RED)
+green:
+	echo $(GRN)
+clear:
+	echo $(CLEAR)
+
+.PHONY: all clean fclean re e red clear green
+.SILENT: red clear green
