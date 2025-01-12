@@ -91,7 +91,8 @@ void	input_parser(char *file)
 					.level = 0,
 					.x = ft_atoi(line_parts[1]),
 					.y = ft_atoi(line_parts[2]),
-					.ant = -1
+					.ant = -1,
+					.path = -1
 				};
 				node = ft_new_graph(c);
 				lst = ft_lstnew((void *)node);

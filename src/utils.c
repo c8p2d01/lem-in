@@ -194,10 +194,11 @@ void	print_node(void *iter)
 	t_graph	*node;
 	
 	node = (t_graph *)iter;
-	printf(" ᐅ  %s \n",
+	printf(" ᐅ  %s \tpath  %i\n",
 		ft_strrchr(((t_content *)node->content)->name, '_') ?
 			ft_strrchr(((t_content *)node->content)->name, '_') + 1 :
-			((t_content *)node->content)->name);
+			((t_content *)node->content)->name,
+		((t_content *)node->content)->path);
 }
 
 void	print_node_and_links(void *iter)
@@ -235,7 +236,7 @@ void	print_path(void *iter)
 	t_list	*path;
 	
 	path = (t_list *)iter;
-	printf("Path Length %i\n", ft_lstsize(path));
+	printf("Path %i Length %i\n", ((t_content *)((t_graph *)path->content)->content)->path, ft_lstsize(path));
 	ft_lstiter(ft_lstfirst(path), print_node);
 	printf("\n");
 }

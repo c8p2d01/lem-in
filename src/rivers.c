@@ -54,6 +54,7 @@ void	tectonics()
 	ft_lstclear(&q_nodes, NULL);
 }
 
+void	assign_path(void	*iter);
 void	flow()
 {
 	t_net	*net;
@@ -108,10 +109,21 @@ void	flow()
 	if (net->pathed)
 	{
 		path = ft_lstnew(river);
+		ft_lstiter(ft_lstfirst(river), assign_path);
 		ft_lstadd_back(&net->paths, path);
 	}
 	else
 		ft_lstclear(&river, NULL);
+}
+
+void	assign_path(void	*iter)
+{
+	t_net	*net;
+	t_graph	*node;
+
+	net = *catch();
+	node = (t_graph *)iter;
+	((t_content *)node->content)->path = ft_lstsize(net->paths) + 1;
 }
 
 void	flatten()

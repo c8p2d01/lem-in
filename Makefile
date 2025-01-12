@@ -9,13 +9,16 @@ SOURCE	= ./src
 COMPILER:=	cc
 COMPFLAGS:=	-g #-Wall -Werror -Wextra -Wno-unused-variable 
 DEFINES = -D DEBUG=1
+DEFINES += -D BONUS=1
 
 # Source Files:
 SRCFILES:=	main.c \
 			parsing.c \
 			rivers.c \
+			sending.c \
 			utils.c \
-			cleanup.c
+			cleanup.c \
+			../bonus/bonus.c
 
 # ------------------------------------------
 # Do not change anything beyond this point!
@@ -53,7 +56,7 @@ lib:
 # Compile .cpp files to .o Files
 $(OBJS): $(BUILD)%.o : $(SOURCE)%.c
 	@mkdir -p $(dir $@)
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $(DEFINES) $< -o $@
 
 # Main Build Rule
 $(NAME): $(OBJS)
@@ -73,11 +76,17 @@ fclean: clean
 
 re: fclean all
 
+bonus: clean
+	rm -f ./bonus/Obsidian_Vault/*.md
+	make
+	./$(NAME) map/flow-ten_double.map
+	open -a /Applications/./Obsidian.app/ bonus/Obsidian_Vault/
+
 ree: re
-	./$(NAME) map/ex3
+	./$(NAME) map/flow-ten_double.map
 e:
 	make
-	./$(NAME) map/ex3
+	./$(NAME) map/flow-ten_double.map
 
 red:
 	echo $(RED)

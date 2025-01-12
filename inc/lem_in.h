@@ -32,6 +32,7 @@ typedef struct s_content
 	int		x;
 	int		y;
 	int		ant;
+	int		path;
 }	t_content;
 
 typedef struct s_info
@@ -67,6 +68,9 @@ void	cut_loose();
 void	prune_orphans();
 void	deactivate_ends();
 void	prune_subnets();
+
+void	bonus();
+void	assignColorToPath(char **env);
 
 #endif
 

@@ -7,7 +7,7 @@ t_net	**catch()
 	return(&net);
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **env)
 {
 	if (argc != 2)
 		exit(-1);
@@ -34,7 +34,11 @@ int	main(int argc, char **argv)
 		flatten();
 		tectonics();
 	}
-	//print_paths();
 	send_off();
+	print_paths();
+	#ifdef BONUS
+		assignColorToPath(env);
+		bonus();
+	#endif
 	return (0);
 }
