@@ -61,12 +61,14 @@ void	input_parser(char *file)
 			{
 				if (!ft_strncmp(line, "##start", 8))
 				{
+					printf("%s\n", line);
 					if (input_type == LINK)
 						break;
 					input_type = START;
 				}
 				if (!ft_strncmp(line, "##end", 6))
 				{
+					printf("%s\n", line);
 					if (input_type == LINK)
 						break;
 					input_type = END;
@@ -134,6 +136,7 @@ void	input_parser(char *file)
 			}
 			free_2dstr(line_parts);
 		}
+		printf("%s\n", line);
 		free(line);
 		line = get_next_line(fd);
 	}

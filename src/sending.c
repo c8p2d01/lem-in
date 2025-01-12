@@ -12,6 +12,7 @@ void	send_off()
 	net = *catch();
 	ant = 1;
 	ant_endet = 0;
+	printf("\n");
 	while (ant_endet < net->packets)
 	{
 		pick_path = net->paths;
