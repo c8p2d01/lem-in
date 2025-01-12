@@ -45,6 +45,8 @@ void	input_parser(char *file)
 				.graph_nodes = NULL,
 				.start = NULL,
 				.end = NULL,
+				.pathed = false,
+				.paths = NULL,
 				.packets = -1
 			};
 			*catch() = net;
@@ -86,7 +88,8 @@ void	input_parser(char *file)
 					.name = ft_strdup(line_parts[0]),
 					.level = 0,
 					.x = ft_atoi(line_parts[1]),
-					.y = ft_atoi(line_parts[2])
+					.y = ft_atoi(line_parts[2]),
+					.ant = -1
 				};
 				node = ft_new_graph(c);
 				lst = ft_lstnew((void *)node);

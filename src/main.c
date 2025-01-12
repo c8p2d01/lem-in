@@ -14,8 +14,27 @@ int	main(int argc, char **argv)
 	input_parser(argv[1]);
 	prune_orphans();
 	deactivate_ends();
+	flatten();
 	tectonics();
 	prune_subnets();
-	print_net();
+	t_net	*net;
+	net = *catch();
+	while (((t_content *)net->end->content)->level != 0)
+	{
+		flow();
+		flatten();
+		tectonics();
+	}
+	net->pathed = true;
+	drain();
+	tectonics();
+	while (((t_content *)net->end->content)->level != 0)
+	{
+		flow();
+		flatten();
+		tectonics();
+	}
+	//print_paths();
+	send_off();
 	return (0);
 }

@@ -62,7 +62,7 @@ void	prune_orphans()
 		if (node->content)
 		{
 			orph = node->content;
-			if (ft_lstsize(orph->links) == 0)
+			if (!orph->links || ft_lstsize(orph->links) == 0)
 				ft_lstdelone(node, clear_graph);
 		}
 		node = next;
@@ -74,6 +74,7 @@ void	deactivate_ends()
 	t_net	*net;
 	t_list	*node;
 	t_list	*next;
+	t_list	*link;
 	t_graph	*end;
 
 	net = *catch();
@@ -89,7 +90,7 @@ void	deactivate_ends()
 			if (end != net->end && end != net->start && \
 				ft_lstsize(end->links) == 1)
 			{
-				((t_info *)((t_link *)end->links->content)->info)->active = 0;
+				((t_info *)((t_link *)end->links->content)->info)->active = false;
 			}
 		}
 		node = next;
@@ -114,6 +115,7 @@ void	prune_subnets()
 		if (stuff->level == 0)
 		{
 			ft_lstdelone(node, clear_graph);
+			node = NULL;
 		}
 		node = next;
 	}
