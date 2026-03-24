@@ -1,0 +1,53 @@
+<head>
+	<style>
+		body {
+			margin: 0;
+		}
+	</style>
+
+	<script src="//cdn.jsdelivr.net/npm/force-graph"></script>
+	<!--<script src="../../dist/force-graph.js"></script>-->
+</head>
+
+<body>
+	<div id="graph"></div>
+
+	<script>
+		function buildGraph(raw) {
+			const lines = raw.split('\n');
+			const nodes = [];
+			const links = [];
+			const nodeMap = new Set();
+
+			lines.forEach(line => {
+				line = line.trim();
+				if (line.startsWith('#') || !line) return;
+
+				if (line.includes('-')) {
+					const [source, target] = line.split('-').map(s => s.trim());
+					links.push({ source, target });
+				} else {
+					const parts = line.split(/\s+/);
+					if (parts.length >= 3) {
+						const id = parts[0];
+						if (!nodeMap.has(id)) {
+							nodes.push({ id, label: id });
+							nodeMap.add(id);
+						}
+					}
+				}
+			});
+
+			return { nodes, links };
+		}
+		fetch("world.txt")
+			.then(res => res.text())
+			.then(raw => {
+				const graph = buildGraph(raw);
+				ForceGraph()(document.getElementById("graph"))
+					.graphData(graph)
+					.nodeLabel(n => n.label)
+					.nodeColor(() => "gray");
+			});
+	</script>
+</body>
