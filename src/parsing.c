@@ -4,88 +4,104 @@ enum INPUT {
 	ROOM = 1,
 	START = 2,
 	END = 3,
-	LINK = 4
+	LINK = 4,
+	COMMENT = 5
 };
+
+int8_t	determine_input_type(char *line)
+{
+	if (line[0] && line[0] == '#')
+	{
+		if (line[1] && line[1] == '#')
+		{
+			if (!ft_strncmp(line, "##start", 8))
+				return (START);
+			if (!ft_strncmp(line, "##end", 6))
+				return (END);
+		}
+		return (COMMENT);
+	}
+	if (ft_strchr(line, '-'))
+		return (LINK);
+	return (ROOM);
+}
 
 void	input_parser(char *file)
 {
 	int16_t		fd;
-	char		*line;
-	char		*trim;
-	int8_t		input_type;
-	char		**line_parts;
 	t_net		*net;
-	t_list		*lst;
-	t_graph		*node;
-	t_graph		*linked_node;
-	t_link		*link;
-	t_content	*c;
-	t_info		*i;
+	char *		raw_line;
+	char *		line;
+	int8_t		input_type;
+	t_graph		*new_node;
+
 
 	fd = open(file, O_RDONLY);
-	if (fd < 0)
-	{
+	if (fd < 0)	{
 		ft_printf("invalid File\n");
 		exit(-1);
 	}
 
 	net = *catch();
-	input_type = ROOM;
-	line = get_next_line(fd);
-	while (line)
+	if (!net)
 	{
-		trim = ft_strtrim(line, " \n");
-		free(line);
-		line = trim;
-		if (!net)
+		net = malloc(sizeof(t_net));
+		*net = (t_net){
+			.graph_links = NULL,
+			.graph_nodes = NULL,
+			.start = NULL,
+			.end = NULL,
+			.pathed = false,
+			.paths = NULL,
+			.packets = -1
+		};
+		*catch() = net;
+	}
+
+	raw_line = get_next_line(fd);
+	if (!raw_line)
+	{
+		ft_printf("invalid File\n");
+		exit(-1);
+	}
+	net->packets = ft_atoi(raw_line);
+	free(raw_line);
+
+	raw_line = get_next_line(fd);
+	while (raw_line)
+	{
+		line  = ft_strtrim(raw_line, " \n");
+		free(raw_line);
+		if (!line)
+			cut_loose();
+		
+		input_type = determine_input_type(line);
+		if (input_type == COMMENT)
 		{
-			net = malloc(sizeof(t_net));
-			*net = (t_net){
-				.graph_links = NULL,
-				.graph_nodes = NULL,
-				.start = NULL,
-				.end = NULL,
-				.pathed = false,
-				.paths = NULL,
-				.packets = -1
-			};
-			*catch() = net;
-			net->packets = ft_atoi(line);
+			raw_line = get_next_line(fd);
 			free(line);
-			line = get_next_line(fd);
 			continue;
 		}
-		if (line[0] && line[0] == '#')
+		if (input_type == START)
 		{
-			if (line[1] && line[1] == '#')
-			{
-				if (!ft_strncmp(line, "##start", 8))
-				{
-					printf("%s\n", line);
-					if (input_type == LINK)
-						break;
-					input_type = START;
-				}
-				if (!ft_strncmp(line, "##end", 6))
-				{
-					printf("%s\n", line);
-					if (input_type == LINK)
-						break;
-					input_type = END;
-				}
-			}
 			free(line);
-			line = get_next_line(fd);
-			continue;
+			raw_line = get_next_line(fd);
+			line  = ft_strtrim(raw_line, " \n");
+			free(raw_line);
 		}
-		if (input_type != LINK && ft_strchr(line, '-'))
-			input_type = LINK;
-		if (input_type != LINK)
+		if (input_type == END)
 		{
-			line_parts = ft_split(line, ' ');
+			free(line);
+			raw_line = get_next_line(fd);
+			line  = ft_strtrim(raw_line, " \n");
+			free(raw_line);
+		}
+		if (input_type == ROOM || input_type == START || input_type == END)
+		{
+			char **line_parts = ft_split(line, ' ');
 			if (ft_2d_array_size((void **)line_parts) == 3)
 			{
-				c = malloc(1 * sizeof(t_content));
+				t_content *c = ft_malloc(sizeof(t_content));
 				*c = (t_content){
 					.name = ft_strdup(line_parts[0]),
 					.level = 0,
@@ -94,9 +110,12 @@ void	input_parser(char *file)
 					.ant = -1,
 					.path = -1
 				};
-				node = ft_new_graph(c);
-				lst = ft_lstnew((void *)node);
-				ft_lstadd_back(&(net->graph_nodes), lst);
+				new_node = ft_malloc(sizeof(t_graph));
+				*new_node = (t_graph){
+					.content = c,
+					.links = NULL
+				};
+				ft_lstadd_back(&net->graph_nodes, ft_lstnew(new_node));
 				free_2dstr(line_parts);
 			}
 			else
@@ -106,44 +125,39 @@ void	input_parser(char *file)
 			}
 			if (input_type == START)
 			{
-				net->start = node;
-				input_type = ROOM;
+				net->start = new_node;
 			}
 			if (input_type == END)
 			{
-				net->end = node;
-				input_type = ROOM;
+				net->end = new_node;
+			}
+		}
+		else if (input_type == LINK)
+		{
+			char **line_parts = ft_split(line, '-');
+			if (ft_2d_array_size((void **)line_parts) == 2)
+			{
+				t_graph *node1 = node_exist(line_parts[0]);
+				t_graph *node2 = node_exist(line_parts[1]);
+				if (!node1 || !node2)
+				{
+					free_2dstr(line_parts);
+					cut_loose();
+				}
+				ft_lstadd_back(&node1->links, ft_lstnew(node2));
+				ft_lstadd_back(&node2->links, ft_lstnew(node1));
+				free_2dstr(line_parts);
+			}
+			else
+			{
+				free_2dstr(line_parts);
+				cut_loose();
 			}
 		}
 		else
 		{
-			line_parts = ft_split(line, '-');
-			if (ft_2d_array_size((void **)line_parts) == 2)
-			{
-				node = node_exist(line_parts[0]);
-				linked_node = node_exist(line_parts[1]);
-				i = malloc(sizeof(t_info));
-				*i = (t_info){
-					.active = true,
-					.flow = 0
-				};
-				if (node && linked_node && !ft_has_link(node, linked_node))
-				{
-					link = ft_new_link(node, linked_node, i);
-					ft_lstadd_back(&(net->graph_links), ft_lstnew(link));
-					ft_lstadd_back(&(node->links), ft_lstnew(link));
-					ft_lstadd_back(&(linked_node->links), ft_lstnew(link));
-				}
-			}
-			free_2dstr(line_parts);
+			free(line);
+			cut_loose();
 		}
-		printf("%s\n", line);
-		free(line);
-		line = get_next_line(fd);
-	}
-	if (line)
-	{
-		free(line);
-		cut_loose();
 	}
 }

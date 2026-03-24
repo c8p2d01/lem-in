@@ -3,25 +3,29 @@
 t_graph	*node_exist(char	*name)
 {
 	t_net	*net;
-	t_list	*node;
+	t_list	*node_ptr;
+	t_graph	*node;
+	char	*node_name;
 
 	net = *catch();
 	if (!net || !net->graph_nodes)
 		return (NULL);
-	node = net->graph_nodes;
-	while (node)
+	node_ptr = net->graph_nodes;
+	while (node_ptr)
 	{
-		if (node->content && \
-			((t_content *)((t_graph *)node->content)->content) && \
-			((t_content *)((t_graph *)node->content)->content)->name && \
+		node = node_ptr->content;
+		node_name = NULL;
+		if (node && ((t_content *)node->content) && ((t_content *)node->content)->name)
+			node_name = ((t_content *)node->content)->name;
+		if (node_name && \
 			!ft_strncmp(
-				((t_content *)((t_graph *)node->content)->content)->name,
+				((t_content *)node->content)->name,
 				name,
 				ft_strlen(name) + 1))
 		{
-			return (node->content);
+			return (node_ptr->content);
 		}
-		node = node->next;
+		node_ptr = node_ptr->next;
 	}
 	return (NULL);
 }
