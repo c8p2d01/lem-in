@@ -3,7 +3,7 @@
 start 23 3
 2 16 7
 #comment
-orph 42 42
+orph 3 6
 3 16 3
 4 16 5
 5 9 3
@@ -17,12 +17,14 @@ start-3
 2-start
 4-3
 5-2
-6-orph
-3-5
-#another comment
 4-2
-7-6
-7-2
+#another comment
+#another comment
+#another comment
+#another comment
+7-orph
+3-5
 7-4
+7-2
 6-5
 #another comment

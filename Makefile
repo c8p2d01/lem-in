@@ -12,13 +12,24 @@ DEFINES = -D DEBUG=1
 DEFINES += -D BONUS=1
 
 # Source Files:
-SRCFILES:=	main.c \
+SRCFILES:=	graph/new_net.c \
+			graph/new_link.c \
+			graph/new_graph.c \
+			graph/node_exist.c \
+			graph/link_graphs.c \
+			graph/are_linked.c \
+			graph/linked_to.c \
+			graph/unlink_graphs.c \
+			\
+			main.c \
 			parsing.c \
+			loose_ends.c \
+			pathing.c \
+			debug.c \
 			rivers.c \
 			sending.c \
 			utils.c \
-			cleanup.c \
-			../bonus/bonus.c
+			cleanup.c
 
 # ------------------------------------------
 # Do not change anything beyond this point!
@@ -35,23 +46,32 @@ OS:=		$(shell uname -s)
 .PHONY: all clean fclean re e red clear green
 
 LFT = ./ft_libft
+LIBMLX = ./MLX42
 LIBRARYS = -lm -I include -lglfw  $(LFT)/libft.a
 
- ifeq ($(SUBM_STATE),)
- SUBM_FLAG	= submodule
- else 
- SUBM_FLAG	= 
- endif
+ifeq ($(SUBM_STATE),)
+SUBM_FLAG	= submodule
+else 
+SUBM_FLAG	= 
+endif
+
+ifeq ($(shell uname),Darwin)
+	LIBRARYS += $(LIBMLX)/libmlx42.a -framework OpenGL -framework IOKit -lglfw
+else ifeq ($(shell uname),Linux)
+	LIBRARYS += $(LIBMLX)/libmlx42.a -pthread -lm -lglfw
+endif
 
 all: $(SUBM_FLAG) lib
 	make -j $(nproc) $(NAME)
 
 submodule: 
-	@git submodule init 
-	@git submodule update --remote
+	@git submodule init
+	@git submodule update --remote --init --recursive
+	@cmake -S $(LIBMLX) -B $(LIBMLX)
 
 lib:
 	make bonus -C $(LFT)
+	@make -C $(LIBMLX)
 
 # Compile .cpp files to .o Files
 $(OBJS): $(BUILD)%.o : $(SOURCE)%.c
