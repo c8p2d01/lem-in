@@ -26,8 +26,7 @@ SRCFILES:=	graph/new_net.c \
 			loose_ends.c \
 			pathing.c \
 			debug.c \
-			rivers.c \
-			sending.c \
+			force.c \
 			utils.c \
 			cleanup.c
 
@@ -49,11 +48,11 @@ LFT = ./ft_libft
 LIBMLX = ./MLX42
 LIBRARYS = -lm -I include -lglfw  $(LFT)/libft.a
 
-ifeq ($(SUBM_STATE),)
-SUBM_FLAG	= submodule
-else 
+#ifeq ($(SUBM_STATE),)
+#SUBM_FLAG	= submodule
+#else 
 SUBM_FLAG	= 
-endif
+#endif
 
 ifeq ($(shell uname),Darwin)
 	LIBRARYS += $(LIBMLX)/libmlx42.a -framework OpenGL -framework IOKit -lglfw

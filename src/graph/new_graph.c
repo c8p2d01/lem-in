@@ -30,9 +30,11 @@ t_graph	*ft_new_graph(char *name, int x, int y)
 		.dist = -1,
 		.x = x,
 		.y = y,
-		.ant = -1,
+		.ant = 0,
 		.path = -1,
-		.important = false
+		.important = false,
+		.fpos.x = 0,
+		.fpos.y = 0
 	};
 	net = *catch();
 	list = ft_lstnew(res);

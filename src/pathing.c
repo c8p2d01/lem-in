@@ -14,8 +14,10 @@ void	append_uninitialised(t_graph *a, t_list **queue, size_t dist)
 	{
 		link = (t_link *)(i->content);
 		b = ft_linked_to(a, link);
-		if (link->active && b->dist < 0 && ((link->from == a && link->flow != 1) || \
-											(link->to == a && link->flow != -1)))
+				link = (t_link *)(i->content);
+		b = ft_linked_to(a, link);
+		if (link->active &&
+			b->dist < 0 && !has_flow_from(b, link))
 		{
 			b->dist = dist;
 			new = ft_lstnew(b);
@@ -26,10 +28,10 @@ void	append_uninitialised(t_graph *a, t_list **queue, size_t dist)
 }
 
 /**
- * begining from the start node set the dist variable of each
- * graph node to the distance from the start
+ * begining from given node set the dist variable of each connected
+ * graph node (under consideration of links with direction)to the distance from the start
  */
-void	set_distances()
+void	set_distances(t_graph	*start, size_t base, size_t increment)
 {
 	t_net	*net;
 	t_list	*queue;
@@ -37,12 +39,15 @@ void	set_distances()
 	t_graph	*current;
 
 	net = *catch();
-	net->start->dist = 0;
-	queue = ft_lstnew(net->start);
+	start->dist = base;
+	queue = ft_lstnew(start);
 	while(queue)
 	{
 		current = queue->content;
-		append_uninitialised(current, &queue, current->dist + 1);
+		current->path = 0;
+		append_uninitialised(current, &queue, current->dist + increment);
+		if (increment == 0)
+			current->path = base;
 		queue = queue->next;
 	}
 }
@@ -66,93 +71,129 @@ void	reset_distances()
 	}
 }
 
-t_graph	*closer_neighbour(t_graph *a)
+void	identify_nets()
 {
+	t_net	*net;
 	t_list	*i;
-	t_link	*link;
-	t_graph	*b;
-	t_graph	*closest;
+	t_graph	*a;
 
-	if (!a)
-		return (NULL);
-	closest = NULL;
-	i = a->links;
+	net = *catch();
+	set_distances(net->start, 0, 0);
+	i = net->graph_nodes;
 	while (i)
 	{
-		link = (t_link *)i->content;
-		b = ft_linked_to(a, link);
-		if (!closest)
-			closest = b;
-		if (closest->dist > b->dist)
-			closest = b;
+		a = (t_graph *)i->content;
+		if (a->dist < 0)
+		{
+			net->n_paths++;
+			set_distances(a, net->n_paths, 0);
+		}
 		i = i->next;
 	}
-	return (closest);
+	reset_distances();
 }
 
-void	path_linking(t_graph *a, t_graph *b)
+void	prepare_pathing()
 {
-	t_link	*link;
+	t_net	*net;
+	t_list	*i;
+	size_t	count;
 
-	link = ft_are_linked(a, b);
-	if (!link)
-		interrupt("flow set through inactive link\n");
-	if (link->from == a)
+	net = *catch();
+	i = net->end->links;
+	count = 0;
+	while (i)
+	{
+		count++;
+		i = i->next;
+	}
+	net->paths = ft_calloc(sizeof(t_path), count + 1);
+	net->n_paths = 0;
+}
+
+void	path_linking(t_graph *from, t_link *link)
+{
+	if (link->from == from)
 	{
 		if (link->flow == -1)
 			link->active = false;
+		else if (link->flow == 1)
+			ft_printf("ERROR\t this case should never occur\n");
 		else
 			link->flow = 1;
 	}
-	if (link->from == b)
+	else if (link->to == from)
 	{
 		if (link->flow == 1)
 			link->active = false;
+		else if (link->flow == -1)
+			ft_printf("ERROR\t this case should never occur\n");
 		else
 			link->flow = -1;
 	}
+	else
+		ft_printf("ERROR\t Closest link doesnt link correct nodes\n");
 }
 
-void	set_path(t_list *path_nodes)
+bool	has_flow_from(t_graph *from, t_link *link)
 {
-	t_net	*net;
-	t_path	*new_path_collection;
-	size_t	i;
-
-	net = *catch();
-	new_path_collection = ft_calloc(net->n_paths + 2, sizeof(t_path));
-	i = 0;
-	while (i < net->n_paths)
-	{
-		new_path_collection[i] = net->paths[i];
-		i++;
-	}
-	new_path_collection[i].path_nodes = path_nodes;
-	net->n_paths++;
+	if (link->from == from && link->flow > 0)
+		return true;
+	if (link->to == from && link->flow < 0)
+		return true;
+	return (false);
 }
 
+t_link	*closer_neighbour(t_graph *a)
+{
+	t_list	*i;
+	t_link	*close;
+	t_link	*i_link;
+	t_graph	*c;
+	t_graph	*b;
+
+	i = a->links;
+	close = NULL;
+	while (i)
+	{
+		i_link = i->content;
+		b = ft_linked_to(a, i_link);
+		if (has_flow_from(a, i_link))
+			;
+		else if (i_link->active && (!close || b->dist < c->dist))
+		{
+			close = i_link;
+			c = ft_linked_to(a, close);
+		}
+		i = i->next;
+	}
+	if (close)
+		path_linking(a, close);
+	return (close);
+}
+
+/**
+ * traces paths, setting directions on links
+ * if a link alreadz has a direction and it can be countered, deactivate the link
+ */
 void	trace_path()
 {
 	t_net	*net;
-	t_list	*path_nodes;
-	t_graph *current;
-	t_list	*new;
-	t_graph *next;
+	t_link	*link;
+	t_graph	*a;
 
 	net = *catch();
-	current = net->end;
-	while (current->dist > 0)
+	a = net->end;
+	while (a && a->dist > 0)
 	{
-		new = ft_lstnew(current);
-		ft_lstadd_back(&path_nodes, new);
-		next = closer_neighbour(current);
-		printf("%s going to %p\n", current->name, next);
-		path_linking(current, next);
-		current = next;
+		link = closer_neighbour(a);
+		a = ft_linked_to(a, link);
 	}
-	if (current != net->start)
-		printf("no new path found\n");
-	new = ft_lstnew(current);
-	ft_lstadd_back(&path_nodes, new);
-	set_path(path_nodes);
+}
+
+void	map_paths()
+{
+	t_net	*net;
+
+	net = *catch();
 }

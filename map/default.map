@@ -1,9 +1,13 @@
+# debug
 20
 ##start
 start 23 3
 2 16 7
 #comment
-orph 3 6
+sub1 3 6
+sub2 4 6
+sub3 4 7
+sub4 3 7
 3 16 3
 4 16 5
 5 9 3
@@ -22,9 +26,14 @@ start-3
 #another comment
 #another comment
 #another comment
-7-orph
 3-5
 7-4
 7-2
 6-5
-#another comment
+#subgraph
+sub1-sub2
+sub1-sub3
+sub1-sub4
+sub2-sub3
+sub2-sub4
+sub3-sub4

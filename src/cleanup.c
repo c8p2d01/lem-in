@@ -3,7 +3,10 @@
 int		interrupt(char *format, ...)
 {
 	va_list		arg;
+	t_hook		*params;
 
+	params = *vis();
+	mlx_terminate(params->mlx);
 	va_start(arg, format);
 	if (format)
 		ft_vprintf(format, arg);

@@ -1,13 +1,5 @@
 #include "../inc/lem_in.h"
 
-enum INPUT {
-	COMMENT = 1,
-	ROOM = 2,
-	LINK = 3,
-	START = 4,
-	END = 5
-};
-
 int8_t	determine_input_type(char *line)
 {
 	size_t	len;
@@ -43,7 +35,7 @@ t_graph	*create_node(char *raw_line, t_graph **node_destination)
 		{
 			interrupt("Error: nodes with the same name : %s\n", parts[0]);
 		}
-		new_graph = ft_new_graph(ft_strdup(parts[0]), ft_atoi(parts[1]), ft_atoi(parts[2]));
+		new_graph = ft_new_graph(ft_strdup(parts[0]), ft_atof(parts[1]), ft_atof(parts[2]));
 		if (node_destination)
 		{
 			new_graph->important = true;
@@ -79,6 +71,30 @@ t_link	*create_link(char *raw_line)
 	else
 		interrupt("Error: link with too many attributes\n%s", raw_line);
 	return (link);
+}
+
+/**
+ * a few comments trigger specific reactions
+ * @param debug -> when in code create images and display them before end of execution
+ * @param force -> run phisics simulation to spread out graph nodes
+ */
+void	comment_parsing(char *raw_line)
+{
+	char	**parts;
+	size_t	i;
+	t_net		*net;
+
+	net = *catch();
+	parts = ft_set_split(raw_line, " \n");
+	i = 0;
+	while (parts[i])
+	{
+		if (ft_strlcmp(parts[i], "debug", 6) == 0)
+			net->visualize = true;
+		if (ft_strlcmp(parts[i], "force", 6) == 0)
+			net->simulate = true;
+		i++;
+	}
 }
 
 void	input_check()
@@ -126,6 +142,8 @@ void	input_parser(char *file)
 		}
 		else if (input_type == LINK)
 			create_link(raw_line);
+		else if (input_type == COMMENT)
+			comment_parsing(raw_line);
 		ft_free(raw_line);
 		raw_line = get_next_line(fd);
 	}

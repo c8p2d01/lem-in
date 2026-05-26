@@ -42,7 +42,9 @@ t_net	*ft_new_net()
 		.end = NULL,
 		.n_paths = 0,
 		.paths = NULL,
-		.packets = -1
+		.packets = -1,
+		.visualize = false,
+		.simulate = false
 	};
 	return (res);
 }

@@ -6,26 +6,60 @@
 #endif
 
 #ifndef HGHT
-# define HGHT 400
+# define HGHT 800
 #endif
 
 #ifndef FRAME
 # define FRAME 10
 #endif
 
-typedef struct s_hook
-{
-	mlx_t		*mlx;
-	mlx_image_t	*img;
-}	t_hook;
-
 void	keyhook(void *param)
 {
-	t_hook *params;
+	t_hook			*params;
 	
 	params = (t_hook*)param;
 	if (mlx_is_key_down(params->mlx, MLX_KEY_ESCAPE))
 		interrupt("");
+	else if (params->press == false && mlx_is_key_down(params->mlx, MLX_KEY_RIGHT))
+	{
+		params->press = true;
+		if (params->images->next && params->n_images > 1)
+		{
+			params->images = params->images->next;
+			if (params->images->content)
+			{
+				mlx_delete_image(params->mlx, params->images->prev->content);
+				mlx_image_to_window(params->mlx, params->images->content, 0, 0);
+			}
+			params->n_images--;
+		}
+		else
+			interrupt("end reached\n");
+	}
+	else if (!mlx_is_key_down(params->mlx, MLX_KEY_RIGHT))
+		params->press = false;
+}
+
+t_hook	**vis()
+{
+	static t_hook	*res;
+	if (res == NULL)
+	{
+		res = ft_malloc(sizeof(t_hook));
+		*res = (t_hook){
+			.mlx = mlx_init(WDTH, HGHT, "Graph-network", true),
+			.images = NULL,
+			.n_images = 0,
+			.max_x = ft_atof("-200000000000"),
+			.max_y = ft_atof("-200000000000"),
+			.min_x = ft_atof("200000000000"),
+			.min_y = ft_atof("200000000000"),
+			.press = false
+		};
+		determine_max_coordinates();
+		mlx_loop_hook(res->mlx, keyhook, res);
+	}
+	return (&res);
 }
 
 void	square(mlx_image_t *img, size_t x, size_t y, size_t len, int color)
@@ -87,26 +121,24 @@ void	line(mlx_image_t *img, int x0, int y0, int x1, int y1, int color)
 void	determine_max_coordinates()
 {
 	t_net	*net;
+	t_hook	*params;
 	t_list	*i;
 	t_graph	*graph;
 
 	net = *catch();
-	net->min_x = 2147483647;
-	net->min_y = 2147483647;
-	net->max_x = -2147483648;
-	net->max_y = -2147483648;
+	params = *vis();
 	i = net->graph_nodes;
 	while (i)
 	{
 		graph = (t_graph *)i->content;
-		if (graph->x < net->min_x)
-			net->min_x = graph->x;
-		if (graph->y < net->min_y)
-			net->min_y = graph->y;
-		if (graph->x > net->max_x)
-			net->max_x = graph->x;
-		if (graph->y > net->max_y)
-			net->max_y = graph->y;
+		if (graph->x < params->min_x)
+			params->min_x = graph->x;
+		if (graph->y < params->min_y)
+			params->min_y = graph->y;
+		if (graph->x > params->max_x)
+			params->max_x = graph->x;
+		if (graph->y > params->max_y)
+			params->max_y = graph->y;
 		i = i->next;
 	}
 }
@@ -116,7 +148,7 @@ int	create_rgbt(unsigned char t, unsigned char r, unsigned char g, unsigned char
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
-void	draw_links(t_hook *params)
+void	draw_links(t_hook *params, mlx_image_t *img)
 {
 	t_net		*net;
 	t_list		*i;
@@ -134,36 +166,91 @@ void	draw_links(t_hook *params)
 	{
 		link = (t_link *)i->content;
 		graph = link->from;
-		x = (int)((float)((graph->x - net->min_x)) / (float)((net->max_x - net->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
-		y = (int)((float)((graph->y - net->min_y)) / (float)((net->max_y - net->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
+		x = (int)((float)((graph->x - params->min_x)) / (float)((params->max_x - params->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
+		y = (int)((float)((graph->y - params->min_y)) / (float)((params->max_y - params->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
 		graph = link->to;
-		x2 = (int)((float)((graph->x - net->min_x)) / (float)((net->max_x - net->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
-		y2 = (int)((float)((graph->y - net->min_y)) / (float)((net->max_y - net->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
+		x2 = (int)((float)((graph->x - params->min_x)) / (float)((params->max_x - params->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
+		y2 = (int)((float)((graph->y - params->min_y)) / (float)((params->max_y - params->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
 
-		color = create_rgbt(128, 128, 128, link->active ? 255 : 64);
 		if (link->flow != 0)
-			color = create_rgbt(32, 32, 246, link->active ? 255 : 64);
-		line(params->img, x, y, x2, y2, color);
+		{
+			color = create_rgbt(16, 16, 224, 255);
+			if (!link->active)
+				color = create_rgbt(196, 32, 196, 255);
+		}
+		else
+		{
+			color = create_rgbt(128, 128, 128, 255);
+			if (!link->active)
+				color = create_rgbt(16, 16, 16, 255);
+		}
+		line(img, x, y, x2, y2, color);
 		i = i->next;
 	}
 }
 
+/** 
+ * color nodes by which path the are assinged to
+ * if run before pathing is done it colors by net
+ */
+int	color_by_path(t_graph *a)
+{
+	t_net		*net;
+	float		max;
+	float		fraction;
+	float		dist;
+
+	net = *catch();
+	max = net->n_paths;
+	dist = (float)a->path;
+	if (dist < 0)
+		dist += max;
+	fraction = dist / (float)(max);
+	if (fraction < 0)
+		fraction += 1;
+	int color = create_multi_gradient(fraction, 2, 0,255,255, 0,0,255, 255,0,255, 255,0,0, 255,255,0, 0,255,0);
+	return (color << 8 | 255);
+}
+
 int	color_by_distance(t_graph *a)
+{
+	t_net		*net;
+	float		max;
+	float		fraction;
+	float		dist;
+
+	net = *catch();
+	max = net->end->dist - net->start->dist;
+	dist = (float)a->dist;
+	if (dist < 0)
+		return (color_by_path(a));
+	fraction = (float)a->dist / (float)(max);
+	if (fraction < 0)
+		fraction += 1;
+	int color = create_multi_gradient(fraction, 4, 255,0,0, 255,255,0, 0,255,0, 0,255,255, 0,0,255, 255,0,255);
+	return (color << 8 | 255);
+}
+
+int	color_by_ant(t_graph *a)
 {
 	t_net		*net;
 	size_t		max;
 	float		fraction;
 
 	net = *catch();
-	max = net->end->dist - net->start->dist;
-	fraction = (float)a->dist / (float)(max);
+	if (a == net->end)
+		return (create_rgbt(255, 255, 255, 255));
+	if (a == net->start)
+		return (create_rgbt(255, 255, 255, 255));
+	max = net->packets;
+	fraction = (float)a->ant / (float)(max);
 	if (fraction < 0)
 		fraction += 1;
 	int color = create_multi_gradient(fraction, 6, 255,0,0, 255,255,0, 0,255,0, 0,255,255, 0,0,255, 255,0,255);
 	return (color << 8 | 255);
 }
 
-void	draw_nodes(t_hook *params, int(f)(t_graph *))
+void	draw_nodes(t_hook *params, int(f)(t_graph *), mlx_image_t *img)
 {
 	t_net		*net;
 	t_list		*i;
@@ -176,33 +263,70 @@ void	draw_nodes(t_hook *params, int(f)(t_graph *))
 	while (i)
 	{
 		graph = (t_graph *)i->content;
-		x = (int)((float)((graph->x - net->min_x)) / (float)((net->max_x - net->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
-		y = (int)((float)((graph->y - net->min_y)) / (float)((net->max_y - net->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
-		square(params->img, x, y, FRAME, f(graph));
+		x = (int)(((graph->x - params->min_x) / (params->max_x - params->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
+		y = (int)(((graph->y - params->min_y) / (params->max_y - params->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
+		square(img, x, y, FRAME, f(graph));
 		i = i->next;
 	}
 }
 
+void	corner_imprtant()
+{
+	t_net		*net;
+	t_hook		*params;
+
+	net = *catch();
+	params = *vis();
+	net->end->x = params->max_x - FRAME;
+	net->end->y = params->max_y - FRAME;
+	net->start->x = params->min_x + FRAME;
+	net->start->y = params->min_y + FRAME;
+}
+
+void	plot_graph(int(f)(t_graph *))
+{
+	t_hook		*params;
+	mlx_image_t	*img;
+	t_list		*new;
+
+	determine_max_coordinates();
+	corner_imprtant();
+	if ((t_net *)(*catch())->visualize == false)
+		return ;
+	params = *vis();
+	img = mlx_new_image(params->mlx, WDTH, HGHT);
+	if (!img)
+		interrupt("images failed\n");
+	draw_links(params, img);
+	draw_nodes(params, f, img);
+	new = ft_lstnew(img);
+	if (!new)
+		interrupt("images failed\n");
+	ft_lstadd_back(&params->images, new);
+	params->n_images++;
+}
+
 void	visualize_net()
 {
-	t_hook		params;
-	t_net		*net;
+	t_hook		*params;
 	t_list		*i;
-	t_graph		*graph;
-	t_link		*link;
-	int			x;
-	int			y;
-	int			x2;
-	int			y2;
+	mlx_image_t	*img;
 
-	params.mlx = mlx_init(WDTH, HGHT, "Graph-network", true);
-	params.img = mlx_new_image(params.mlx, WDTH, HGHT);
-	mlx_image_to_window(params.mlx, params.img, 0, 0);
-	net = *catch();
-	determine_max_coordinates();
-	draw_links(&params);
-	draw_nodes(&params, color_by_distance);
-
-	mlx_loop_hook(params.mlx, keyhook, &params);
-	mlx_loop(params.mlx);
+	if ((t_net *)(*catch())->visualize == false)
+		return ;
+	params = *vis();
+	i = params->images;
+	if (i)
+	{
+		img = i->content;
+		if (img)
+		{
+			mlx_image_to_window(params->mlx, img, 0, 0);
+			mlx_loop(params->mlx);
+		}
+	else
+		printf("HEH\n");
+	}
+	else
+		printf("HEH\n");
 }
