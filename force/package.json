@@ -1,0 +1,17 @@
+{
+  "name": "lemin_visualizer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "open-my-html": "index.html",
+    "test": "node index.js"
+  },
+  "devDependencies": {
+    "open-cli": "^6.0.1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+
+

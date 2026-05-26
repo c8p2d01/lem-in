@@ -1,44 +1,46 @@
 #include "../inc/lem_in.h"
 
-#include <fcntl.h>
-
-int main()
+int	main(int argc, char **argv, char **env)
 {
+	t_net	*net;
+	t_list	*i;
+	double	heat;
 
-	globe data;
-	ft_bzero(&data, sizeof(globe));
-
-	openat(3, "/Users/cdahlhof/Documents/lem-in/map/ex3", O_RDONLY);
-
-	read_data(&data);
-
-	close(3);
-
-	remove_deadend(&data);
-
-	first_level(&data);
-	first_flow(data.end, &data);
-	int i = 1;
-	printf("%d------\n",i);
-	leveling(&data);
-	while (after_flow(data.end, &data))
+	if (argc != 2)
+		exit(-1);
+	input_parser(argv[1]);
+	net = *catch();
+	isolate_endings();
+	identify_nets();
+	plot_graph(color_by_path);
+	set_distances(net->start, 0, 1);
+	plot_graph(color_by_distance);
+	srand(time(NULL));
+	for (int i = 0; i < 500; i++)
 	{
-		i++;
-		printf("%d------\n",i);
-		leveling(&data);
+		calculate_forces();
+		heat = apply_forces();
+		printf("heat : %lf\n", heat);
+		if (!(i % 20))
+			plot_graph(color_by_distance);
 	}
-
-	print_nodes(data.graph);
-
-	data.paths = cartograph(&data);
-
-	path_sort(&data);
-
-	// for the tester
-	printf("TESTER:%s\n", data.end->name);
-
-	ant_march(&data);
-
-	free_globe(&data);
+	i = net->start->links;
+	while (i)
+	{
+		plot_graph(color_by_distance);
+		trace_path();
+		plot_graph(color_by_distance);
+		reset_distances();
+		set_distances(net->start, 0, 1);
+		i = i->next;
+	}
+	//prepare_pathing();
+	visualize_net();
+	//send_off();
+	//print_paths();
+	//#ifdef BONUS
+	//	assignColorToPath(env);
+	//	bonus();
+	//#endif
 	return (0);
 }

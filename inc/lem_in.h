@@ -1,7 +1,8 @@
 #ifndef LEM_IN_H
 # define LEM_IN_H
 
-# include "../lft/inc/libft.h"
+# include "../ft_libft/inc/libft.h"
+# include "../MLX42/include/MLX42/MLX42.h"
 # include <time.h>
 # include <stdio.h>
 # include <stdarg.h>
@@ -12,42 +13,132 @@
 #  define READ_INPUT STDIN_FILENO
 # endif
 
-typedef struct globe {
-	struct s_room	**graph;
-	struct s_room	*start;
-	struct s_room	*end;
-	struct s_link	**linkedlist;
-	size_t			nAnts;
-	size_t			maxLevel;
-	struct s_path	**paths;
-}	globe;
-
-typedef struct s_path {
-	struct	s_room **path;
-	size_t	len;
+typedef struct s_graph
+{
+	struct s_list	*links;
+	char	*name;
+	int		dist;
+	float	x;
+	float	y;
 	int		ant;
+	int		path;
+	bool	important;
+	t_vec2d	fpos;
+}	t_graph;
+
+typedef struct s_link
+{
+	struct s_graph	*from;
+	struct s_graph	*to;
+	bool	active;
+	int		flow;
+}	t_link;
+
+typedef struct s_path
+{
+	t_list	*path_links;
 }	t_path;
 
-void	read_data(globe *data);
+typedef struct s_net
+{
+	t_list	*graph_nodes;
+	t_list	*graph_links;
+	t_graph	*start;
+	t_graph	*end;
+	size_t	n_paths;
+	t_path	*paths;
+	int		packets;
 
-void	remove_deadend(globe *data);
+	bool	visualize;
+	bool	simulate;
+}	t_net;
 
-void	first_level(globe *data);
+typedef struct s_hook
+{
+	mlx_t	*mlx;
+	t_list	*images;
+	size_t	n_images;
+	float	max_x;
+	float	min_x;
+	float	max_y;
+	float	min_y;
+	bool	press;
+}	t_hook;
 
-bool	first_flow(t_room *node, globe *data);
+enum INPUT {
+	COMMENT = 1,
+	ROOM = 2,
+	LINK = 3,
+	START = 4,
+	END = 5
+};
 
-void	leveling(globe *data);
+t_net	**catch();
+t_net	*ft_new_net();
+t_graph	*ft_new_graph(char *name, int x, int y);
+t_link	*ft_new_link(t_graph *in, t_graph *out);
 
-bool 	after_flow(t_room *node, globe *data);
+t_link	*ft_are_linked(t_graph *a, t_graph *b);
+t_link	*ft_link_graphs(t_graph *a, t_graph *b);
+void	ft_unlink_graphs(t_graph *a, t_graph *b);
+t_graph	*ft_linked_to(t_graph *a, t_link *link);
+t_graph	*ft_node_exist(char *name);
 
-t_path	*river(t_link *flow, t_room *spring, t_room *estuary);
+void	square(mlx_image_t *img, size_t x, size_t y, size_t len, int color);
+void	determine_max_coordinates();
+int		create_rgbt(unsigned char t, unsigned char r, unsigned char g, unsigned char b);
+void	visualize_net();
 
-t_path	**cartograph(globe *data);
+int8_t	determine_input_type(char *line);
+t_graph	*create_node(char *raw_line, t_graph **node_destination);
+t_link	*create_link(char *raw_line);
+void	comment_parsing(char *raw_line);
+void	input_check();
+void	input_parser(char *file);
 
-void	path_sort(globe *data);
+size_t	n_links(t_graph *a);
+void	isolate_graph(t_graph *a);
+size_t	isolate_endings();
 
-void	ant_march(globe *data);
+void	append_uninitialised(t_graph *a, t_list **queue, size_t dist);
+void	set_distances(t_graph	*start, size_t base, size_t increment);
+void	reset_distances();
+void	identify_nets();
+void	prepare_pathing();
+void	path_linking(t_graph *from, t_link *link);
+bool	has_flow_from(t_graph *from, t_link *link);
+t_link	*closer_neighbour(t_graph *a);
+void	trace_path();
 
-void	free_globe(globe *data);
+void	cut_loose();
+void	prune_orphans();
+void	deactivate_ends();
+void	prune_subnets();
+
+int		interrupt(char *format, ...);
+
+void	antigravity(t_graph *a);
+void	link_force(t_graph *a);
+void	calculate_forces();
+size_t	apply_forces();
+
+t_hook	**vis();
+void	keyhook(void *param);
+void	square(mlx_image_t *img, size_t x, size_t y, size_t len, int color);
+void	line(mlx_image_t *img, int x0, int y0, int x1, int y1, int color);
+void	determine_max_coordinates();
+int		create_rgbt(unsigned char t, unsigned char r, unsigned char g, unsigned char b);
+void	draw_links(t_hook *params, mlx_image_t *img);
+int	color_by_path(t_graph *a);
+int		color_by_distance(t_graph *a);
+int		color_by_ant(t_graph *a);
+void	draw_nodes(t_hook *params, int(f)(t_graph *), mlx_image_t *img);
+void	plot_graph(int(f)(t_graph *));
+void	visualize_net();
 
 #endif
+
+// 6 04e50
+// 5 0a7a0
+// 1 05c90
+// 

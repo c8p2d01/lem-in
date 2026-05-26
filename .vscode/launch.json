@@ -1,0 +1,20 @@
+{
+	"configurations": [
+		{
+			"name": "(gdb) Launch",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "/home/cdahlhof/Documents/lem-in/lem_in",
+			"args": ["/home/cdahlhof/Documents/lem-in/map/default.map"],
+			"stopAtEntry": false,
+			"cwd": "${fileDirname}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": []
+		}
+		
+	
+	]
+
+}
