@@ -16,7 +16,7 @@ int	main(int argc, char **argv, char **env)
 	set_distances(net->start, 0, 1);
 	plot_graph(color_by_distance);
 	srand(time(NULL));
-	for (int i = 0; i < 360; i++)
+	for (int i = 0; net->simulate && i < 360; i++)
 	{
 		calculate_forces();
 		heat = apply_forces();

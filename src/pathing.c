@@ -169,13 +169,13 @@ void	trace_path(t_path *storage)
 	a = net->end;
 	while (a && a->dist > 0)
 	{
+		link = closer_neighbour(a);
+		a = ft_linked_to(a, link);
 		if (storage)
 		{
 			new = ft_lstnew(a);
 			ft_lstadd_back(&storage->path_nodes, new);
 		}
-		link = closer_neighbour(a);
-		a = ft_linked_to(a, link);
 	}
 }
 
@@ -188,11 +188,11 @@ void	trim_net()
 	i = net->start->links;
 	while (i)
 	{
+		reset_distances();
 		set_distances(net->start, 0, 1);
 		plot_graph(color_by_distance);
 		trace_path(NULL);
 		plot_graph(color_by_distance);
-		reset_distances();
 		i = i->next;
 	}
 }
@@ -227,14 +227,14 @@ void	prepare_pathing()
 		count++;
 		i = i->next;
 	}
+	net->n_paths = count;
 	net->paths = ft_calloc(sizeof(t_path), count + 1);
-	i = ft_lstnew(net->end);
-	while (0 <= count)
+	while (0 < count)
 	{
-		ft_lstadd_back(&net->paths[count].path_nodes, i);
+		i = ft_lstnew(net->end);
+		ft_lstadd_back(&net->paths[count - 1].path_nodes, i);
 		count--;
 	}
-	net->n_paths = count;
 	reset_flow();
 }
 
@@ -261,10 +261,15 @@ void	map_paths()
 
 void	path_iter(void *content)
 {
+	t_net	*net;
 	t_graph	*a;
 
+	net = *catch();
 	a = (t_graph *)content;
-	printf("%s -> ", a->name);
+	if (a != net->start)
+		printf("%s <- ", a->name);
+	else
+		printf("%s\n\n", a->name);
 }
 
 void	print_paths()
@@ -275,7 +280,12 @@ void	print_paths()
 
 	net = *catch();
 	c = 0;
-	i = net->paths[c].path_nodes;
-	ft_lstiter(i, path_iter);
-	printf("len %i\n", ft_lstsize(i));
+	while (c < net->n_paths)
+	{
+		i = net->paths[c].path_nodes;
+		printf("Path Nr %i\tlength : %i\n", c + 1, ft_lsts(i));
+		ft_lstiter(i, path_iter);
+		c ++;
+	}
+	printf("Number of paths found : %i\n", net->n_paths);
 }
