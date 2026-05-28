@@ -113,5 +113,7 @@ size_t	apply_forces()
 		i = i->next;
 		c += 2;
 	}
+	determine_max_coordinates();
+	corner_imprtant();
 	return (heatsum / c);
 }

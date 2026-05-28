@@ -93,24 +93,6 @@ void	identify_nets()
 	reset_distances();
 }
 
-void	prepare_pathing()
-{
-	t_net	*net;
-	t_list	*i;
-	size_t	count;
-
-	net = *catch();
-	i = net->end->links;
-	count = 0;
-	while (i)
-	{
-		count++;
-		i = i->next;
-	}
-	net->paths = ft_calloc(sizeof(t_path), count + 1);
-	net->n_paths = 0;
-}
-
 void	path_linking(t_graph *from, t_link *link)
 {
 	if (link->from == from)
@@ -176,24 +158,124 @@ t_link	*closer_neighbour(t_graph *a)
  * traces paths, setting directions on links
  * if a link alreadz has a direction and it can be countered, deactivate the link
  */
-void	trace_path()
+void	trace_path(t_path *storage)
 {
 	t_net	*net;
 	t_link	*link;
 	t_graph	*a;
+	t_list	*new;
 
 	net = *catch();
 	a = net->end;
 	while (a && a->dist > 0)
 	{
+		if (storage)
+		{
+			new = ft_lstnew(a);
+			ft_lstadd_back(&storage->path_nodes, new);
+		}
 		link = closer_neighbour(a);
 		a = ft_linked_to(a, link);
 	}
 }
 
+void	trim_net()
+{
+	t_net	*net;
+	t_list	*i;
+
+	net = *catch();
+	i = net->start->links;
+	while (i)
+	{
+		set_distances(net->start, 0, 1);
+		plot_graph(color_by_distance);
+		trace_path(NULL);
+		plot_graph(color_by_distance);
+		reset_distances();
+		i = i->next;
+	}
+}
+
+void	reset_flow()
+{
+	t_net	*net;
+	t_list	*i;
+	t_link	*link;
+
+	net = *catch();
+	i = net->graph_links;
+	while (i)
+	{
+		link = i->content;
+		link->flow = 0;
+		i = i->next;
+	}
+}
+
+void	prepare_pathing()
+{
+	t_net	*net;
+	t_list	*i;
+	int		count;
+
+	net = *catch();
+	i = net->end->links;
+	count = 0;
+	while (i)
+	{
+		count++;
+		i = i->next;
+	}
+	net->paths = ft_calloc(sizeof(t_path), count + 1);
+	i = ft_lstnew(net->end);
+	while (0 <= count)
+	{
+		ft_lstadd_back(&net->paths[count].path_nodes, i);
+		count--;
+	}
+	net->n_paths = count;
+	reset_flow();
+}
+
 void	map_paths()
 {
 	t_net	*net;
+	t_list	*i;
+	t_link	*link;
+	t_list	*new;
+	size_t	c;
 
 	net = *catch();
+	i = net->end->links;
+	c = 0;
+	while (i)
+	{
+		reset_distances();
+		set_distances(net->start, 0, 1);
+		trace_path(net->paths + c);
+		c++;
+		i = i->next;
+	}
+}
+
+void	path_iter(void *content)
+{
+	t_graph	*a;
+
+	a = (t_graph *)content;
+	printf("%s -> ", a->name);
+}
+
+void	print_paths()
+{
+	t_net	*net;
+	t_list	*i;
+	size_t	c;
+
+	net = *catch();
+	c = 0;
+	i = net->paths[c].path_nodes;
+	ft_lstiter(i, path_iter);
+	printf("len %i\n", ft_lstsize(i));
 }

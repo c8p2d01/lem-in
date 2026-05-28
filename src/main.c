@@ -16,31 +16,26 @@ int	main(int argc, char **argv, char **env)
 	set_distances(net->start, 0, 1);
 	plot_graph(color_by_distance);
 	srand(time(NULL));
-	for (int i = 0; i < 500; i++)
+	for (int i = 0; i < 360; i++)
 	{
 		calculate_forces();
 		heat = apply_forces();
-		printf("heat : %lf\n", heat);
-		if (!(i % 20))
-			plot_graph(color_by_distance);
+		//if (!(i % 100))
+		//	printf("heat : %lf\n", heat);
+		//if (!(i % 100))
+		//	plot_graph(color_by_distance);
+		//corner_imprtant();
 	}
-	i = net->start->links;
-	while (i)
-	{
-		plot_graph(color_by_distance);
-		trace_path();
-		plot_graph(color_by_distance);
-		reset_distances();
-		set_distances(net->start, 0, 1);
-		i = i->next;
-	}
-	//prepare_pathing();
-	visualize_net();
+	trim_net();
+	prepare_pathing();
+	map_paths();
+	print_paths();
 	//send_off();
 	//print_paths();
 	//#ifdef BONUS
 	//	assignColorToPath(env);
 	//	bonus();
 	//#endif
+	visualize_net();
 	return (0);
 }

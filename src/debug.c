@@ -10,7 +10,7 @@
 #endif
 
 #ifndef FRAME
-# define FRAME 10
+# define FRAME 6
 #endif
 
 void	keyhook(void *param)
@@ -227,7 +227,7 @@ int	color_by_distance(t_graph *a)
 	fraction = (float)a->dist / (float)(max);
 	if (fraction < 0)
 		fraction += 1;
-	int color = create_multi_gradient(fraction, 4, 255,0,0, 255,255,0, 0,255,0, 0,255,255, 0,0,255, 255,0,255);
+	int color = create_multi_gradient(fraction, 2, 255,0,0, 255,255,0, 0,255,0, 0,255,255, 0,0,255, 255,0,255);
 	return (color << 8 | 255);
 }
 
@@ -289,8 +289,6 @@ void	plot_graph(int(f)(t_graph *))
 	mlx_image_t	*img;
 	t_list		*new;
 
-	determine_max_coordinates();
-	corner_imprtant();
 	if ((t_net *)(*catch())->visualize == false)
 		return ;
 	params = *vis();

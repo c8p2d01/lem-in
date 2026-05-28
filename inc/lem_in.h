@@ -36,7 +36,7 @@ typedef struct s_link
 
 typedef struct s_path
 {
-	t_list	*path_links;
+	t_list	*path_nodes;
 }	t_path;
 
 typedef struct s_net
@@ -104,11 +104,15 @@ void	append_uninitialised(t_graph *a, t_list **queue, size_t dist);
 void	set_distances(t_graph	*start, size_t base, size_t increment);
 void	reset_distances();
 void	identify_nets();
-void	prepare_pathing();
 void	path_linking(t_graph *from, t_link *link);
 bool	has_flow_from(t_graph *from, t_link *link);
 t_link	*closer_neighbour(t_graph *a);
-void	trace_path();
+void	trace_path(t_path *storage);
+void	trim_net();
+void	reset_flow();
+void	prepare_pathing();
+void	map_paths();
+void	print_paths();
 
 void	cut_loose();
 void	prune_orphans();
@@ -129,11 +133,12 @@ void	line(mlx_image_t *img, int x0, int y0, int x1, int y1, int color);
 void	determine_max_coordinates();
 int		create_rgbt(unsigned char t, unsigned char r, unsigned char g, unsigned char b);
 void	draw_links(t_hook *params, mlx_image_t *img);
-int	color_by_path(t_graph *a);
+int		color_by_path(t_graph *a);
 int		color_by_distance(t_graph *a);
 int		color_by_ant(t_graph *a);
 void	draw_nodes(t_hook *params, int(f)(t_graph *), mlx_image_t *img);
 void	plot_graph(int(f)(t_graph *));
+void	corner_imprtant();
 void	visualize_net();
 
 #endif
