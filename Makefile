@@ -20,15 +20,21 @@ SRCFILES:=	graph/new_net.c \
 			graph/are_linked.c \
 			graph/linked_to.c \
 			graph/unlink_graphs.c \
+			graph/quad_tree.c \
+			graph/qt_setup.c \
+			graph/qt_debug.c \
 			\
-			main.c \
 			parsing.c \
 			loose_ends.c \
 			pathing.c \
-			debug.c \
+			visualizer.c \
 			force.c \
 			utils.c \
 			cleanup.c
+
+MAIN:=		$(SOURCE)/main.c
+
+BONUS:=		$(SOURCE)/reposition.c
 
 # ------------------------------------------
 # Do not change anything beyond this point!
@@ -42,7 +48,7 @@ OBJS:=		$(SRCS:$(SOURCE)/%.c=$(BUILD)/%.o)
 NAME:=		./$(NAME)
 OS:=		$(shell uname -s)
 
-.PHONY: all clean fclean re e red clear green
+.PHONY: all clean fclean re e
 
 LFT = ./ft_libft
 LIBMLX = ./MLX42
@@ -72,7 +78,7 @@ lib:
 	make bonus -C $(LFT)
 	@make -C $(LIBMLX)
 
-# Compile .cpp files to .o Files
+# Compile .c files to .o Files
 $(OBJS): $(BUILD)%.o : $(SOURCE)%.c
 	@mkdir -p $(dir $@)
 	$(CC) -c $(CFLAGS) $(DEFINES) $< -o $@
@@ -80,7 +86,12 @@ $(OBJS): $(BUILD)%.o : $(SOURCE)%.c
 # Main Build Rule
 $(NAME): $(OBJS)
 	@echo "--> Compiling Executable"
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBRARYS)
+	$(CC) $(CFLAGS) $(MAIN) $(OBJS) -o $(NAME) $(LIBRARYS)
+
+# Bonus Build Rule
+bonus: $(OBJS)
+	@echo "--> Compiling Executable"
+	$(CC) $(CFLAGS) $(BONUS) $(OBJS) -o map_recalculation $(LIBRARYS)
 
 clean:
 	@make -s red
@@ -95,24 +106,11 @@ fclean: clean
 
 re: fclean all
 
-bonus: clean
-	rm -f ./bonus/Obsidian_Vault/*.md
-	make
-	./$(NAME) map/flow-ten_double.map
-	open -a /Applications/./Obsidian.app/ bonus/Obsidian_Vault/
-
 ree: re
 	./$(NAME) map/flow-ten_double.map
 e:
 	make
 	./$(NAME) map/flow-ten_double.map
-
-red:
-	echo $(RED)
-green:
-	echo $(GRN)
-clear:
-	echo $(CLEAR)
 
 .PHONY: all clean fclean re e red clear green
 .SILENT: red clear green

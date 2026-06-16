@@ -14,16 +14,17 @@ int	main(int argc, char **argv, char **env)
 	identify_nets();
 	plot_graph(color_by_path);
 	set_distances(net->start, 0, 1);
-	plot_graph(color_by_distance);
+
 	srand(time(NULL));
-	for (int i = 0; i < 500; i++)
-	{
-		calculate_forces();
-		heat = apply_forces();
-		printf("heat : %lf\n", heat);
-		if (!(i % 20))
-			plot_graph(color_by_distance);
-	}
+
+	jitter_positions();
+	force_reset();
+	velocity_reset();
+
+	plot_graph(color_by_distance);
+	calculate_forces();
+	plot_graph(color_by_distance);
+
 	i = net->start->links;
 	while (i)
 	{

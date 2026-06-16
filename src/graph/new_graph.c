@@ -28,13 +28,15 @@ t_graph	*ft_new_graph(char *name, int x, int y)
 		.links = NULL,
 		.name = name,
 		.dist = -1,
-		.x = x,
-		.y = y,
+		.pos.x = x,
+		.pos.y = y,
 		.ant = 0,
 		.path = -1,
 		.important = false,
-		.fpos.x = 0,
-		.fpos.y = 0
+		.f.x = 0,
+		.f.y = 0,
+		.v.x = 0,
+		.v.y = 0
 	};
 	net = *catch();
 	list = ft_lstnew(res);

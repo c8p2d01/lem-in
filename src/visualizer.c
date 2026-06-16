@@ -62,7 +62,7 @@ t_hook	**vis()
 	return (&res);
 }
 
-void	square(mlx_image_t *img, size_t x, size_t y, size_t len, int color)
+void	draw_square(mlx_image_t *img, size_t x, size_t y, size_t len, int color)
 {
 	size_t	x0;
 	size_t	y0;
@@ -84,7 +84,7 @@ void	square(mlx_image_t *img, size_t x, size_t y, size_t len, int color)
 	}
 }
 
-void	line(mlx_image_t *img, int x0, int y0, int x1, int y1, int color)
+void	draw_line(mlx_image_t *img, int x0, int y0, int x1, int y1, int color)
 {
 	int dx = abs(x1 - x0);
 	int dy = -abs(y1 - y0);
@@ -99,7 +99,7 @@ void	line(mlx_image_t *img, int x0, int y0, int x1, int y1, int color)
 		if (x0 >= 0 && x0 < WDTH && y0 >= 0 && y0 < HGHT) // Assuming HGHT is defined
 			mlx_put_pixel(img, x0, y0, color);
 
-		// 2. Break condition when the end of the line is reached
+		// 2. Break condition when the end of the draw_line is reached
 		if (x0 == x1 && y0 == y1)
 			break ;
 
@@ -131,19 +131,19 @@ void	determine_max_coordinates()
 	while (i)
 	{
 		graph = (t_graph *)i->content;
-		if (graph->x < params->min_x)
-			params->min_x = graph->x;
-		if (graph->y < params->min_y)
-			params->min_y = graph->y;
-		if (graph->x > params->max_x)
-			params->max_x = graph->x;
-		if (graph->y > params->max_y)
-			params->max_y = graph->y;
+		if (graph->pos.x < params->min_x)
+			params->min_x = graph->pos.x;
+		if (graph->pos.y < params->min_y)
+			params->min_y = graph->pos.y;
+		if (graph->pos.x > params->max_x)
+			params->max_x = graph->pos.x;
+		if (graph->pos.y > params->max_y)
+			params->max_y = graph->pos.y;
 		i = i->next;
 	}
 }
 
-int	create_rgbt(unsigned char t, unsigned char r, unsigned char g, unsigned char b)
+int		create_rgbt(unsigned char t, unsigned char r, unsigned char g, unsigned char b)
 {
 	return (t << 24 | r << 16 | g << 8 | b);
 }
@@ -166,11 +166,11 @@ void	draw_links(t_hook *params, mlx_image_t *img)
 	{
 		link = (t_link *)i->content;
 		graph = link->from;
-		x = (int)((float)((graph->x - params->min_x)) / (float)((params->max_x - params->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
-		y = (int)((float)((graph->y - params->min_y)) / (float)((params->max_y - params->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
+		x = (int)((float)((graph->pos.x - params->min_x)) / (float)((params->max_x - params->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
+		y = (int)((float)((graph->pos.y - params->min_y)) / (float)((params->max_y - params->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
 		graph = link->to;
-		x2 = (int)((float)((graph->x - params->min_x)) / (float)((params->max_x - params->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
-		y2 = (int)((float)((graph->y - params->min_y)) / (float)((params->max_y - params->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
+		x2 = (int)((float)((graph->pos.x - params->min_x)) / (float)((params->max_x - params->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
+		y2 = (int)((float)((graph->pos.y - params->min_y)) / (float)((params->max_y - params->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
 
 		if (link->flow != 0)
 		{
@@ -184,7 +184,7 @@ void	draw_links(t_hook *params, mlx_image_t *img)
 			if (!link->active)
 				color = create_rgbt(16, 16, 16, 255);
 		}
-		line(img, x, y, x2, y2, color);
+		draw_line(img, x, y, x2, y2, color);
 		i = i->next;
 	}
 }
@@ -263,26 +263,29 @@ void	draw_nodes(t_hook *params, int(f)(t_graph *), mlx_image_t *img)
 	while (i)
 	{
 		graph = (t_graph *)i->content;
-		x = (int)(((graph->x - params->min_x) / (params->max_x - params->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
-		y = (int)(((graph->y - params->min_y) / (params->max_y - params->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
-		square(img, x, y, FRAME, f(graph));
+		x = (int)(((graph->pos.x - params->min_x) / (params->max_x - params->min_x)) * (WDTH - 2 * FRAME)) + FRAME;
+		y = (int)(((graph->pos.y - params->min_y) / (params->max_y - params->min_y)) * (HGHT - 2 * FRAME)) + FRAME;
+		draw_square(img, x, y, FRAME, f(graph));
 		i = i->next;
 	}
 }
 
-void	corner_imprtant()
+void	corner_important()
 {
 	t_net		*net;
 	t_hook		*params;
 
 	net = *catch();
 	params = *vis();
-	net->end->x = params->max_x - FRAME;
-	net->end->y = params->max_y - FRAME;
-	net->start->x = params->min_x + FRAME;
-	net->start->y = params->min_y + FRAME;
+	net->end->pos.x = params->max_x;
+	net->end->pos.y = params->max_y;
+	net->start->pos.x = params->min_x;
+	net->start->pos.y = params->min_y;
 }
 
+/**
+ * takes a snapshot of the current graph and its postions, colored using the given function
+ */
 void	plot_graph(int(f)(t_graph *))
 {
 	t_hook		*params;
@@ -290,7 +293,7 @@ void	plot_graph(int(f)(t_graph *))
 	t_list		*new;
 
 	determine_max_coordinates();
-	corner_imprtant();
+	//corner_important();
 	if ((t_net *)(*catch())->visualize == false)
 		return ;
 	params = *vis();
@@ -306,6 +309,9 @@ void	plot_graph(int(f)(t_graph *))
 	params->n_images++;
 }
 
+/**
+ * starts the visualisation using mlx, call at end of calculation
+ */
 void	visualize_net()
 {
 	t_hook		*params;

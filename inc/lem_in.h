@@ -13,17 +13,30 @@
 #  define READ_INPUT STDIN_FILENO
 # endif
 
+# define K_THETA   0.5
+# define K_REPULSE 2500.0
+# define K_SPRING  10
+
+enum INPUT
+{
+	COMMENT = 1,
+	ROOM = 2,
+	LINK = 3,
+	START = 4,
+	END = 5
+};
+
 typedef struct s_graph
 {
 	struct s_list	*links;
 	char	*name;
 	int		dist;
-	float	x;
-	float	y;
 	int		ant;
 	int		path;
 	bool	important;
-	t_vec2d	fpos;
+	t_vec2d	pos;
+	t_vec2d	f;
+	t_vec2d	v;
 }	t_graph;
 
 typedef struct s_link
@@ -51,6 +64,7 @@ typedef struct s_net
 
 	bool	visualize;
 	bool	simulate;
+	double	ideal_node_distance;
 }	t_net;
 
 typedef struct s_hook
@@ -65,77 +79,114 @@ typedef struct s_hook
 	bool	press;
 }	t_hook;
 
-enum INPUT {
-	COMMENT = 1,
-	ROOM = 2,
-	LINK = 3,
-	START = 4,
-	END = 5
-};
+typedef struct s_qt_node
+{
+	t_vec2d	bound_x;
+	t_vec2d	bound_y;
+	t_vec2d	center;
+	double	total_mass;
+	bool	is_leaf;
+	t_graph	*node;
+	struct	s_qt_node *children[4];
+	double	min_width;
+} t_qt_node;
+
+// graph setup
 
 t_net	**catch();
 t_net	*ft_new_net();
 t_graph	*ft_new_graph(char *name, int x, int y);
 t_link	*ft_new_link(t_graph *in, t_graph *out);
 
-t_link	*ft_are_linked(t_graph *a, t_graph *b);
+// graph utils
+
 t_link	*ft_link_graphs(t_graph *a, t_graph *b);
+t_link	*ft_are_linked(t_graph *a, t_graph *b);
 void	ft_unlink_graphs(t_graph *a, t_graph *b);
+size_t	n_links(t_graph *a);
 t_graph	*ft_linked_to(t_graph *a, t_link *link);
 t_graph	*ft_node_exist(char *name);
 
-void	square(mlx_image_t *img, size_t x, size_t y, size_t len, int color);
-void	determine_max_coordinates();
-int		create_rgbt(unsigned char t, unsigned char r, unsigned char g, unsigned char b);
-void	visualize_net();
+// graph preperation
 
+size_t	isolate_endings();
+void	isolate_graph(t_graph *a);
+void	identify_nets();
+
+// parsing utils
+
+void	input_parser(char *file);
+void	input_check();
 int8_t	determine_input_type(char *line);
 t_graph	*create_node(char *raw_line, t_graph **node_destination);
 t_link	*create_link(char *raw_line);
 void	comment_parsing(char *raw_line);
-void	input_check();
-void	input_parser(char *file);
 
-size_t	n_links(t_graph *a);
-void	isolate_graph(t_graph *a);
-size_t	isolate_endings();
+// path isolation
 
-void	append_uninitialised(t_graph *a, t_list **queue, size_t dist);
-void	set_distances(t_graph	*start, size_t base, size_t increment);
 void	reset_distances();
-void	identify_nets();
+void	set_distances(t_graph	*start, size_t base, size_t increment);
+void	append_uninitialised(t_graph *a, t_list **queue, size_t dist);
+
+// path tracing
+
 void	prepare_pathing();
 void	path_linking(t_graph *from, t_link *link);
 bool	has_flow_from(t_graph *from, t_link *link);
 t_link	*closer_neighbour(t_graph *a);
 void	trace_path();
 
-void	cut_loose();
-void	prune_orphans();
-void	deactivate_ends();
-void	prune_subnets();
-
 int		interrupt(char *format, ...);
 
-void	antigravity(t_graph *a);
-void	link_force(t_graph *a);
-void	calculate_forces();
-size_t	apply_forces();
+// graph position calculation
 
-t_hook	**vis();
-void	keyhook(void *param);
-void	square(mlx_image_t *img, size_t x, size_t y, size_t len, int color);
-void	line(mlx_image_t *img, int x0, int y0, int x1, int y1, int color);
-void	determine_max_coordinates();
-int		create_rgbt(unsigned char t, unsigned char r, unsigned char g, unsigned char b);
-void	draw_links(t_hook *params, mlx_image_t *img);
-int	color_by_path(t_graph *a);
-int		color_by_distance(t_graph *a);
-int		color_by_ant(t_graph *a);
-void	draw_nodes(t_hook *params, int(f)(t_graph *), mlx_image_t *img);
+void	calculate_forces();
+void	attraction();
+void	repulsion();
+void	jitter_positions();
+void	qt_insert(t_qt_node *root, t_graph *node);
+void	qt_mass(t_qt_node *root);
+void	qt_repulsion(t_qt_node *root, t_graph *node);
+void	qt_destroy(t_qt_node *root);
+
+// graph position utils
+
+void		velocity_reset();
+t_qt_node	*new_qt_root(float min_x, float min_y, float max_x, float max_y);
+t_qt_node	*new_qt_node(t_qt_node *parent, int quartile);
+int			determine_quadrant(t_qt_node *root, t_graph *node);
+
+void		force_reset();
+void		apply_forces();
+void		link_force(t_link *link);
+
+int			qt_print_node(t_graph *node, size_t indent, int q_num);
+int			qt_print(t_qt_node *root, size_t indent, int q_num);
+
+// visualisation
+
 void	plot_graph(int(f)(t_graph *));
 void	visualize_net();
 
+// visualisation options
+
+int		color_by_path(t_graph *a);
+int		color_by_distance(t_graph *a);
+int		color_by_ant(t_graph *a);
+
+// visualisation utils
+
+t_hook	**vis();
+void	determine_max_coordinates();
+void	corner_important();
+void	keyhook(void *param);
+void	draw_square(mlx_image_t *img, size_t x, size_t y, size_t len, int color);
+void	draw_line(mlx_image_t *img, int x0, int y0, int x1, int y1, int color);
+int		create_rgbt(unsigned char t, unsigned char r, unsigned char g, unsigned char b);
+void	draw_links(t_hook *params, mlx_image_t *img);
+void	draw_nodes(t_hook *params, int(f)(t_graph *), mlx_image_t *img);
+
+void	print_net();
 #endif
 
 // 6 04e50

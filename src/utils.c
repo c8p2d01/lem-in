@@ -121,9 +121,19 @@
 void	print_net()
 {
 	t_net	*net;
+	t_list	*i;
+	t_graph	*graph;
 
 	net = *catch();
-	
+	i = net->graph_nodes;
+	printf("\n");
+	while (i)
+	{
+		graph = i->content;
+		printf("%s %.2lf %.2lf\n", graph->name, graph->pos.x, graph->pos.y);
+		i = i->next;
+	}
+	printf("\n");
 }
 
 //void	print_node(void *iter)

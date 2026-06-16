@@ -1,117 +1,163 @@
 #include "../inc/lem_in.h"
 
-# ifndef LINK_DIV
-#  define LINK_DIV 42
-# endif
-
-void	random_force(t_graph *a)
-{
-	a->fpos.x += rand();
-	a->fpos.y -= rand();
-}
-
-void	antigravity(t_graph *a)
+void	jitter_positions()
 {
 	t_net	*net;
 	t_list	*i;
-	t_graph	*b;
-	t_vec2d	p;
-	float	min_dist;
+	t_graph	*graph;
 
 	net = *catch();
 	i = net->graph_nodes;
-	min_dist = 0.4;
 	while (i)
 	{
-		b = i->content;
-		p.x = (b->x - a->x);
-		p.y = (b->y - a->y);
-		if (-min_dist < p.x && p.x < min_dist && -min_dist < p.y && p.y < min_dist)
+		graph = i->content;
+		if (graph->important != true)
 		{
-			b->fpos.x *= (0 - min_dist);
-			b->fpos.y *= (0 - min_dist);
+			if (graph->pos.x == graph->pos.y)
+			{
+				graph->pos.x += 0.01 * rand() / RAND_MAX;
+				graph->pos.y -= 0.01 * rand() / RAND_MAX;
+			}
 		}
+		i = i->next;
+	}
+	
+}
+
+void	force_reset()
+{
+	t_net	*net;
+	t_list	*i;
+	t_graph	*graph;
+
+	net = *catch();
+	i = net->graph_nodes;
+	while (i)
+	{
+		graph = i->content;
+		graph->f.x = 0;
+		graph->f.y = 0;
 		i = i->next;
 	}
 }
 
-void	link_force(t_graph *a)
+// there is no need to run this function ?
+void	velocity_reset()
 {
+	t_net	*net;
+	t_list	*i;
+	t_graph	*graph;
+
+	net = *catch();
+	i = net->graph_nodes;
+	while (i)
+	{
+		graph = i->content;
+		graph->v.x = 0;
+		graph->v.y = 0;
+		i = i->next;
+	}
+}
+
+void	repulsion()
+{
+	t_net		*net;
+	t_hook		*p;
+	t_qt_node	*root;
+	t_list		*i;
+	t_graph		*graph;
+
+	p = *vis();
+	net = *catch();
+	determine_max_coordinates();
+	root = new_qt_root(p->min_x, p->min_y, p->max_x, p->max_y);
+	i = net->graph_nodes;
+	while (i)
+	{
+		graph = i->content;
+		if (graph)
+			qt_insert(root, graph);
+		i = i->next;
+	}
+	qt_mass(root);
+	i = net->graph_nodes;
+	while (i)
+	{
+		qt_repulsion(root, i->content);
+		i = i->next;
+	}
+	qt_destroy(root);
+}
+
+static void	add_link_force(t_graph *a, t_graph *b, \
+						t_vec2d *direction, double force)
+{
+	a->pos.x += force * direction->x;
+	b->pos.x += force * direction->x;
+	a->pos.y += force * direction->y;
+	b->pos.y += force * direction->y;
+}
+
+void	link_force(t_link *link)
+{
+	t_graph	*a;
+	t_graph	*b;
+	t_vec2d	spring;
+	double	dst;
+	t_net	*net;
+
+	net = *catch();
+	a = link->from;
+	b = link->to;
+	spring = connect2d(a->pos, b->pos);
+	dst = veclen2d(&spring);
+	normalise2d(&spring);
+	add_link_force(a, b, &spring, 
+		K_SPRING * (dst - net->ideal_node_distance) / dst);
+}
+
+void	attraction()
+{
+	t_net	*net;
 	t_list	*i;
 	t_link	*link;
-	t_graph *b;
-	t_vec2d	dst_b;
-	t_vec2d	sum;
-	double	len;
-	double	min_len;
 
-	i = a->links;
-	min_len = 0.7;
-	sum = new_vec2d(0, 0);
+	net = *catch();
+	i = net->graph_links;
 	while (i)
 	{
 		link = i->content;
-		b = ft_linked_to(a, link);
-		dst_b = connect2d(new_vec2d(a->x, a->y), new_vec2d(b->x, b->y));
-		len = veclen2d(&dst_b);
-		if (len < min_len)
+		link_force(link);
+		i = i->next;
+	}
+}
+
+void	apply_forces()
+{
+	t_net	*net;
+	t_list	*i;
+	t_graph	*graph;
+
+	net = *catch();
+	i = net->graph_nodes;
+	while (i)
+	{
+		graph = i->content;
+		if (!graph->important)
 		{
-			sum.x -= dst_b.x * (len / LINK_DIV);
-			sum.y -= dst_b.y * (len / LINK_DIV);
-		}
-		else
-		{
-			sum.x += dst_b.x * (len / LINK_DIV);
-			sum.y += dst_b.y * (len / LINK_DIV);
+			graph->v.x = graph->v.x * 1 + graph->f.x;
+			graph->v.y = graph->v.y * 1 + graph->f.y;
+			graph->pos.x += graph->v.x;
+			graph->pos.y += graph->v.y;
 		}
 		i = i->next;
 	}
-	a->fpos.x -= sum.x;
-	a->fpos.y -= sum.y;
 }
 
 void	calculate_forces()
 {
-	t_net	*net;
-	t_list	*i;
-	t_graph	*a;
-	t_hook	*h;
-
-	net = *catch();
-	i = net->graph_nodes;
-	while (i)
-	{
-		a = i->content;
-		if (!a->important)
-		{
-			if (a->x == a->y)
-				random_force(a);
-			link_force(a);
-			//antigravity(a);
-		}
-		i = i->next;
-	}
-}
-
-size_t	apply_forces()
-{
-	t_net	*net;
-	t_list	*i;
-	t_graph	*a;
-	double	heatsum;
-	double	c;
-
-	net = *catch();
-	i = net->graph_nodes;
-	c = 0;
-	while (i)
-	{
-		a = i->content;
-		a->x += (0.00001 * a->fpos.x);
-		a->y += (0.00001 * a->fpos.y);
-		heatsum += veclen_2d(0.00001 * a->fpos.x, 0.00001 * a->fpos.y);
-		i = i->next;
-		c += 2;
-	}
-	return (heatsum / c);
+	force_reset();
+	repulsion();
+	attraction();
+	apply_forces();
 }
