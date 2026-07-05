@@ -1,97 +1,126 @@
 #include "../inc/lem_in.h"
 
-//void	send_off()
-//{
-//	t_net		*net;
-//	int			ant;
-//	int			ant_endet;
-//	t_list		*pick_path;
-//	t_list		*path_node;
-//	t_content	*stuff;
+void	print_move(t_graph *a)
+{
+	int color;
+	int rgb[3];
+	t_net	*net;
 
-//	net = *catch();
-//	ant = 1;
-//	ant_endet = 0;
-//	printf("\n");
-//	while (ant_endet < net->packets)
-//	{
-//		pick_path = net->paths;
-//		while (pick_path)
-//		{
-//			path_node = ft_lstfirst(pick_path->content);
-//			while (path_node && path_node->next)
-//			{
-//				if (((t_content *)((t_graph *)path_node->next->content)->content)->ant != -1)
-//				{
-//					printf("L%i-%s ", ((t_content *)((t_graph *)path_node->next->content)->content)->ant,
-//						((t_content *)((t_graph *)path_node->content)->content)->name);
-//					if (((t_graph *)path_node->content) == net->end)
-//						ant_endet++;
-//				}
-//					((t_content *)((t_graph *)path_node->content)->content)->ant = 
-//					((t_content *)((t_graph *)path_node->next->content)->content)->ant;
-//				if (((t_graph *)path_node->next->content) == net->start)
-//				{
-//					if (ant - 1 < net->packets)
-//					{
-//						((t_content *)((t_graph *)path_node->content)->content)->ant = ant;
-//						printf("L%i-%s ", ant, ((t_content *)((t_graph *)path_node->content)->content)->name);
-//						ant++;
-//					}
-//				}
-//				path_node = path_node->next;
-//			}
-//			pick_path = pick_path->next;
-//		}
-//		printf("\n");
-//	}
-//}
+	net = *catch();
+	if (!net->display)
+	{
+		printf("L%i-%s ", a->ant, a->name);
+		return ;
+	}
+	color = color_by_ant(a);
+	rgb[0] = (color) % 256;
+	rgb[1] = (color >> 8) % 256;
+	rgb[2] = (color >> 16) % 256;
+	printf("L\e[38;2;%i;%i;%im%i\e[0m-", rgb[2], rgb[1], rgb[0], a->ant);
+	printf("%s ", a->name);
+}
 
-//void	path_start(t_list *path)
-//{
-//	t_list	*path_node;
+size_t	ant_step(t_path *path)
+{
+	t_list	*i;
+	t_list	*p;
+	t_graph	*graph;
+	t_graph	*p_graph;
+	size_t	stepped;
 
-//	path_node = path;
-//	while (path_node && path_node->next)
-//	{
-//		if (((t_content *)((t_graph *)path_node->content)->content)->ant != -1)
-//		{
-//			((t_content *)((t_graph *)path_node->next->content)->content)->ant =
-//			((t_content *)((t_graph *)path_node->content)->content)->ant;
-//		}
-//		path_node = path_node->next;
-//	}
-//}
+	i = ft_lstlast(path->path_nodes);
+	if (i)
+		i = i->prev;
+	p = NULL;
+	if (i)
+		p = i->prev;
+	stepped = 0;
+	while (p)
+	{
+		graph = i->content;
+		p_graph = p->content;
+		graph->ant = p_graph->ant;
+		if (p_graph->ant > 0)
+		{
+			print_move(graph);
+			stepped++;
+		}
+		i = p;
+		p = i->prev;
+	}
+	return (stepped);
+}
 
-//void	path_step(t_list *path)
-//{
-//	t_list	*path_node;
+void	calculate_packets()
+{
+	t_net			*net;
+	size_t			packets;
+	size_t			p;
+	size_t			steps;
+	size_t			p_steps;
+	t_path			*path;
 
-//	path_node = path;
-//	while (path_node && path_node->next)
-//	{
-//		((t_content *)((t_graph *)path_node->content)->content)->ant =
-//		((t_content *)((t_graph *)path_node->next->content)->content)->ant;
-//		path_node = path_node->next;
-//	}
-//	((t_content *)((t_graph *)path_node->content)->content)->ant = -1;
-//}
+	net = *catch();
+	packets = 0;
+	while (packets < net->packets)
+	{
+		p = 0;
+		path = net->paths;
+		steps = (size_t)-1;
+		while (p < net->n_paths)
+		{
+			p_steps = (net->paths + p)->packets + ft_lstsize((net->paths + p)->path_nodes);
+			if (p_steps < steps)
+			{
+				steps = p_steps;
+				path = net->paths + p;
+			}
+			p++;
+		}
+		path->packets++;
+		packets++;
+	}
+}
 
-//void	path_step_print(t_list *path)
-//{
-//	t_list	*path_node;
+size_t	send_packets()
+{
+	t_net			*net;
+	size_t			p;
+	t_path			*path;
+	t_graph			*graph;
+	size_t			stepped;
+	size_t			remaining;
+	size_t			nodes_used;
+	size_t			longest_used;
+	size_t			path_length;
+	static size_t	ant = 1;
+	static size_t	lines = 1;
 
-//	path_node = path;
-//	while (path_node)
-//	{
-//		if (((t_content *)((t_graph *)path_node->content)->content)->ant != -1)
-//		{
-//			printf("L%i-%s\t",
-//				((t_content *)((t_graph *)path_node->content)->content)->ant,
-//				((t_content *)((t_graph *)path_node->content)->content)->name);
-//		}
-//		path_node = path_node->next;
-//	}
-//}
-
-// (t_content *)((t_graph *)((t_list *)(net->paths)->content)->content)->content
+	net = *catch();
+	p = 0;
+	stepped = 0;
+	nodes_used = 0;
+	longest_used = 0;
+	while (p < net->n_paths)
+	{
+		path = net->paths + p;
+		stepped += ant_step(path);
+		graph = path->path_nodes->next->content;
+		if (remaining && path->packets)
+		{
+			path->packets--;
+			ant++;
+			stepped++;
+			graph->ant = ant;
+			print_move(graph);
+		}
+		else
+			graph->ant = -42;
+		p++;
+	}
+	printf("\n");
+	if (!stepped)
+		printf("step count : %lu\n", lines);
+	lines ++;
+	return (stepped);
+}

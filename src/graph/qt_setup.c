@@ -1,20 +1,18 @@
 #include "../../inc/lem_in.h"
 
-t_qt_node	*new_qt_root(float min_x, float min_y, float max_x, float max_y)
+t_qt_node	*new_qt_root(t_vec2d x, t_vec2d y, size_t n)
 {
 	t_qt_node	*root;
 
 	root = ft_malloc(sizeof(t_qt_node));
-	root->bound_x.x = min_x;
-	root->bound_x.y = max_x;
-	root->bound_y.x = min_y;
-	root->bound_y.y = max_y;
+	root->bound_x = x;
+	root->bound_y = y;
 	root->center.x = root->bound_x.x + (root->bound_x.y - root->bound_x.x) / 2;
 	root->center.y = root->bound_y.x + (root->bound_y.y - root->bound_y.x) / 2;
 	root->is_leaf = false;
 	root->node = NULL;
 	root->total_mass = 0;
-	root->min_width = ((max_x - min_x) / max_x) / 10;
+	root->min_width = veclen2d(&x) / n;
 	return (root);
 }
 

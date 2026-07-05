@@ -37,10 +37,7 @@ t_graph	*create_node(char *raw_line, t_graph **node_destination)
 		}
 		new_graph = ft_new_graph(ft_strdup(parts[0]), ft_atof(parts[1]), ft_atof(parts[2]));
 		if (node_destination)
-		{
-			new_graph->important = true;
 			*node_destination = new_graph;
-		}
 		free_2dstr(parts);
 	}
 	else
@@ -75,26 +72,32 @@ t_link	*create_link(char *raw_line)
 
 /**
  * a few comments trigger specific reactions
- * @param debug -> when in code create images and display them before end of execution
- * @param force -> run phisics simulation to spread out graph nodes
+ * @param display -> create images and display them before end of execution
+ * @param animate -> run physics simulation to spread out graph nodes
  */
 void	comment_parsing(char *raw_line)
 {
 	char	**parts;
 	size_t	i;
-	t_net		*net;
+	t_net	*net;
+	bool	lines;
 
 	net = *catch();
 	parts = ft_set_split(raw_line, " \n");
 	i = 0;
+	lines = false;
 	while (parts[i])
 	{
-		if (ft_strlcmp(parts[i], "debug", 6) == 0)
-			net->visualize = true;
-		if (ft_strlcmp(parts[i], "force", 6) == 0)
-			net->simulate = true;
+		if (ft_strlcmp(parts[i], "display", 7) == 0)
+			net->display = true;
+		if (ft_strlcmp(parts[i], "animate", 7) == 0)
+			net->animate = true;
+		if (ft_strlcmp(parts[i], "required", 8) == 0)
+			lines = true;
 		i++;
 	}
+	if (lines && parts[--i])
+		net->lines = ft_atoi(parts[i]);
 }
 
 void	input_check()
@@ -121,7 +124,7 @@ void	input_parser(char *file)
 		exit(ft_printf("invalid File\n") * 0 - 1);
 
 	net = *catch();
-
+	net->file = file;
 	node_destination = NULL;
 	raw_line = get_next_line(fd);
 	if (!raw_line)

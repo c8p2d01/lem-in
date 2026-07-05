@@ -44,10 +44,7 @@ void	set_distances(t_graph	*start, size_t base, size_t increment)
 	while(queue)
 	{
 		current = queue->content;
-		current->path = 0;
 		append_uninitialised(current, &queue, current->dist + increment);
-		if (increment == 0)
-			current->path = base;
 		queue = queue->next;
 	}
 }
@@ -91,24 +88,6 @@ void	identify_nets()
 		i = i->next;
 	}
 	reset_distances();
-}
-
-void	prepare_pathing()
-{
-	t_net	*net;
-	t_list	*i;
-	size_t	count;
-
-	net = *catch();
-	i = net->end->links;
-	count = 0;
-	while (i)
-	{
-		count++;
-		i = i->next;
-	}
-	net->paths = ft_calloc(sizeof(t_path), count + 1);
-	net->n_paths = 0;
 }
 
 void	path_linking(t_graph *from, t_link *link)
@@ -174,7 +153,7 @@ t_link	*closer_neighbour(t_graph *a)
 
 /**
  * traces paths, setting directions on links
- * if a link alreadz has a direction and it can be countered, deactivate the link
+ * if a link already has a direction and it can be countered, deactivate the link
  */
 void	trace_path()
 {
@@ -191,9 +170,101 @@ void	trace_path()
 	}
 }
 
+void	prepare_pathing()
+{
+	t_net	*net;
+	t_list	*i;
+	size_t	count;
+
+	net = *catch();
+	i = net->end->links;
+	count = 0;
+	while (i)
+	{
+		((t_link *)i->content)->active = true;
+		count++;
+		i = i->next;
+	}
+	net->paths = ft_calloc(sizeof(t_path), count + 1);
+	net->n_paths = count;
+}
+
+t_graph	*step_path(t_graph *graph, t_graph *prev)
+{
+	t_net	*net;
+	t_link	*link;
+	t_list	*i;
+	t_graph	*to;
+
+	net = *catch();
+	if (prev == net->end)
+		return (NULL);
+	i = graph->links;
+	while(i)
+	{
+		link = i->content;
+		to = ft_linked_to(graph, link);
+		if (link->flow != 0 && to != prev)
+			return (to);
+		i = i->next;
+	}
+	return (NULL);
+}
+
 void	map_paths()
 {
 	t_net	*net;
+	t_list	*i;
+	size_t	n;
+	t_graph	*graph;
+	t_graph	*next;
+	t_graph	*temp;
 
 	net = *catch();
+	i = net->start->links;
+	n = 0;
+	while(i)
+	{
+		graph = net->start;
+		next = ft_linked_to(graph, i->content);
+		while (graph)
+		{
+			ft_lstadd_back(&net->paths[n].path_nodes, ft_lstnew(graph));
+			temp = step_path(next, graph);
+			if (!temp)
+				break ;
+			if (next != net->end)
+				next->path = n;
+			graph = next;
+			next = temp;
+		}
+		i = i->next;
+		n++;
+	}
+}
+
+void	sort_paths()
+{
+	t_net	*net;
+	t_path swap;
+	size_t	n;
+	size_t	comp_len;
+	size_t	len;
+
+	net = *catch();
+	n = 0;
+	while (n < net->n_paths - 1)
+	{
+		len = ft_lstsize((net->paths + n)->path_nodes);
+		comp_len = ft_lstsize((net->paths + n + 1)->path_nodes);
+		if (comp_len < len)
+		{
+			swap = net->paths[n];
+			net->paths[n] = net->paths[n + 1];
+			net->paths[n + 1] = swap;
+			n = 0;
+			continue ;
+		}
+		n++;
+	}
 }

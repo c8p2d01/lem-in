@@ -47,15 +47,66 @@ int	qt_print(t_qt_node *root, size_t indent, int q_num)
 	}
 }
 
+void	qt_sub_plot(t_qt_node *root, mlx_image_t *img, bool nodes, bool center)
+{
+	t_hook	*params;
+	int		q;
+	t_vec2d	p1;
+	t_vec2d	p2;
+	int		frame_color = create_rgbt(255, 0, 255, 255);
+	int		node_color = create_rgbt(0, 255, 0, 255);
+	int		center_color = create_rgbt(0, 0, 255, 255);
+
+	params = *vis();
+	p1.x = root->bound_x.x;
+	p1.y = root->bound_y.x;
+	p2.x = root->bound_x.x;
+	p2.y = root->bound_y.y;
+	draw_line(img, point_on_image(p1), point_on_image(p2), frame_color);
+	p2.x = root->bound_x.y;
+	p2.y = root->bound_y.x;
+	draw_line(img, point_on_image(p1), point_on_image(p2), frame_color);
+	p1.x = root->bound_x.y;
+	p1.y = root->bound_y.y;
+	draw_line(img, point_on_image(p1), point_on_image(p2), frame_color);
+	p2.x = root->bound_x.x;
+	p2.y = root->bound_y.y;
+	draw_line(img, point_on_image(p1), point_on_image(p2), frame_color);
+	if (nodes && root->node)
+		draw_square(img, point_on_image(root->node->pos), NODE_SIZE, node_color);
+	if (center)
+		draw_square(img, point_on_image(root->center), root->total_mass + NODE_SIZE / 2, center_color);
+	q = 0;
+	while (q < 4)
+	{
+		if (root->children[q])
+			qt_sub_plot(root->children[q], img, nodes, center);
+		q++;
+	}
+}
+
+void	qt_plot(t_qt_node *root, bool nodes, bool center)
+{
+	t_hook		*params;
+	mlx_image_t	*img;
+	t_list		*new;
+
+	params = *vis();
+	img = mlx_new_image(params->mlx, WDTH, HGHT);
+	if (!img)
+		interrupt("images failed\n");
+	qt_sub_plot(root, img, nodes, center);
+	new = ft_lstnew(img);
+	if (!new)
+		interrupt("images failed\n");
+	ft_lstadd_back(&params->images, new);
+	params->n_images++;
+}
+
 //int main()
 //{
-//	t_net	*net = catch();
-//	t_graph *node1 = new_graph("1",12, 12);
-//	t_graph *node2 = new_graph("2",25, 75);
-//	t_graph *node3 = new_graph("3",75, 25);
-//	t_graph *node4 = new_graph("4",75, 75);
-//	t_graph *node5 = new_graph("5",25, 25.1);
-//	t_graph *node6 = new_graph("6",55, 55);
+//	t_net	*net = *catch();
+//	t_hook	*params = *vis();
 
 //	t_qt_node	*root = ft_calloc(1, sizeof(t_qt_node));
 //	*root = (t_qt_node){
@@ -66,12 +117,6 @@ int	qt_print(t_qt_node *root, size_t indent, int q_num)
 //		.center.x = 50,
 //		.center.y = 50,
 //	};
-//	qt_insert(root, node1);
-//	qt_insert(root, node2);
-//	qt_insert(root, node3);
-//	qt_insert(root, node4);
-//	qt_insert(root, node5);
-//	qt_insert(root, node6);
 //	qt_mass(root);
 //	qt_print(root, 1, 42);
 //}

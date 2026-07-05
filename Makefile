@@ -1,5 +1,6 @@
 #OUTPUT NAME
 NAME := lem-in
+B_NAME := map_recalculation
 
 # Folders:
 BUILD	= ./build
@@ -9,7 +10,6 @@ SOURCE	= ./src
 COMPILER:=	cc
 COMPFLAGS:=	-g #-Wall -Werror -Wextra -Wno-unused-variable 
 DEFINES = -D DEBUG=1
-DEFINES += -D BONUS=1
 
 # Source Files:
 SRCFILES:=	graph/new_net.c \
@@ -27,7 +27,10 @@ SRCFILES:=	graph/new_net.c \
 			parsing.c \
 			loose_ends.c \
 			pathing.c \
-			visualizer.c \
+			sending.c \
+			output.c \
+			vis_functions.c \
+			vis_setup.c \
 			force.c \
 			utils.c \
 			cleanup.c
@@ -69,8 +72,7 @@ endif
 all: $(SUBM_FLAG) lib
 	make -j $(nproc) $(NAME)
 
-submodule: 
-	@git submodule init
+submodule:
 	@git submodule update --remote --init --recursive
 	@cmake -S $(LIBMLX) -B $(LIBMLX)
 
@@ -91,7 +93,7 @@ $(NAME): $(OBJS)
 # Bonus Build Rule
 bonus: $(OBJS)
 	@echo "--> Compiling Executable"
-	$(CC) $(CFLAGS) $(BONUS) $(OBJS) -o map_recalculation $(LIBRARYS)
+	$(CC) $(CFLAGS) $(BONUS) $(OBJS) -o $(B_NAME) $(LIBRARYS)
 
 clean:
 	@make -s red
@@ -102,6 +104,7 @@ clean:
 fclean: clean
 	@make -s red
 	rm -rdf $(NAME)
+	rm -rdf $(B_NAME)
 	@make -s clear
 
 re: fclean all

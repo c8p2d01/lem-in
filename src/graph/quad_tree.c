@@ -38,16 +38,18 @@ void	qt_insert(t_qt_node *root, t_graph *node)
 	}
 	else
 	{
-		if (equal2d(&root->node->pos, &node->pos, root->min_width))
-		{
-			node->pos.x -= root->min_width;
-			node->pos.y += root->min_width;
-		}
 		child_quadrant = determine_quadrant(root, node);
 		qt_insert(root->children[child_quadrant], node);
 		if (root->is_leaf == true)
 		{
 			child_quadrant = determine_quadrant(root, root->node);
+			if (equal2d(&root->node->pos, &node->pos, root->min_width))
+			{
+				child_quadrant = (child_quadrant + 1) % 4;
+				if (!root->children[child_quadrant])
+					root->children[child_quadrant] = new_qt_node(root, child_quadrant);
+				root->node->pos = root->children[child_quadrant]->center;
+			}
 			qt_insert(root->children[child_quadrant], root->node);
 			root->is_leaf = false;
 		}
@@ -60,52 +62,60 @@ void	qt_insert(t_qt_node *root, t_graph *node)
  */
 void	qt_mass(t_qt_node *root)
 {
+	t_vec2d	mass_center;
 	double	sum_x;
 	double	sum_y;
 	double	child_mass;
 	int		q;
 
-	root->total_mass = 0;
+	sum_x = root->center.x;
+	sum_y = root->center.y;
 	if (root->is_leaf == true)
+	{
 		root->total_mass = 1;
+		root->center.x = root->node->pos.x;
+		root->center.y = root->node->pos.y;
+	}
 	else
 	{
-		sum_x = 0;
-		sum_y = 0;
+		root->center.x = 0;
+		root->center.y = 0;
 		q = 0;
 		while (q < 4)
 		{
 			if (root->children[q])
 			{
 				qt_mass(root->children[q]);
-				sum_x += root->children[q]->total_mass * root->children[q]->center.x;
-				sum_y += root->children[q]->total_mass * root->children[q]->center.y;
+				root->center.x += root->children[q]->total_mass * root->children[q]->center.x;
+				root->center.y += root->children[q]->total_mass * root->children[q]->center.y;
 				root->total_mass += root->children[q]->total_mass;
 			}
 			q++;
 		}
+		root->center.x /= root->total_mass;
+		root->center.y /= root->total_mass;
 	}
-	root->center.x = sum_x / root->total_mass;
-	root->center.y = sum_y / root->total_mass;
 }
 
 void	qt_repulsion(t_qt_node *root, t_graph *node)
 {
 	t_vec2d	connection;
 	double	distance;
+	double	width;
+	double	force;
 	int		q;
 
 	if (!root || !node || root->total_mass == 0.0 || root->node == node)
 		return;
 	connection = connect2d(root->center, node->pos);
 	distance = veclen2d(&connection);
-	if (distance == 0.0) return;
-	double width = root->bound_x.x - root->bound_x.y;
+	if (distance == 0.0)
+		return;
 
-	if (root->is_leaf || (width / distance) < K_THETA)
+	width = root->bound_x.y - root->bound_x.x;
+	if (root->is_leaf || (distance / width) > K_THETA)
 	{
-		double force = (K_REPULSE * root->total_mass) / (distance * distance);
-
+		force = (K_REPULSE * root->total_mass) / (distance * distance);
 		node->f.x -= force * (connection.x / distance);
 		node->f.y -= force * (connection.y / distance);
 	}

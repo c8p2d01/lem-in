@@ -35,6 +35,7 @@ void	isolate_graph(t_graph *a)
 		((t_link*)i->content)->active = false;
 		i = i->next;
 	}
+	a->active = false;
 }
 
 /**

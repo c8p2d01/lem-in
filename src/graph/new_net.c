@@ -43,9 +43,11 @@ t_net	*ft_new_net()
 		.n_paths = 0,
 		.paths = NULL,
 		.packets = -1,
-		.visualize = false,
-		.simulate = false,
-		.ideal_node_distance = 1
+		.ideal_node_distance = 1,
+		.file = NULL,
+		.lines = 0,
+		.display = DISPLAY,
+		.animate = ANIMATE
 	};
 	return (res);
 }

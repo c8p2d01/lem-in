@@ -4,7 +4,7 @@ int	main(int argc, char **argv, char **env)
 {
 	t_net	*net;
 	t_list	*i;
-	double	heat;
+	size_t	s;
 
 	if (argc != 2)
 		exit(-1);
@@ -12,36 +12,27 @@ int	main(int argc, char **argv, char **env)
 	net = *catch();
 	isolate_endings();
 	identify_nets();
-	plot_graph(color_by_path);
 	set_distances(net->start, 0, 1);
-
-	srand(time(NULL));
-
-	jitter_positions();
-	force_reset();
-	velocity_reset();
-
-	plot_graph(color_by_distance);
-	calculate_forces();
-	plot_graph(color_by_distance);
-
 	i = net->start->links;
 	while (i)
 	{
-		plot_graph(color_by_distance);
 		trace_path();
-		plot_graph(color_by_distance);
 		reset_distances();
 		set_distances(net->start, 0, 1);
 		i = i->next;
 	}
-	//prepare_pathing();
+	prepare_pathing();
+	map_paths();
+	sort_paths();
+	calculate_packets();
+	if (net->display)
+		print_paths();
+	s = 1;
+	while (s)
+	{
+		s = send_packets();
+		plot_graph(color_by_ant);
+	}
 	visualize_net();
-	//send_off();
-	//print_paths();
-	//#ifdef BONUS
-	//	assignColorToPath(env);
-	//	bonus();
-	//#endif
 	return (0);
 }
