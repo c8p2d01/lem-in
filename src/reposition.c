@@ -11,7 +11,10 @@ int	main(int argc, char **argv, char **env)
 	if (argc != 2)
 		exit(-1);
 	input_parser(argv[1]);
+	printf("parsed\n");
 	net = *catch();
+	net->display = true;
+	net->animate = true;
 	isolate_endings();
 	identify_nets();
 
@@ -23,9 +26,11 @@ int	main(int argc, char **argv, char **env)
 		reset_distances();
 		i = i->next;
 	}
+	printf("traced\n");
 
 	prepare_pathing();
 	map_paths();
+	printf("mapped\n");
 
 	n = 0;
 	used_nodes = 0;
@@ -40,8 +45,10 @@ int	main(int argc, char **argv, char **env)
 
 	jitter_positions();
 	scale_positions();
+	printf("prepped\n");
 
-	animate(1, 600, 10);
+	animate(1, 500, 10);
+	printf("pre generated\n");
 
 	visualize_net();
 

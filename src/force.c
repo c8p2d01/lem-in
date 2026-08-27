@@ -197,14 +197,10 @@ t_vec2d	calculate_forces(bool plot)
 	force_reset();
 
 	repulsion(plot);
-	if (plot)
-		img = ft_lstlast(params->images)->content;
-	force_reset();
-	//ends_repell();
 	attraction();
-	repulsion(false);
 	if (plot)
 	{
+		img = ft_lstlast(params->images)->content;
 		draw_links(params, img);
 		draw_nodes(params, color_by_path, img);
 	}

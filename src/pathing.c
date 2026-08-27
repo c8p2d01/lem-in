@@ -160,14 +160,18 @@ void	trace_path()
 	t_net	*net;
 	t_link	*link;
 	t_graph	*a;
+	size_t	traced_length;
 
 	net = *catch();
 	a = net->end;
+	traced_length = 0;
 	while (a && a->dist > 0)
 	{
 		link = closer_neighbour(a);
 		a = ft_linked_to(a, link);
+		traced_length++;
 	}
+	printf("traced len %lu\n", traced_length);
 }
 
 void	prepare_pathing()
